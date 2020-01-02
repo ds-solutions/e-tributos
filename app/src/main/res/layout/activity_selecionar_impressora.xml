@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".SelecionarImpressora">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="8dp"
+        android:background="#8600ff">
+
+        <ImageView
+            android:id="@+id/img_blue"
+            android:layout_width="56dp"
+            android:layout_height="51dp"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="6dp" />
+
+        <TextView
+            android:id="@+id/status"
+            android:layout_width="222dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginRight="5dp"
+            android:gravity="center_horizontal|left"
+            android:textColor="@color/cardview_light_background"
+            android:textSize="36sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/bt_pesquisar"
+            android:layout_width="56dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="6dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/search"
+            android:gravity="center|center_horizontal|center_vertical" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/status_conexao_impressora"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15sp"
+        android:layout_marginBottom="20sp"
+        android:gravity="center|center_horizontal|center_vertical"
+        android:textSize="16sp"
+        android:textStyle="bold|italic" />
+
+    <ListView
+        android:id="@+id/list_impressoras"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+</LinearLayout>

@@ -1,3 +1,124 @@
 <resources>
-    <string name="app_name">ETributos</string>
+    <string name="app_name">ℯ-TRIBUTOS</string>
+
+    <!-- LABEL DOS CAMPOS -->
+    <string name="login">Login</string>
+    <string name="senha">Senha</string>
+    <string name="conf_senha">Confirmar Senha</string>
+    <string name="nome">Nome</string>
+
+    <!-- Label dos dados do proprietário -->
+    <string name="proprietario">Proprietário</string>
+    <string name="cpf">CPF</string>
+    <string name="rg">RG</string>
+    <string name="org_emissor">Órg. Em.</string>
+    <string name="estado_civil">Estado Cívil</string>
+    <string name="cor">Cor</string>
+    <string name="sexo">Sexo</string>
+    <string name="data_nacimento">Data de Nasc.</string>
+    <string name="nacionalidade">Nacionalidade</string>
+    <string name="naturalidade">Naturalidade</string>
+    <string name="escolaridade">Escolaridade</string>
+    <string name="cpf_cnpj">CPF / CNPJ</string>
+    <string name="tipo_pessoa">Tipo Pessoa</string>
+    <string name="telefone">Telefone</string>
+    <string name="celular">Celular</string>
+    <string name="email">e-mail</string>
+
+
+    <!-- Label dos dados do imóvel -->
+    <string name="cadastro">Cadastro:</string>
+    <string name="matricula">Matricula:</string>
+    <string name="inscricao">Inscrição:</string>
+    <string name="nova_inscr">Nova Insc.:</string>
+    <string name="distrito">Distrito:</string>
+    <string name="setor">Setor:</string>
+    <string name="quadra">Quadra:</string>
+    <string name="lote">Lote:</string>
+    <string name="unidade">Unidade:</string>
+    <string name="pavimento">Pavimento:</string>
+    <string name="cidade">Cidade:</string>
+    <string name="logradouro">Logradouro:</string>
+    <string name="numero">Nº:</string>
+    <string name="bairro">Bairro:</string>
+    <string name="complemento">Complemento:</string>
+
+    <string name="contribuinte">Contribuinte:</string>
+
+    <string name="status">Status</string>
+    <string name="zona_valor">Valores</string>
+    <string name="zona">Zoneamento:</string>
+    <string name="valor_tributo">Valor do Tributo:</string>
+    <string name="cifrao">R$</string>
+
+
+    <!-- Label dos componentes -->
+    <string name="titulo_menu">Menu</string>
+    <string name="buscar">Buscar</string>
+    <string name="salvar">Salvar</string>
+    <string name="imprimir">Imprimir</string>
+    <string name="editar">Editar</string>
+    <string name="entrar">Entrar</string>
+    <string name="tributos">Tributo</string>
+    <string name="atualizar">Atualizar Imóvel</string>
+    <string name="anterior">Anterior</string>
+    <string name="proximo">Próximo</string>
+    <string name="dados_imovel">Dados do Imóvel</string>
+    <string name="dados_contribuinte">Dados do Contribuinte</string>
+    <string name="motivo_nao_entrega">Motivo da Não Entrega</string>
+
+    <string name="selecione_dispositivo">Selecione a impressora a conectar.</string>
+    <string name="dispositivo_nao_pareado">Nenhuma impressora pareada.</string>
+    <string name="sucesso_conexao">Impressora configurada!</string>
+
+
+
+    <string-array name="nao_entrega">
+        <item>Motivo da não entrega</item>
+        <item>Abandonado</item>
+        <item>Demolido</item>
+        <item>Desocupado</item>
+        <item>Fechado</item>
+        <item>Mudou-se</item>
+        <item>Não Encontrado</item>
+        <item>Terreno</item>
+    </string-array>
+
+    <string-array name="tipo_pessoa">
+        <item>Tipo de Pessoa</item>
+        <item>Pessoa Física</item>
+        <item>Pessoa Jurídica</item>
+    </string-array>
+
+    <string-array name="cor">
+        <item>Cor</item>
+        <item>Amarela</item>
+        <item>Branca</item>
+        <item>Parda</item>
+        <item>Preta</item>
+    </string-array>
+
+    <string-array name="sexo">
+        <item>Sexo</item>
+        <item>Masculino</item>
+        <item>Feminino</item>
+    </string-array>
+
+    <string-array name="estado_civil">
+        <item>Estado Cívil</item>
+        <item>Casado(a)</item>
+        <item>Solteiro(a)</item>
+        <item>União Estável</item>
+        <item>Viúvo(a)</item>
+    </string-array>
+
+
+
+    <string name="lista_imoveis">Lista de Imóveis</string>
+    <string name="falha_conecao">Não foi possivel se conectar à impressora.</string>
+    <string name="str_erro_impressora">%1$s Deseja tentar novamente ?</string>
+    <string name="db_erro">Erro ao acessar o banco de dados</string>
+
+
+
 </resources>
