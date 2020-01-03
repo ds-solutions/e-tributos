@@ -24,11 +24,12 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.developer.demetrio.etributos.ListaImoveis;
+import com.developer.demetrio.etributos.R;
+import com.developer.demetrio.execoes.ControladorException;
 import com.developer.demetrio.fachada.Fachada;
 import com.developer.demetrio.iptu.DescricaoDaDivida;
 import com.developer.demetrio.model.Aliquota;
@@ -41,17 +42,8 @@ import com.developer.demetrio.model.Endereco;
 import com.developer.demetrio.model.Imovel;
 import com.developer.demetrio.model.LatLng;
 import com.developer.demetrio.model.ValoresVenais;
-import com.developer.demetrio.service.GPS_Service;
 import com.developer.demetrio.service.Mail;
 import com.developer.demetrio.service.Zap;
-import com.developer.demetrio.tributos.ListaImoveis;
-import com.developer.demetrio.tributos.R;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -74,21 +66,10 @@ public class DadosDoImovel extends Fragment {
     private Fachada fachada = Fachada.getInstance();
     //  private OnClickListener imprimir = new C_Imprimir();
     private Location location;
-    private GoogleApiClient googleApiClient;
     private static final int PLAY_SERVICE_RESOLUTION_REQUEST = 9000;
-    private LocationRequest locationRequest;
-    private long UPDATE_INTERVAL = 10, FASTEST_INTRVAL = 10;
-
-    private ArrayList<String> permissionsToRequest = new ArrayList<>();
-    private ArrayList<String> permissonsRejected  = new ArrayList<>();
-    private ArrayList<String> permissions  = new ArrayList<>();
-    private static final int ALL_PERMISSIONS_RESULT = 1011;
 
     private Mail mail;
     private Zap zap;
-
-    private LatLng latLng;
-    private int ultimaDistancia = 12;
 
     private boolean has = false;
 
@@ -139,7 +120,7 @@ public class DadosDoImovel extends Fragment {
 
         ArrayAdapter<String> listMotivoNaoEntregaAdapter = new ArrayAdapter<String>(this.context, android.R.layout.simple_spinner_dropdown_item, this.motivos);
         listMotivoNaoEntregaAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        this.motivoNaoEntrega = (Spinner) viewGroup.findViewById(R.id.id_motivo_nao_entrega);
+        this.motivoNaoEntrega = viewGroup.findViewById(R.id.id_motivo_nao_entrega);
         this.motivoNaoEntrega.setAdapter(listMotivoNaoEntregaAdapter);
         this.motivoNaoEntrega.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -213,7 +194,11 @@ public class DadosDoImovel extends Fragment {
                                 } catch (InterruptedException e) {
                                     e.printStackTrace();
                                 }
-                                sendForIpressora();
+                                try {
+                                    sendForIpressora();
+                                } catch (ControladorException e) {
+                                    e.printStackTrace();
+                                }
                                 break;
                         }
                     }
@@ -246,7 +231,11 @@ public class DadosDoImovel extends Fragment {
                                 } catch (InterruptedException e) {
                                     e.printStackTrace();
                                 }
-                                sendForIpressora();
+                                try {
+                                    sendForIpressora();
+                                } catch (ControladorException e) {
+                                    e.printStackTrace();
+                                }
                                 break;
                         }
                     }
@@ -291,7 +280,11 @@ public class DadosDoImovel extends Fragment {
                                 } catch (InterruptedException e) {
                                     e.printStackTrace();
                                 }
-                                sendForIpressora();
+                                try {
+                                    sendForIpressora();
+                                } catch (ControladorException e) {
+                                    e.printStackTrace();
+                                }
                                 break;
                         }
                     }
@@ -304,7 +297,11 @@ public class DadosDoImovel extends Fragment {
             }
 
         } else {
-            sendForIpressora();
+            try {
+                sendForIpressora();
+            } catch (ControladorException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -322,7 +319,11 @@ public class DadosDoImovel extends Fragment {
             public void onClick(DialogInterface dialogInterface, int i) {
                 switch (i) {
                     case -1:
-                        sendForIpressora();
+                        try {
+                            sendForIpressora();
+                        } catch (ControladorException e) {
+                            e.printStackTrace();
+                        }
                         break;
                     default:
                         proximoImovel();
@@ -343,11 +344,9 @@ public class DadosDoImovel extends Fragment {
     }
 
 
-    private void sendForIpressora() {
+    private void sendForIpressora() throws ControladorException {
         if (this.fachada.verificarImpressaoConta(this.imovel, this.context.getApplicationContext()).isPeloMenosUmaImpressao()) {
             this.imovel.setIndcEmissaoConta(1);
-           setarLocalizacao();
-
             /*** TODO: método para salvar a alteração do status do imóvel
              *   método para buscar próximo imóvel
              */
@@ -358,14 +357,6 @@ public class DadosDoImovel extends Fragment {
         }
     }
 
-    public void setarLocalizacao() {
-        System.out.println("Método setarLocalizacao");
-        if (this.latLng != null) {
-            this.imovel.setLatLng(new LatLng(this.latLng.getLatitude(), this.latLng.getLongitude()));
-        } else {
-         //   setarLocalizacao();
-        }
-    }
 
     /*
         private void nextImovel(String mensagem) {
@@ -443,53 +434,10 @@ public class DadosDoImovel extends Fragment {
         return;
     }
 
-    private ArrayList<String> permissionsToTequest(ArrayList<String> wantedPermissions) {
-        ArrayList<String> result = new ArrayList<>();
-        for (String permission: wantedPermissions) {
-            if (!hasPermission(permission)) {
-                result.add(permission);
-            }
-        }
-        return result;
-    }
-
-    private boolean hasPermission(String permission) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            return ContextCompat.checkSelfPermission(this.context, permission) == PackageManager.PERMISSION_GRANTED;
-        }
-        return true;
-    }
-
-    private boolean checkePlayServices() {
-        GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
-        int resultCode = googleApiAvailability.isGooglePlayServicesAvailable(this.context);
-        if (resultCode != ConnectionResult.SUCCESS) {
-            if (googleApiAvailability.isUserResolvableError(resultCode)) {
-                googleApiAvailability.getErrorDialog(this.activity, resultCode, PLAY_SERVICE_RESOLUTION_REQUEST);
-            } else {
-                this.activity.finish();
-            }
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        System.out.println("Método onStart");
-        if (this.googleApiClient != null) {
-            this.googleApiClient.connect();
-        }
-    }
 
     @Override
     public void onResume() {
         super.onResume();
-        System.out.println("Método onResume");
-        if (!checkePlayServices()) {
-            Toast.makeText(this.context, "É necessário instalar o Google Play Services neste dispositivo!!!", LENGTH_LONG).show();
-        }
 
 
     }
