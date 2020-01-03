@@ -26,7 +26,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/idStatus"
+        android:id="@+id/id_status"
         android:layout_width="151dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="131dp"
@@ -41,6 +41,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/idProgressBar" />
+        app:layout_constraintTop_toBottomOf="@+id/idProgressBar"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

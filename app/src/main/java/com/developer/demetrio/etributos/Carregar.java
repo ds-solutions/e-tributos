@@ -5,12 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.concurrent.TimeoutException;
 
 public class Carregar extends AppCompatActivity {
     Boolean carregado = false;
@@ -26,7 +23,7 @@ public class Carregar extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_carregar);
         looping = (ProgressBar) findViewById(R.id.idProgressBar);
-        status = (TextView) findViewById(R.id.idStatus);
+        status = (TextView) findViewById(R.id.id_status);
         final long l = 2;
         handler = new Handler();
        new Thread(new Runnable() {
