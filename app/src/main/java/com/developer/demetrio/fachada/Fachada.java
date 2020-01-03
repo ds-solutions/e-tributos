@@ -47,24 +47,14 @@ public class Fachada {
         ControladorBasico.getInstance().setContext(context);
     }
 
-    public Parametros buscarParametros() throws FachadaException {
-        try {
-            Parametros parametros = this.getControladorParametros().buscarParametro();
-            return parametros;
-        }
-        catch (ControladorException controladorException) {
-            throw new FachadaException(controladorException.getMessage());
-        }
+    public Parametros buscarParametros() throws FachadaException, ControladorException {
+        Parametros parametros = this.getControladorParametros().buscarParametro();
+        return parametros;
     }
 
-    public void enviarEmBackground(Imovel imovel) throws FachadaException {
-        try {
-            Fachada.getControladorImovelTributo().enviarEmBackground(imovel);
-            return;
-        }
-        catch (ControladorException controladorException) {
-            throw new FachadaException(controladorException.getMessage());
-        }
+    public void enviarEmBackground(Imovel imovel) throws FachadaException, ControladorException {
+        getControladorImovelTributo().enviarEmBackground(imovel);
+        return;
     }
 
     public IControladorParametros getControladorParametros() throws FachadaException {
@@ -74,14 +64,9 @@ public class Fachada {
         return this.controladorParametros;
     }
 
-    public ControladorImpressao.FlagImpressao verificarImpressaoConta(Imovel imovel, Context context) throws FachadaException {
-        try {
-            ControladorImpressao.FlagImpressao flagImpressao = Fachada.getControladorImpressao().verificarImpressaoConta(imovel, context, true);
-            return flagImpressao;
-        }
-        catch (ControladorException controladorException) {
-            throw new FachadaException(controladorException.getMessage());
-        }
+    public ControladorImpressao.FlagImpressao verificarImpressaoConta(Imovel imovel, Context context) throws FachadaException, ControladorException {
+        ControladorImpressao.FlagImpressao flagImpressao = getControladorImpressao().verificarImpressaoConta(imovel, context, true);
+        return flagImpressao;
     }
 }
 
