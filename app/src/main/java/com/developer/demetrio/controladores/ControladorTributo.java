@@ -1,10 +1,12 @@
 package com.developer.demetrio.controladores;
 
 import com.developer.demetrio.execoes.ControladorException;
+import com.developer.demetrio.execoes.RepositorioException;
 import com.developer.demetrio.model.Imovel;
 import com.developer.demetrio.repositorio.RepositorioImovelIPTU;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ControladorTributo extends ControladorBasico implements IControladorTributo {
 
@@ -24,6 +26,10 @@ public class ControladorTributo extends ControladorBasico implements IControlado
 
     }
 
+    @Override
+    public List<Imovel> getImoveis(){
+        return repositorioImovelIPTU.getImoveis();
+    }
 
 
     @Override
@@ -116,5 +122,9 @@ public class ControladorTributo extends ControladorBasico implements IControlado
         return null;
     }
 
+    public ArrayList<Imovel> buscarImovelContas() throws ControladorException, RepositorioException {
+        System.out.println("dentro do buscarImovelContas na class Controlador Tributos");
+        return repositorioImovelIPTU.buscarImovelContas();
+    }
 
 }

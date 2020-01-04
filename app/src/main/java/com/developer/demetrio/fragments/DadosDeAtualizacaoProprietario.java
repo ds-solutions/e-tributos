@@ -28,9 +28,11 @@ public class DadosDeAtualizacaoProprietario extends Fragment {
     private String[] arrayTipoPessoa = new String[] {"Pessoa","Fisíca", "Jurídica"};
     private String[] arrayEstadoCivil = new String[]{"Estado Cívil","Casado(a)", "Solteiro(a)", "União Estável", "Viúvo(a)"};
     private Context context;
+    private Integer index;
+    public static final Integer FRAGMENTO_ATUALIZAR_DADOS = 2;
 
-
-    public DadosDeAtualizacaoProprietario(Context context) {
+    public DadosDeAtualizacaoProprietario(Context context, Integer index) {
+        this.index = index;
         this.context = context;
     }
 

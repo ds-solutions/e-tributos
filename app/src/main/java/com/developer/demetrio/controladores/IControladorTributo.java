@@ -4,9 +4,11 @@ import android.content.Context;
 
 
 import com.developer.demetrio.execoes.ControladorException;
+import com.developer.demetrio.execoes.RepositorioException;
 import com.developer.demetrio.model.Imovel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public interface IControladorTributo {
 
@@ -48,6 +50,9 @@ public interface IControladorTributo {
 
     Integer obterQuantidadeImoveisVisitadosPorQuadra(Integer num) throws ControladorException;
 
+
+
     void setContext(Context context);
 
+    List<Imovel> getImoveis();
 }

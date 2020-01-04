@@ -9,13 +9,21 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.developer.demetrio.controladores.ControladorTributo;
+import com.developer.demetrio.execoes.ControladorException;
+import com.developer.demetrio.execoes.RepositorioException;
+import com.developer.demetrio.model.Imovel;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class Carregar extends AppCompatActivity {
     Boolean carregado = false;
     ProgressBar looping;
     long time = 0;
     Thread thread;
     TextView status;
-
+    private List<Imovel> imoveis = new ArrayList<>();
     private Handler handler;
 
     @Override
@@ -26,12 +34,14 @@ public class Carregar extends AppCompatActivity {
         status = (TextView) findViewById(R.id.id_status);
         final long l = 2;
         handler = new Handler();
+
        new Thread(new Runnable() {
            @Override
            public void run() {
                do {
                    try {
                        Thread.sleep(l);
+
                       carregado = verificarCarregamento();
                    } catch (InterruptedException e) {
                        Toast toast = new Toast(getApplicationContext());
@@ -53,6 +63,7 @@ public class Carregar extends AppCompatActivity {
 
     public Boolean verificarCarregamento(){
        time++;
+
        return time == 2000;
     }
 }

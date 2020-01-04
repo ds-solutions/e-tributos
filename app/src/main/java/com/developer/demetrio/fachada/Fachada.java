@@ -15,12 +15,14 @@ import com.developer.demetrio.execoes.FachadaException;
 import com.developer.demetrio.execoes.RepositorioException;
 import com.developer.demetrio.model.Imovel;
 
+
 public class Fachada {
     private static Fachada instance;
     private Context context;
     private IControladorImovelTributo controladorImovelTributo;
     private IControladorImpressao controladorImpressao;
     private IControladorParametros controladorParametros;
+
     private Imovel imovel;
 
     private IControladorImovelTributo getControladorImovelTributo() {
@@ -36,6 +38,7 @@ public class Fachada {
         }
         return this.controladorImpressao;
     }
+
 
     public static Fachada getInstance() {
         if (instance == null) {

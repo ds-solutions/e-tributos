@@ -68,24 +68,38 @@ public class ListaImoveis extends AppCompatActivity {
     private ArrayList<String> permissonsRejected  = new ArrayList<>();
     private ArrayList<String> permissions  = new ArrayList<>();
     private static final int ALL_PERMISSIONS_RESULT = 1011;
+    public static final Integer FRAGMENTO_DADOS_DO_IMOVEL = 1;
 
     private Mail mail;
     private Zap zap;
 
     private LatLng latLng;
     private int ultimaDistancia = 12;
-
+    private Integer index;
     private boolean has = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_lista_imoveis);
-
         List<Fragment> fragments = new ArrayList<>();
-        fragments.add(new DadosDoImovel(this, this));
-        fragments.add(new DadosDeAtualizacaoProprietario(this));
+        Intent intent = getIntent();
+
+        if (intent != null) {
+            System.out.println("intent não nulo");
+            Bundle parametros = intent.getExtras();
+            if (parametros != null) {
+                System.out.println("paramentros não nulo");
+                this.index = parametros.getInt("index");
+            } else if (parametros == null) {
+                System.out.println("paramentros está nulo");
+            }
+        } else if (intent == null) {
+            System.out.println("intent está nulo");
+        }
+
+        fragments.add(new DadosDoImovel(this, this, this.index));
+        fragments.add(new DadosDeAtualizacaoProprietario(this, this.index));
 
         this.viewPager = (ViewPager) findViewById(R.id.view_page);
         this.pagerAdapter = new PageViewAdapter(getSupportFragmentManager(), fragments);

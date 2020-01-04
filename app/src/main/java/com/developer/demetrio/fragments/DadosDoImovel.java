@@ -23,9 +23,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.developer.demetrio.controladores.ControladorTributo;
 import com.developer.demetrio.etributos.ListaImoveis;
 import com.developer.demetrio.etributos.R;
 import com.developer.demetrio.execoes.ControladorException;
+import com.developer.demetrio.execoes.RepositorioException;
 import com.developer.demetrio.fachada.Fachada;
 import com.developer.demetrio.iptu.DescricaoDaDivida;
 import com.developer.demetrio.model.Aliquota;
@@ -57,7 +59,7 @@ public class DadosDoImovel extends Fragment {
     private Context context;
     private Activity activity;
 
-    private Button btImprimir;
+    private Button btImprimir, btImovelAnterior, btProximoImovel;
     private Fachada fachada = Fachada.getInstance();
     //  private OnClickListener imprimir = new C_Imprimir();
     private Location location;
@@ -72,13 +74,28 @@ public class DadosDoImovel extends Fragment {
     zoneamento, valorTributo, contribuinte;
 
     private ImageView printer, email, whatsApp;
+    private ControladorTributo controladorTributo;
+    private List<Imovel> imoveis = new ArrayList<Imovel>();
+    private Integer index = 0;
+    private Integer in = 0;
+    private Integer lastIndex;
 
-    public DadosDoImovel(Context context, Activity activity) {
+    public DadosDoImovel(Context context, Activity activity, Integer index) {
         this.context = context;
         this.activity = activity;
+        if (index != null) {
+            this.index = index;
+        }
         Fachada.setContext(this.context);
 
-        this.imovel = popularImovelParaImpressao();
+        try {
+            this.imoveis =  ControladorTributo.getInstance().buscarImovelContas();
+        } catch (ControladorException e) {
+            e.printStackTrace();
+        } catch (RepositorioException e) {
+            e.printStackTrace();
+        }
+        lastIndex = this.imoveis.size() -1;
     }
 
 
@@ -103,9 +120,12 @@ public class DadosDoImovel extends Fragment {
         this.printer = viewGroup.findViewById(R.id.status_impressora);
         this.email =  viewGroup.findViewById(R.id.status_email);
         this.whatsApp =  viewGroup.findViewById(R.id.status_whatsapp);
-      preencherView();
+        this.btImprimir = (Button) viewGroup.findViewById(R.id.bt_imprimir);
+        this.btImovelAnterior = (Button) viewGroup.findViewById(R.id.bt_anterior2);
+        this.btProximoImovel = (Button) viewGroup.findViewById(R.id.bt_proximo2);
 
-       this.btImprimir = (Button) viewGroup.findViewById(R.id.bt_imprimir);
+        preencherView();
+        in = index +1;
 
         ArrayAdapter<String> listMotivoNaoEntregaAdapter = new ArrayAdapter<String>(this.context, android.R.layout.simple_spinner_dropdown_item, this.motivos);
         listMotivoNaoEntregaAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -120,14 +140,16 @@ public class DadosDoImovel extends Fragment {
             public void onNothingSelected(AdapterView<?> adapterView) {
             }
         });
-        this.btImprimir.setOnClickListener(new C_Imprimir());
+        this.btImprimir.setOnClickListener(new C_Imprimir(this.imovel));
         onCreate(savedInstanceState);
-       // init();
-
+        this.btImovelAnterior.setOnClickListener(new ImovelAnterior(this.context, index, lastIndex));
+        this.btProximoImovel.setOnClickListener(new ProximoImovel(this.context, index, lastIndex));
         return viewGroup;
     }
 
     private void preencherView() {
+        System.out.println("Total de imóveis cadastrados "+ this.imoveis.size());
+        this.imovel = this.imoveis.get(index);
         this.matricula.setText(this.imovel.getCadastro().getNumCadastro());
         this.inscricao.setText(this.imovel.getCadastro().getInscricao());
         this.cidade.setText(this.imovel.getEndereco().getCidade());
@@ -150,15 +172,70 @@ public class DadosDoImovel extends Fragment {
 
     }
 
+    class ImovelAnterior implements View.OnClickListener {
+
+        private Integer index, lastIndex;
+        private Context context;
+
+        public ImovelAnterior(Context context, Integer index, Integer lastIndex) {
+            this.context = context;
+            this.index = index;
+            this.lastIndex = lastIndex;
+        }
+
+        @Override
+        public void onClick(View view) {
+            if (this.index != null && this.index != 0) {
+                this.index--;
+            } else if (this.index == null || this.index == 0) {
+                index = lastIndex;
+            }
+
+            Bundle parametros = new Bundle();
+            parametros.putInt("index", index);
+            Intent activity = new Intent(this.context, ListaImoveis.class);
+            activity.putExtras(parametros);
+            startActivity(activity);
+        }
+    }
+
+    class ProximoImovel implements View.OnClickListener {
+
+        private Integer index, lastIndex;
+        private Context context;
+
+        public ProximoImovel(Context context, Integer index, Integer lastIndex) {
+            this.context = context;
+            this.index = index;
+            this.lastIndex = lastIndex;
+        }
+
+        @Override
+        public void onClick(View view) {
+            if (this.index < this.lastIndex) {
+                this.index++;
+            } else if (this.index == this.lastIndex) {
+                index = 0;
+            }
+
+            Bundle parametros = new Bundle();
+            parametros.putInt("index", index);
+            Intent activity = new Intent(this.context, ListaImoveis.class);
+            activity.putExtras(parametros);
+            startActivity(activity);
+        }
+    }
 
     class C_Imprimir implements View.OnClickListener {
         private Imovel imovel;
-        public C_Imprimir(){}
+        public C_Imprimir(Imovel imovel){
+            this.imovel = imovel;
+        }
 
         @Override
         public void onClick(View view) {
             if (this.imovel == null) {
-                this.imovel = popularImovelParaImpressao();
+                mensagemToast("Não há imóvel para ser impresso");
             }
             if (this.imovel != null) {
                 imprimirTributo();
@@ -191,7 +268,7 @@ public class DadosDoImovel extends Fragment {
                                     e.printStackTrace();
                                 }
                                 try {
-                                    sendForIpressora();
+                                    sendForImpressora();
                                 } catch (ControladorException e) {
                                     e.printStackTrace();
                                 }
@@ -228,7 +305,7 @@ public class DadosDoImovel extends Fragment {
                                     e.printStackTrace();
                                 }
                                 try {
-                                    sendForIpressora();
+                                    sendForImpressora();
                                 } catch (ControladorException e) {
                                     e.printStackTrace();
                                 }
@@ -277,7 +354,7 @@ public class DadosDoImovel extends Fragment {
                                     e.printStackTrace();
                                 }
                                 try {
-                                    sendForIpressora();
+                                    sendForImpressora();
                                 } catch (ControladorException e) {
                                     e.printStackTrace();
                                 }
@@ -294,7 +371,7 @@ public class DadosDoImovel extends Fragment {
 
         } else {
             try {
-                sendForIpressora();
+                sendForImpressora();
             } catch (ControladorException e) {
                 e.printStackTrace();
             }
@@ -316,12 +393,13 @@ public class DadosDoImovel extends Fragment {
                 switch (i) {
                     case -1:
                         try {
-                            sendForIpressora();
+                            sendForImpressora();
                         } catch (ControladorException e) {
                             e.printStackTrace();
                         }
                         break;
                     default:
+                        addImagemNosStatusDoImovel();
                         proximoImovel();
                         break;
                 }
@@ -334,20 +412,24 @@ public class DadosDoImovel extends Fragment {
     }
 
     private void proximoImovel() {
-        System.out.println("Dentro da class DadosDoImovel");
-        Intent intent = new Intent(this.context, ListaImoveis.class);
-        startActivity(intent);
+        this.index ++;
+       // new DadosDoImovel(this.context, this.activity, this.index);
+        Bundle parametros = new Bundle();
+        parametros.putInt("index", index);
+        Intent activity = new Intent(this.context, ListaImoveis.class);
+        activity.putExtras(parametros);
+        startActivity(activity);
     }
 
 
-    private void sendForIpressora() throws ControladorException {
+    private void sendForImpressora() throws ControladorException {
         if (this.fachada.verificarImpressaoConta(this.imovel, this.context.getApplicationContext()).isPeloMenosUmaImpressao()) {
             this.imovel.setIndcEmissaoConta(1);
             /*** TODO: método para salvar a alteração do status do imóvel
              *   método para buscar próximo imóvel
              */
             addImagemNosStatusDoImovel();
-           // proximoImovel();
+            proximoImovel();
         } else {
             mensagemToast("Erro ao tentar imprimir!");
             return;

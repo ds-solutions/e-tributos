@@ -5,6 +5,7 @@ import com.developer.demetrio.execoes.RepositorioException;
 import com.developer.demetrio.model.Imovel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 interface IRepositorioImovelIPTU {
     void atualizarIndicadorContinuaImpressao(Integer num, Integer num2) throws RepositorioException;
@@ -50,6 +51,8 @@ interface IRepositorioImovelIPTU {
     Imovel buscarImovelContaPosicao(Integer num) throws RepositorioException;
 
     ArrayList<Imovel> buscarImovelContas() throws RepositorioException;
+
+
 
     ArrayList<Imovel> buscarImovelContasLidos() throws RepositorioException;
 
@@ -106,4 +109,6 @@ interface IRepositorioImovelIPTU {
    // MapaIntegracao pesquisarImovelCoordenada() throws RepositorioException;
 
     Integer verificarRateioCondominio(Integer num) throws RepositorioException;
+
+    List<Imovel> getImoveis();
 }
