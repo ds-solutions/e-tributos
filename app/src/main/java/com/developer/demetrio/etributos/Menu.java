@@ -45,6 +45,11 @@ public class Menu extends AppCompatActivity {
                         startActivity(activity);
                         break;
 
+                    case "Relatório":
+                        activity = new Intent(getApplicationContext(), ConsultarImoveis.class);
+                        startActivity(activity);
+                        break;
+
                     case "Finalizar":
                         activity = new Intent(getApplicationContext(), Finalizar.class);
                         startActivity(activity);
@@ -73,6 +78,8 @@ public class Menu extends AppCompatActivity {
         item = new ItemMenu(R.drawable.impressora, "Selecionar Impressora");
         itens.add(item);
 
+        item = new ItemMenu(R.drawable.relatorio, "Relatório");
+        itens.add(item);
 
         item = new ItemMenu(R.drawable.finalizar, "Finalizar");
         itens.add(item);
