@@ -67,11 +67,12 @@ public class Menu extends AppCompatActivity {
         ItemMenu item = new ItemMenu(R.drawable.imovel, "Lista de Imóveis");
         itens.add(item);
 
-        item = new ItemMenu(R.drawable.lupa, "Consultar Imóveis");
+        item = new ItemMenu(R.drawable.buscar_imoveis, "Consultar Imóveis");
         itens.add(item);
 
         item = new ItemMenu(R.drawable.impressora, "Selecionar Impressora");
         itens.add(item);
+
 
         item = new ItemMenu(R.drawable.finalizar, "Finalizar");
         itens.add(item);

@@ -103,14 +103,9 @@ public class DadosDoImovel extends Fragment {
         this.printer = viewGroup.findViewById(R.id.status_impressora);
         this.email =  viewGroup.findViewById(R.id.status_email);
         this.whatsApp =  viewGroup.findViewById(R.id.status_whatsapp);
-        this.printer.setImageResource(this.imovel.getIndcEmissaoConta() == 1 ? R.drawable.print : R.drawable.un_send_impressora);
-        this.whatsApp.setImageResource(this.imovel.getIndcEmissaoConta() == 1 ? R.drawable.whatsapp : R.drawable.un_send_whatsapp1);
-        this.email.setImageResource(this.imovel.getIndcEnvioEmail() == 1 ? R.drawable.email : R.drawable.un_send_email);
+      preencherView();
 
-
-        preencherView();
-
-        this.btImprimir = (Button) viewGroup.findViewById(R.id.bt_imprimir);
+       this.btImprimir = (Button) viewGroup.findViewById(R.id.bt_imprimir);
 
         ArrayAdapter<String> listMotivoNaoEntregaAdapter = new ArrayAdapter<String>(this.context, android.R.layout.simple_spinner_dropdown_item, this.motivos);
         listMotivoNaoEntregaAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -145,8 +140,15 @@ public class DadosDoImovel extends Fragment {
         this.contribuinte.setText(imovel.getAtualizacaoDoProprietario() != null ?
                 this.imovel.getAtualizacaoDoProprietario().getNome() : this.imovel.getContribuinte().getNome());
 
+        addImagemNosStatusDoImovel();
     }
 
+    private void addImagemNosStatusDoImovel() {
+        this.printer.setImageResource(this.imovel.getIndcEmissaoConta() == 1 ? R.drawable.print : R.drawable.un_send_impressora);
+        this.whatsApp.setImageResource(this.imovel.getIndcEmissaoConta() == 1 ? R.drawable.whatsapp : R.drawable.un_send_whatsapp1);
+        this.email.setImageResource(this.imovel.getIndcEnvioEmail() == 1 ? R.drawable.email : R.drawable.un_send_email);
+
+    }
 
 
     class C_Imprimir implements View.OnClickListener {
@@ -344,7 +346,8 @@ public class DadosDoImovel extends Fragment {
             /*** TODO: método para salvar a alteração do status do imóvel
              *   método para buscar próximo imóvel
              */
-            proximoImovel();
+            addImagemNosStatusDoImovel();
+           // proximoImovel();
         } else {
             mensagemToast("Erro ao tentar imprimir!");
             return;
@@ -401,6 +404,7 @@ public class DadosDoImovel extends Fragment {
         startActivity(Intent.createChooser(intentSend,"Escolha um app para enviar o email!"));
 
         this.mail.rejetar();
+        addImagemNosStatusDoImovel();
         return;
     }
 
@@ -425,6 +429,7 @@ public class DadosDoImovel extends Fragment {
             Toast.makeText(this.context, "Erro ao tentar enviar mensagem via WhatsApp, tente novamente!", LENGTH_LONG).show();
         }
         this.zap.rejetar();
+        addImagemNosStatusDoImovel();
         return;
     }
 
@@ -441,8 +446,9 @@ public class DadosDoImovel extends Fragment {
         Aliquota aliquota = new Aliquota();
         CodigoDeCobranca codigo = new CodigoDeCobranca();
         codigo.setId(1L);
-        this.imovel.setIndcEmissaoConta(1);
-        this.imovel.setIndcEnvioZap(1);
+        this.imovel.setIndcEmissaoConta(0);
+        this.imovel.setIndcEnvioZap(0);
+        this.imovel.setIndcEnvioEmail(0);
 
         codigo.setTipo("1-NORMAL");
         codigo.setTaxaTestada("6,00");
