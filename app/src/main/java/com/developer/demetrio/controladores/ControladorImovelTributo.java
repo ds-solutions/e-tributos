@@ -1,8 +1,7 @@
 package com.developer.demetrio.controladores;
 
 import android.content.Context;
-
-import com.developer.demetrio.excecoes.ControladorException;
+import com.developer.demetrio.execoes.ControladorException;
 import com.developer.demetrio.model.Imovel;
 import com.developer.demetrio.repositorio.RepositorioImovelIPTU;
 
@@ -182,27 +181,27 @@ public class ControladorImovelTributo implements IControladorImovelTributo {
     }
 
     @Override
-    public Integer obterQuantidadeImovelContratoDemanda(Integer num) throws ControladorException {
+    public Integer obterQuantidadeImovelContratoDemanda(Integer num)  {
         return null;
     }
 
     @Override
-    public Integer obterQuantidadeImovelMicro(Integer num) throws ControladorException {
+    public Integer obterQuantidadeImovelMicro(Integer num) {
         return null;
     }
 
     @Override
-    public double obterValorContaAguaEsgoto(Integer num) throws ControladorException {
+    public double obterValorContaAguaEsgoto(Integer num) {
         return 0;
     }
 
     @Override
-    public double obterValorContaSemCreditos(Integer num, boolean z) throws ControladorException {
+    public double obterValorContaSemCreditos(Integer num, boolean z) {
         return 0;
     }
 
     @Override
-    public double obterValorContaSemImposto(Integer num, boolean z) throws ControladorException {
+    public double obterValorContaSemImposto(Integer num, boolean z) {
         return 0;
     }
 

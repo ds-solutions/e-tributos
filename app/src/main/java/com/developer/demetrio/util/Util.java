@@ -4,10 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.developer.demetrio.excecoes.FachadaException;
+import com.developer.demetrio.execoes.ControladorException;
+import com.developer.demetrio.execoes.FachadaException;
 import com.developer.demetrio.fachada.Fachada;
 import com.developer.demetrio.model.Imovel;
-import com.developer.demetrio.tributos.ListaImoveis;
+import com.developer.demetrio.etributos.ListaImoveis;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -25,7 +26,7 @@ public class Util {
    */ }
 
 
-    public static void enviarEmBackGround(Imovel imovel, Context context) {
+    public static void enviarEmBackGround(Imovel imovel, Context context) throws ControladorException {
         try {
             Fachada.setContext(context);
             Fachada.getInstance().enviarEmBackground(imovel);

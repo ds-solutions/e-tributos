@@ -3,11 +3,11 @@ package com.developer.demetrio.controladores;
 import android.content.Context;
 
 import com.developer.demetrio.beans.ObjetoBasico;
-import com.developer.demetrio.excecoes.ControladorException;
+import com.developer.demetrio.execoes.ControladorException;
 
 import java.util.ArrayList;
 
-public interface IcontroladorBasico {
+public interface IControladorBasico {
 
     void apagarBanco();
 

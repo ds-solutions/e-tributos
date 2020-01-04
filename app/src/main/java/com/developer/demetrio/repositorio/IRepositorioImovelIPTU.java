@@ -1,6 +1,7 @@
 package com.developer.demetrio.repositorio;
 
-import com.developer.demetrio.excecoes.RepositorioException;
+
+import com.developer.demetrio.execoes.RepositorioException;
 import com.developer.demetrio.model.Imovel;
 
 import java.util.ArrayList;

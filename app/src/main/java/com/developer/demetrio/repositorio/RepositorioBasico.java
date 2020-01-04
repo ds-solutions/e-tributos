@@ -7,8 +7,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.developer.demetrio.beans.ObjetoBasico;
-import com.developer.demetrio.excecoes.RepositorioException;
-import com.developer.demetrio.tributos.R;
+import com.developer.demetrio.execoes.RepositorioException;
+import com.developer.demetrio.etributos.R;
 import com.developer.demetrio.util.ConstantesSistemas;
 
 import java.util.ArrayList;

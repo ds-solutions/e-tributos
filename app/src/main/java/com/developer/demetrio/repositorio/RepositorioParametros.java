@@ -3,7 +3,7 @@ package com.developer.demetrio.repositorio;
 import android.database.Cursor;
 
 import com.developer.demetrio.beans.Parametros;
-import com.developer.demetrio.excecoes.RepositorioException;
+import com.developer.demetrio.execoes.RepositorioException;
 
 public class RepositorioParametros extends RepositorioBasico /* implements IRepositorioParamentros*/ {
     private static RepositorioParametros instancia;

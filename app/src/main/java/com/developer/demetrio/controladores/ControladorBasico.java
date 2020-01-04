@@ -1,18 +1,14 @@
 package com.developer.demetrio.controladores;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.developer.demetrio.beans.ObjetoBasico;
-import com.developer.demetrio.excecoes.ControladorException;
-import com.developer.demetrio.excecoes.RepositorioException;
-import com.developer.demetrio.iptu.IPTU;
+import com.developer.demetrio.execoes.ControladorException;
 import com.developer.demetrio.model.Imovel;
-import com.developer.demetrio.util.ConstantesSistemas;
 
 import java.util.ArrayList;
 
-public class ControladorBasico implements IcontroladorBasico {
+public class ControladorBasico implements IControladorBasico {
     protected static Context context;
     private static ControladorBasico instance;
     private ControladorImpressao controladorImpressao;

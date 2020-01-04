@@ -45,8 +45,7 @@
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_marginEnd="5dp"
-            android:layout_marginRight="5dp"
-            app:srcCompat="@drawable/print" />
+            android:layout_marginRight="5dp" />
 
         <View
             android:id="@+id/divider5"
@@ -61,8 +60,7 @@
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_marginEnd="5dp"
-            android:layout_marginRight="5dp"
-            app:srcCompat="@drawable/email" />
+            android:layout_marginRight="5dp" />
 
         <View
             android:id="@+id/divider6"
@@ -77,8 +75,7 @@
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_marginEnd="5dp"
-            android:layout_marginRight="5dp"
-            app:srcCompat="@drawable/whatsapp" />
+            android:layout_marginRight="5dp" />
 
         <View
             android:id="@+id/divider7"

@@ -1,15 +1,12 @@
 package com.developer.demetrio.fragments;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +21,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.developer.demetrio.etributos.ListaImoveis;
@@ -40,7 +36,6 @@ import com.developer.demetrio.model.CodigoDeCobranca;
 import com.developer.demetrio.model.Contribuinte;
 import com.developer.demetrio.model.Endereco;
 import com.developer.demetrio.model.Imovel;
-import com.developer.demetrio.model.LatLng;
 import com.developer.demetrio.model.ValoresVenais;
 import com.developer.demetrio.service.Mail;
 import com.developer.demetrio.service.Zap;
@@ -108,10 +103,9 @@ public class DadosDoImovel extends Fragment {
         this.printer = viewGroup.findViewById(R.id.status_impressora);
         this.email =  viewGroup.findViewById(R.id.status_email);
         this.whatsApp =  viewGroup.findViewById(R.id.status_whatsapp);
-
-        this.printer.setVisibility(this.imovel.getIndcEmissaoConta() == 1 ? View.VISIBLE : View.INVISIBLE);
-        this.email.setVisibility(this.imovel.getIndcEnvioEmail() == 1 ? View.VISIBLE : View.INVISIBLE);
-        this.whatsApp.setVisibility(this.imovel.getIndcEnvioZap() == 1 ? View.VISIBLE : View.INVISIBLE);
+        this.printer.setImageResource(this.imovel.getIndcEmissaoConta() == 1 ? R.drawable.print : R.drawable.un_send_impressora);
+        this.whatsApp.setImageResource(this.imovel.getIndcEmissaoConta() == 1 ? R.drawable.whatsapp : R.drawable.un_send_whatsapp1);
+        this.email.setImageResource(this.imovel.getIndcEnvioEmail() == 1 ? R.drawable.email : R.drawable.un_send_email);
 
 
         preencherView();

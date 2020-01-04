@@ -29,7 +29,6 @@ import com.developer.demetrio.adapters.PageViewAdapter;
 import com.developer.demetrio.fachada.Fachada;
 import com.developer.demetrio.fragments.DadosDeAtualizacaoProprietario;
 import com.developer.demetrio.fragments.DadosDoImovel;
-import com.developer.demetrio.impressao.FormatarIPTU;
 import com.developer.demetrio.iptu.DescricaoDaDivida;
 import com.developer.demetrio.model.Aliquota;
 import com.developer.demetrio.model.AreasDoImovel;
@@ -43,11 +42,6 @@ import com.developer.demetrio.model.ValoresVenais;
 import com.developer.demetrio.service.GPS_Service;
 import com.developer.demetrio.service.Mail;
 import com.developer.demetrio.service.Zap;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -67,9 +61,7 @@ public class ListaImoveis extends AppCompatActivity {
     private Fachada fachada = Fachada.getInstance();
     //  private OnClickListener imprimir = new C_Imprimir();
     private Location location;
-    private GoogleApiClient googleApiClient;
     private static final int PLAY_SERVICE_RESOLUTION_REQUEST = 9000;
-    private LocationRequest locationRequest;
     private long UPDATE_INTERVAL = 10, FASTEST_INTRVAL = 10;
 
     private ArrayList<String> permissionsToRequest = new ArrayList<>();

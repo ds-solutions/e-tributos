@@ -1,6 +1,6 @@
 package com.developer.demetrio.controladores;
 
-import com.developer.demetrio.excecoes.ControladorException;
+import com.developer.demetrio.execoes.ControladorException;
 import com.developer.demetrio.model.Imovel;
 import com.developer.demetrio.repositorio.RepositorioImovelIPTU;
 

@@ -1,7 +1,6 @@
 package com.developer.demetrio.fragments;
 
 import android.content.Context;
-import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,11 +15,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.developer.demetrio.model.AtualizacaoDoProprietario;
-import com.developer.demetrio.tributos.ListaImoveis;
-import com.developer.demetrio.tributos.R;
+import com.developer.demetrio.etributos.R;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class DadosDeAtualizacaoProprietario extends Fragment {
     private AtualizacaoDoProprietario dados;

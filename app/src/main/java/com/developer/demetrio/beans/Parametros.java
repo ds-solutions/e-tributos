@@ -3,6 +3,8 @@ package com.developer.demetrio.beans;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import com.developer.demetrio.execoes.ControladorException;
+import com.developer.demetrio.execoes.RepositorioException;
 import com.developer.demetrio.fachada.Fachada;
 
 import java.io.Serializable;
@@ -140,7 +142,7 @@ public class Parametros extends ObjetoBasico implements Serializable {
         return null;
     }
 
-    public static Parametros getInstancia() {
+    public static Parametros getInstancia() throws ControladorException, RepositorioException {
         if (instancia == null) {
             instancia = Fachada.getInstance().buscarParametros();
         }

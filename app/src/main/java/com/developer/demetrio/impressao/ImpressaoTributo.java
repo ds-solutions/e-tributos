@@ -1,11 +1,8 @@
 package com.developer.demetrio.impressao;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.pdf.PdfDocument;
-import android.graphics.pdf.PdfDocument.PageInfo.Builder;
 
-import com.developer.demetrio.excecoes.ImpressaoException;
+import com.developer.demetrio.execoes.ImpressaoException;
 import com.developer.demetrio.impressao.utils.ZebraUtils;
 import com.developer.demetrio.model.Imovel;
 import com.developer.demetrio.util.ConstantesSistemas;
@@ -19,11 +16,11 @@ public class ImpressaoTributo extends Impressao{
    // protected StringBuilder buffer;
     private Context context;
 
-    private FormatarIPTU formatarIPTU;
+   // private FormatarIPTU formatarIPTU;
 
     public StringBuilder coletarIptuFormatado(Imovel imovel) {
         this.buffer = new StringBuilder();
-      this.formatarIPTU = new FormatarIPTU();
+   //   this.formatarIPTU = new FormatarIPTU();
       //  Document document = new Document();
      //  document =  formatarIPTU.gerarIPTU(imovel,this.context);
        /* if (document != null && !document.equals("")) {

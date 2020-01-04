@@ -12,6 +12,7 @@ import com.developer.demetrio.controladores.IControladorParametros;
 
 import com.developer.demetrio.execoes.ControladorException;
 import com.developer.demetrio.execoes.FachadaException;
+import com.developer.demetrio.execoes.RepositorioException;
 import com.developer.demetrio.model.Imovel;
 
 public class Fachada {
@@ -47,13 +48,13 @@ public class Fachada {
         ControladorBasico.getInstance().setContext(context);
     }
 
-    public Parametros buscarParametros() throws FachadaException, ControladorException {
+    public Parametros buscarParametros() throws FachadaException, ControladorException, RepositorioException {
         Parametros parametros = this.getControladorParametros().buscarParametro();
         return parametros;
     }
 
     public void enviarEmBackground(Imovel imovel) throws FachadaException, ControladorException {
-        getControladorImovelTributo().enviarEmBackground(imovel);
+        this.getControladorImovelTributo().enviarEmBackground(imovel);
         return;
     }
 

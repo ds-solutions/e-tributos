@@ -4,8 +4,8 @@ package com.developer.demetrio.controladores;
 import android.content.Context;
 import android.util.Log;
 
-import com.developer.demetrio.excecoes.ControladorException;
-import com.developer.demetrio.excecoes.ImpressaoException;
+import com.developer.demetrio.execoes.ControladorException;
+import com.developer.demetrio.execoes.ImpressaoException;
 import com.developer.demetrio.impressao.ImpressaoTributoNovoIPTU;
 import com.developer.demetrio.impressao.utils.ZebraUtils;
 import com.developer.demetrio.model.Imovel;

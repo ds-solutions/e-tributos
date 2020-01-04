@@ -1,7 +1,7 @@
 package com.developer.demetrio.repositorio;
 
 import com.developer.demetrio.beans.ObjetoBasico;
-import com.developer.demetrio.excecoes.RepositorioException;
+import com.developer.demetrio.execoes.RepositorioException;
 
 import java.util.ArrayList;
 

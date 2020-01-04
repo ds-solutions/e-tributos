@@ -4,11 +4,11 @@ import android.content.Context;
 import android.util.Log;
 
 import com.developer.demetrio.beans.Parametros;
-import com.developer.demetrio.excecoes.ControladorException;
-import com.developer.demetrio.excecoes.RepositorioException;
+import com.developer.demetrio.execoes.ControladorException;
+import com.developer.demetrio.execoes.RepositorioException;
 import com.developer.demetrio.model.Imovel;
 import com.developer.demetrio.repositorio.RepositorioParametros;
-import com.developer.demetrio.tributos.R;
+import com.developer.demetrio.etributos.R;
 import com.developer.demetrio.util.ConstantesSistemas;
 
 public class ControladorParamentros extends ControladorBasico implements IControladorParametros {
@@ -58,14 +58,8 @@ public class ControladorParamentros extends ControladorBasico implements IContro
     }
 
     @Override
-    public Parametros buscarParametro() throws ControladorException {
-        try {
-            return this.repositorioParametros.buscarParametros();
-        } catch (RepositorioException ex) {
-            ex.printStackTrace();
-            Log.e(ConstantesSistemas.CATEGORIA, ex.getMessage());
-            throw new ControladorException(context.getResources().getString(R.string.db_erro));
-        }
+    public Parametros buscarParametro() throws ControladorException, RepositorioException {
+        return this.repositorioParametros.buscarParametros();
     }
 
     @Override

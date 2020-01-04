@@ -3,12 +3,12 @@ package com.developer.demetrio.impressao.utils;
 import android.content.Context;
 import android.util.Log;
 
-import com.developer.demetrio.excecoes.ConexaoImpressoraException;
-import com.developer.demetrio.excecoes.ImpressaoException;
-import com.developer.demetrio.excecoes.StatusImpressoraException;
+import com.developer.demetrio.execoes.ConexaoImpressoraException;
+import com.developer.demetrio.execoes.ImpressaoException;
+import com.developer.demetrio.execoes.StatusImpressoraException;
 import com.developer.demetrio.iptu.IPTU;
 import com.developer.demetrio.model.Imovel;
-import com.developer.demetrio.tributos.SelecionarImpressora;
+import com.developer.demetrio.etributos.SelecionarImpressora;
 import com.developer.demetrio.util.Bluetooth;
 import com.developer.demetrio.util.ConstantesSistemas;
 import com.developer.demetrio.util.SettingsHelper;
@@ -46,7 +46,7 @@ public class ZebraUtils {
         return instance;
     }
 
-    public ZebraPrinter connect() throws ImpressaoException {
+    public ZebraPrinter connect() throws ImpressaoException, ConexaoImpressoraException {
         if (this.zebraPrinterConnection == null || !this.zebraPrinterConnection.isConnected()) {
             initConnection();
         }

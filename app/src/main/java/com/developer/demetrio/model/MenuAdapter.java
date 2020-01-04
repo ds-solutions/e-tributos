@@ -8,7 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.developer.demetrio.tributos.R;
+import com.developer.demetrio.etributos.R;
 
 import org.w3c.dom.Text;
 
@@ -34,8 +34,8 @@ public class MenuAdapter extends ArrayAdapter<ItemMenu> {
 
         View linha = inflater.inflate(R.layout.item_menu, parent, false);
 
-        ImageView img = (ImageView) linha.findViewById(R.id.idImageMenu);
-        TextView opcao = (TextView) linha.findViewById(R.id.idOpcaoMenu);
+        ImageView img = (ImageView) linha.findViewById(R.id.id_image_menu);
+        TextView opcao = (TextView) linha.findViewById(R.id.id_opcao_menu);
 
         img.setImageResource(itens.get(posicao).getImg());
         opcao.setText(itens.get(posicao).getDescricao());

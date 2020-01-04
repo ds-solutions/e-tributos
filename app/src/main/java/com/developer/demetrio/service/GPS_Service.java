@@ -2,34 +2,20 @@ package com.developer.demetrio.service;
 
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.Service;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.util.Log;
-import android.widget.Toast;
 
-import androidx.core.app.ActivityCompat;
 
 import com.developer.demetrio.model.LatLng;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.location.LocationServices;
 
 import java.security.Permission;
-import java.security.Permissions;
 import java.util.ArrayList;
 
-public class GPS_Service extends LocationCallback implements LocationListener {
+public class GPS_Service implements LocationListener {
     public final static  int REQUEST_CODE_ERRO_PLAY_SERVICES = 9000;
 
     private final Context context;
@@ -37,7 +23,6 @@ public class GPS_Service extends LocationCallback implements LocationListener {
     private boolean isNetWorkEnabled = false;
     private boolean canGetLocation = false;
 
-    private FusedLocationProviderClient client;
 
     private Location location;
     private Double lat, lng;
@@ -56,37 +41,14 @@ public class GPS_Service extends LocationCallback implements LocationListener {
     public GPS_Service(Context context, Activity activity) {
         this.context = context;
         this.activity = activity;
-        this.client = LocationServices.getFusedLocationProviderClient(this.context);
         getLocation();
     }
 
-    @SuppressLint("MissingPermission")
-    public void getLocation() {
-        LocationRequest request = new LocationRequest();
-        request.setInterval(100);
-        request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+  public void getLocation() {
 
-        request.setSmallestDisplacement(1);
-
-        if(ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},795);
-        }
-        //solicitando permissao receber sms
-        if(ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},785);
-        }
-
-        client.requestLocationUpdates(request, this, null);
     }
 
-    @Override
-    public void onLocationResult(LocationResult locationResult) {
-        super.onLocationResult(locationResult);
-        this.lat = locationResult.getLastLocation().getLatitude();
-        this.lng = locationResult.getLastLocation().getLongitude();
-        int dist = (int) locationResult.getLastLocation().getAccuracy();
-        System.out.println("Dentro do onLocationChanged a distancia é: "+ dist+"  coord:  " +this.lat+","+this.lng);
-    }
+
 
     /*
     @SuppressLint("MissingPermission")

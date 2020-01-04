@@ -2,8 +2,8 @@ package com.developer.demetrio.controladores;
 
 import android.content.Context;
 
-import com.developer.demetrio.excecoes.ControladorException;
-import com.developer.demetrio.excecoes.ImpressaoException;
+import com.developer.demetrio.execoes.ControladorException;
+import com.developer.demetrio.execoes.ImpressaoException;
 import com.developer.demetrio.model.Imovel;
 import com.developer.demetrio.controladores.ControladorImpressao.FlagImpressao;
 
