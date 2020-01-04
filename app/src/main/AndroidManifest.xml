@@ -27,6 +27,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <activity android:name=".AtualizarCadastro"/>
+        <activity android:name=".Finalizar" />
+        <activity android:name=".SelecionarImpressora" />
+        <activity android:name=".ConsultarImoveis" />
+        <activity android:name=".ListaImoveis" />
+        <activity android:name=".Menu" />
+        <activity android:name=".Carregar" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
