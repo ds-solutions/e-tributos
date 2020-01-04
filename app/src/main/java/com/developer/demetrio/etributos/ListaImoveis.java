@@ -109,7 +109,16 @@ public class ListaImoveis extends AppCompatActivity {
      //   this.btImprimir = (Button) findViewById(R.id.bt_imprimir);
 
     }
-/*
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(this, Menu.class));
+        finishAffinity();
+        return;
+    }
+
+    /*
 
     class C_Imprimir implements OnClickListener {
        private Imovel imovel;

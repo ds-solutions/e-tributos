@@ -516,6 +516,8 @@ public class DadosDoImovel extends Fragment {
     }
 
 
+
+
     @Override
     public void onResume() {
         super.onResume();
