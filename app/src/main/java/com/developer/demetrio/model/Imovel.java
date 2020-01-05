@@ -1,9 +1,6 @@
 package com.developer.demetrio.model;
 
-import com.developer.demetrio.iptu.IPTU;
-
 import java.io.Serializable;
-import java.util.Objects;
 
 public class Imovel implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -17,7 +14,6 @@ public class Imovel implements Serializable {
     private Contribuinte contribuinte;
     private Tributo tributo = new Tributo();
     private LatLng latLng = new LatLng();
-    private AtualizacaoDoProprietario atualizacaoDoProprietario;
 
 
 
@@ -104,13 +100,7 @@ public class Imovel implements Serializable {
         this.latLng = latLng;
     }
 
-    public AtualizacaoDoProprietario getAtualizacaoDoProprietario() {
-        return atualizacaoDoProprietario;
-    }
 
-    public void setAtualizacaoDoProprietario(AtualizacaoDoProprietario atualizacaoDoProprietario) {
-        this.atualizacaoDoProprietario = atualizacaoDoProprietario;
-    }
 
     @Override
     public boolean equals(Object o) {

@@ -33,7 +33,8 @@ public class Mail {
         this.exercicio = this.imovel.getTributo().getIptu().getExercicio();
         this.emails = new String[]{"e.tributos01@gmail.com"}; //  this.para = this.contribuinte.getEmail();
         this.tituloDoEmail = this.imovel.getEndereco().getCidade() +" - "+TITULO_TRIBUTOS[index]+" "+this.exercicio;
-        this.mensagem = INICIO + pegarPrimeiroNome() +EXCLAMACAO+
+        this.mensagem = INICIO + pegarPrimeiroNome(this.imovel.getContribuinte().getAtualizacaoDoContribuinte() != null ?
+                this.imovel.getContribuinte().getAtualizacaoDoContribuinte().getNome() : this.imovel.getContribuinte().getDadosCadastradosDoContribuinte().getNome()) +EXCLAMACAO+
             corpoDoEmail(index, this.imovel.getCadastro().getNumCadastro()) +
                 "       "+CONSIDERACOES_FINAIS+
                 rodaPe();
@@ -105,9 +106,9 @@ public class Mail {
         return builder;
     }
 
-    private String pegarPrimeiroNome() {
-        int totalCaractere = this.imovel.getContribuinte().getNome().length();
-        char[] caracateres = this.imovel.getContribuinte().getNome().toCharArray();
+    private String pegarPrimeiroNome(String nome) {
+        int totalCaractere = nome.length();
+        char[] caracateres = nome.toCharArray();
         String fistName = "";
         String lastName = "";
         int cont = 0;
@@ -123,7 +124,7 @@ public class Mail {
               cont++;
             }
         }
-        lastName += this.imovel.getContribuinte().getNome().subSequence(startLastName, totalCaractere);
+        lastName += nome.subSequence(startLastName, totalCaractere);
        return fistName += lastName;
     }
 

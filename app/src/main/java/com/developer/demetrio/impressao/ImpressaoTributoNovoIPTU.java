@@ -69,13 +69,11 @@ public class ImpressaoTributoNovoIPTU extends ImpressaoTributo{
 
         //TODO: inserir contribuinte, mas antes verificar se tem contribuinte alterado
         linha+=45;
-        if (true) {
-            //TODO: nessa condicional, irei verificar se o atributo contribuinte alterado está vazio, se sim colocar o nome do contribuinte, se não colocar o nome do novo contribuinte
-            iptuBuilder.append(formarLinha(7, 0, 187, linha, this.imovel.getContribuinte().getNome(), 0, 0));
-        } else {
-            System.out.println("atribuir o nome do novo contribuinte!");
 
-        }
+            //TODO: nessa condicional, irei verificar se o atributo contribuinte alterado está vazio, se sim colocar o nome do contribuinte, se não colocar o nome do novo contribuinte
+            iptuBuilder.append(formarLinha(7, 0, 187, linha, this.imovel.getContribuinte().getAtualizacaoDoContribuinte() != null ?
+                    this.imovel.getContribuinte().getAtualizacaoDoContribuinte().getNome() : this.imovel.getContribuinte().getDadosCadastradosDoContribuinte().getNome(), 0, 0));
+
 
         //inserir logradouro, número e complemento
         linha+=43;
@@ -310,13 +308,12 @@ public class ImpressaoTributoNovoIPTU extends ImpressaoTributo{
 
         //TODO: inserir contribuinte, mas antes verificar se tem contribuinte alterado
         linha+=40;
-        if (true) {
-            //TODO: nessa condicional, irei verificar se o atributo contribuinte alterado está vazio, se sim colocar o nome do contribuinte, se não colocar o nome do novo contribuinte
-            iptuBuilder.append(formarLinha(7, 0, 187, linha, this.imovel.getContribuinte().getNome(), 0, 0));
-        } else {
-            System.out.println("atribuir o nome do novo contribuinte!");
 
-        }
+
+            //TODO: nessa condicional, irei verificar se o atributo contribuinte alterado está vazio, se sim colocar o nome do contribuinte, se não colocar o nome do novo contribuinte
+            iptuBuilder.append(formarLinha(7, 0, 187, linha, this.imovel.getContribuinte().getAtualizacaoDoContribuinte() != null ?
+                    this.imovel.getContribuinte().getAtualizacaoDoContribuinte().getNome() : this.imovel.getContribuinte().getDadosCadastradosDoContribuinte().getNome(), 0, 0));
+
 
         //inserir vencimento e valor total
         linha += 39;

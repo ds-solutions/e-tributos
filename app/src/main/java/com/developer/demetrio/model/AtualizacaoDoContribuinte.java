@@ -2,10 +2,9 @@ package com.developer.demetrio.model;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Objects;
 
-public class AtualizacaoDoProprietario implements Serializable {
-
+public class AtualizacaoDoContribuinte implements Serializable {
+    private static final long serialVersionUID = 1L;
     private Long id;
     private String nome;
     private String cpfCnpj;
@@ -156,8 +155,8 @@ public class AtualizacaoDoProprietario implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof AtualizacaoDoProprietario)) return false;
-        AtualizacaoDoProprietario that = (AtualizacaoDoProprietario) o;
+        if (!(o instanceof AtualizacaoDoContribuinte)) return false;
+        AtualizacaoDoContribuinte that = (AtualizacaoDoContribuinte) o;
         return id.equals(that.id);
     }
 

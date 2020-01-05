@@ -32,10 +32,11 @@ import com.developer.demetrio.fachada.Fachada;
 import com.developer.demetrio.iptu.DescricaoDaDivida;
 import com.developer.demetrio.model.Aliquota;
 import com.developer.demetrio.model.AreasDoImovel;
-import com.developer.demetrio.model.AtualizacaoDoProprietario;
+import com.developer.demetrio.model.AtualizacaoDoContribuinte;
 import com.developer.demetrio.model.Cadastro;
 import com.developer.demetrio.model.CodigoDeCobranca;
 import com.developer.demetrio.model.Contribuinte;
+import com.developer.demetrio.model.DadosCadastradosDoContribuinte;
 import com.developer.demetrio.model.Endereco;
 import com.developer.demetrio.model.Imovel;
 import com.developer.demetrio.model.ValoresVenais;
@@ -55,7 +56,7 @@ public class DadosDoImovel extends Fragment {
     private String[] motivos = new String[] {"Motivo da não entrega", "Demolido", "Imóvel não localizado", "Recusou receber",  "Terreno"};
 
     private Imovel imovel, ultimoImovel;
-    private AtualizacaoDoProprietario atualizacaoDoProprietario;
+    private AtualizacaoDoContribuinte atualizacaoDoProprietario;
     private Context context;
     private Activity activity;
 
@@ -159,8 +160,8 @@ public class DadosDoImovel extends Fragment {
         this.complemento.setText(this.imovel.getEndereco().getComplemento());
         this.zoneamento.setText(this.imovel.getCadastro().getAliquota().getZoneamento());
         this.valorTributo.setText(this.imovel.getTributo().getIptu().getValorTotal());
-        this.contribuinte.setText(imovel.getAtualizacaoDoProprietario() != null ?
-                this.imovel.getAtualizacaoDoProprietario().getNome() : this.imovel.getContribuinte().getNome());
+        this.contribuinte.setText(this.imovel.getContribuinte().getAtualizacaoDoContribuinte() != null ?
+                this.imovel.getContribuinte().getAtualizacaoDoContribuinte().getNome() : this.imovel.getContribuinte().getDadosCadastradosDoContribuinte().getNome());
 
         addImagemNosStatusDoImovel();
     }
@@ -425,7 +426,7 @@ public class DadosDoImovel extends Fragment {
     private void sendForImpressora() throws ControladorException {
         if (this.fachada.verificarImpressaoConta(this.imovel, this.context.getApplicationContext()).isPeloMenosUmaImpressao()) {
             this.imovel.setIndcEmissaoConta(1);
-            /*** TODO: método para salvar a alteração do status do imóvel
+            /*** TODO: método para inserir a alteração do status do imóvel
              *   método para buscar próximo imóvel
              */
             addImagemNosStatusDoImovel();
@@ -546,7 +547,6 @@ public class DadosDoImovel extends Fragment {
         Cadastro cadastro = new Cadastro();
         cadastro.setAliquota(aliquota);
         AreasDoImovel areasDoImovel = new AreasDoImovel();
-        areasDoImovel.setAliquota(aliquota);
         areasDoImovel.setAreaDoTerreno("132,00");
         areasDoImovel.setEdificado("50,00");
         areasDoImovel.setAreaTotalEdificado("50,00");
@@ -587,11 +587,12 @@ public class DadosDoImovel extends Fragment {
         this.imovel.setEndereco(endereco);
 
         Contribuinte contribuinte = new Contribuinte();
-        contribuinte.setNome("DEMÉTRIO ANTONIO DE SANTANA");
-        contribuinte.setCpf("010.750.114-77");
-        contribuinte.setEstadoCivil("CASADO");
-        contribuinte.setNacionalidade("BRASILEIRA");
-
+        DadosCadastradosDoContribuinte doContribuinte = new DadosCadastradosDoContribuinte();
+        doContribuinte.setNome("DEMÉTRIO ANTONIO DE SANTANA");
+        doContribuinte.setCpf("010.750.114-77");
+        doContribuinte.setEstadoCivil("CASADO");
+        doContribuinte.setNacionalidade("BRASILEIRA");
+        contribuinte.setDadosCadastradosDoContribuinte(doContribuinte);
 
         this.imovel.setContribuinte(contribuinte);
 

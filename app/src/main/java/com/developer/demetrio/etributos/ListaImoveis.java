@@ -293,7 +293,7 @@ public class ListaImoveis extends AppCompatActivity {
             this.imovel.setIndcEmissaoConta(1);
 
 
-            /*** TODO: método para salvar a alteração do status do imóvel
+            /*** TODO: método para inserir a alteração do status do imóvel
              *   método para buscar próximo imóvel
              */
       //      proximoImovel();

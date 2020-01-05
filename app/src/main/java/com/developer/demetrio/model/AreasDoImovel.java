@@ -13,8 +13,7 @@ public class AreasDoImovel implements Serializable {
     private String areaTotalEdificado;
     private String excedente;
     private String fracao;
-    private Aliquota aliquota;
-    private ValoresVenais valoresVenais;
+
 
     public AreasDoImovel() {
    }
@@ -22,8 +21,7 @@ public class AreasDoImovel implements Serializable {
     public AreasDoImovel(Long id, String testada,
                          String areaDoTerreno, String areaTotalDoTerreno,
                          String edificado, String areaTotalEdificado,
-                         String excedente, String fracao, Aliquota aliquota,
-                         ValoresVenais valoresVenais) {
+                         String excedente, String fracao) {
         this.id = id;
         this.testada = testada;
         this.areaDoTerreno = areaDoTerreno;
@@ -32,8 +30,7 @@ public class AreasDoImovel implements Serializable {
         this.areaTotalEdificado = areaTotalEdificado;
         this.excedente = excedente;
         this.fracao = fracao;
-        this.aliquota = aliquota;
-        this.valoresVenais = valoresVenais;
+
     }
 
     public Long getId() {
@@ -100,21 +97,7 @@ public class AreasDoImovel implements Serializable {
         this.fracao = fracao;
     }
 
-    public Aliquota getAliquota() {
-        return aliquota;
-    }
 
-    public void setAliquota(Aliquota aliquota) {
-        this.aliquota = aliquota;
-    }
-
-    public ValoresVenais getValoresVenais() {
-        return valoresVenais;
-    }
-
-    public void setValoresVenais(ValoresVenais valoresVenais) {
-        this.valoresVenais = valoresVenais;
-    }
 
     @Override
     public boolean equals(Object o) {

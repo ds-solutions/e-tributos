@@ -33,7 +33,8 @@ public class Zap {
 
         this.destino = " 81 9977-5594"; //this.imovel.getContribuinte().getNumeroCelular();
         this.tituloDoZap = "*"+TITULO_TRIBUTOS[index]+" "+this.exercicio+"*";
-        this.mensagem = INICIO + formatarNome() +EXCLAMACAO+
+        this.mensagem = INICIO + formatarNome(this.imovel.getContribuinte().getAtualizacaoDoContribuinte() != null ?
+                this.imovel.getContribuinte().getAtualizacaoDoContribuinte().getNome() : this.imovel.getContribuinte().getDadosCadastradosDoContribuinte().getNome()) +EXCLAMACAO+
      QUEBRA_LINHA +QUEBRA_LINHA+ corpoDaMensagemDoZap(index, this.imovel.getCadastro().getNumCadastro())
                 + contato();
         return this;
@@ -59,9 +60,9 @@ public class Zap {
                 "*Fone/WhatsApp:* +55 81 99256-0214";
     }
 
-    private String formatarNome() {
-        int totalCaractere = this.imovel.getContribuinte().getNome().length();
-        char[] caracateres = this.imovel.getContribuinte().getNome().toCharArray();
+    private String formatarNome(String nome) {
+        int totalCaractere = nome.length();
+        char[] caracateres = nome.toCharArray();
         String fistName = "";
         String lastName = "";
         int cont = 0;
@@ -77,7 +78,7 @@ public class Zap {
                 cont++;
             }
         }
-        lastName += this.imovel.getContribuinte().getNome().subSequence(startLastName, totalCaractere);
+        lastName += nome.subSequence(startLastName, totalCaractere);
         return fistName += lastName;
     }
 

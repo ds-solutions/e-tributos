@@ -1,6 +1,9 @@
 package com.developer.demetrio.repositorio;
 
-import com.developer.demetrio.execoes.ControladorException;
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
+
+import com.developer.demetrio.dadabase.constantes._Imovel;
 import com.developer.demetrio.execoes.RepositorioException;
 import com.developer.demetrio.iptu.DescricaoDaDivida;
 import com.developer.demetrio.model.Aliquota;
@@ -8,6 +11,7 @@ import com.developer.demetrio.model.AreasDoImovel;
 import com.developer.demetrio.model.Cadastro;
 import com.developer.demetrio.model.CodigoDeCobranca;
 import com.developer.demetrio.model.Contribuinte;
+import com.developer.demetrio.model.DadosCadastradosDoContribuinte;
 import com.developer.demetrio.model.Endereco;
 import com.developer.demetrio.model.Imovel;
 import com.developer.demetrio.model.ValoresVenais;
@@ -15,9 +19,9 @@ import com.developer.demetrio.model.ValoresVenais;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RepositorioImovelIPTU implements IRepositorioImovelIPTU{
+public class RepositorioImovel implements IRepositorioImovel {
 
-    private static RepositorioImovelIPTU instancia;
+    private static RepositorioImovel instancia;
     private Imovel objeto, imovel;
     private Long id = 0L;
     private Integer lote = 10;
@@ -26,60 +30,44 @@ public class RepositorioImovelIPTU implements IRepositorioImovelIPTU{
     private Integer lastCpf = 114;
     private Integer digitCpf = 77;
     private List<Imovel> imoveis;
+
+    private SQLiteDatabase conexao;
     public void resetarInstancia() {
         instancia = null;
     }
 
-    public static RepositorioImovelIPTU getInstance() {
+    public static RepositorioImovel getInstance() {
         if (instancia == null) {
-            instancia = new RepositorioImovelIPTU();
+            instancia = new RepositorioImovel();
             instancia.objeto = new Imovel();
         }
         return instancia;
     }
 
     @Override
+    public void inserir(Imovel imovel) throws RepositorioException {
+        ContentValues values = new ContentValues();
+        values.put(_Imovel.ID, imovel.getId());
+        values.put(_Imovel.INDCEMISSAOCONTA, imovel.getIndcEmissaoConta());
+        values.put(_Imovel.INDCENVIOEMAIL, imovel.getIndcEnvioEmail());
+        values.put(_Imovel.INDCENVIOZAP, imovel.getIndcEnvioZap());
+        values.put(_Imovel.ID_CADASTRO, imovel.getCadastro().getId());
+        values.put(_Imovel.ID_CONTRIBUINTE, imovel.getContribuinte().getId());
+        values.put(_Imovel.ID_ENDERECO, imovel.getEndereco().getId());
+        values.put(_Imovel.ID_TRIBUTO, imovel.getTributo().getId());
+        values.put(_Imovel.ID_LATLNG, imovel.getLatLng().getId());
+
+    }
+
+
+    @Override
     public void atualizarIndicadorContinuaImpressao(Integer num, Integer num2) throws RepositorioException {
 
     }
 
-    @Override
-    public void atualizarIndicadorImovelCalculado(Integer num, Integer num2) throws RepositorioException {
-
-    }
-
-    @Override
-    public void atualizarIndicadorImovelCondominioNaoCalculado(Integer num) throws RepositorioException {
-
-    }
-
-    @Override
-    public void atualizarIndicadorImovelEnviado(String str) throws RepositorioException {
-
-    }
-
-    @Override
-    public void atualizarIndicadorRisco(Integer num, Integer num2) throws RepositorioException {
-
-    }
-
-    @Override
-    public void atualizarPosicaoImovel(Integer num, Integer num2) throws RepositorioException {
-
-    }
 
     @Override
     public ArrayList<Integer> buscarIdsImoveisCadastroNaoEnviados() throws RepositorioException {
-        return null;
-    }
-
-    @Override
-    public ArrayList<Integer> buscarIdsImoveisCalculados() throws RepositorioException {
-        return null;
-    }
-
-    @Override
-    public ArrayList<Integer> buscarIdsImoveisCondominioLidos(String str) throws RepositorioException {
         return null;
     }
 
@@ -94,47 +82,7 @@ public class RepositorioImovelIPTU implements IRepositorioImovelIPTU{
     }
 
     @Override
-    public ArrayList<Integer> buscarIdsImoveisLidosNaoEnviadosNaoCondominio() throws RepositorioException {
-        return null;
-    }
-
-    @Override
-    public ArrayList<Integer> buscarIdsImoveisMicro(Integer num) throws RepositorioException {
-        return null;
-    }
-
-    @Override
-    public ArrayList<Imovel> buscarImoveisSequencialNaoNulo() throws RepositorioException {
-        return null;
-    }
-
-    @Override
-    public ArrayList<Imovel> buscarImoveisSequencialNulo() throws RepositorioException {
-        return null;
-    }
-
-    @Override
-    public ArrayList<Imovel> buscarImovelCondominio(Integer num) throws RepositorioException {
-        return null;
-    }
-
-    @Override
-    public ArrayList<Integer> buscarImovelCondominiosNaoCalculados(Integer num) throws RepositorioException {
-        return null;
-    }
-
-    @Override
-    public ArrayList<Integer> buscarImovelCondominiosNaoImpressos(Integer num) throws RepositorioException {
-        return null;
-    }
-
-    @Override
-    public Imovel buscarImovelContaPorHidrometro(String str) throws RepositorioException {
-        return null;
-    }
-
-    @Override
-    public ArrayList<Imovel> buscarImovelContaPorQuadra(String str) throws RepositorioException {
+    public ArrayList<Imovel> buscarImovelContaPorQuadra(String setor, String quadra) throws RepositorioException {
         return null;
     }
 
@@ -147,7 +95,6 @@ public class RepositorioImovelIPTU implements IRepositorioImovelIPTU{
 
     @Override
     public ArrayList<Imovel> buscarImovelContas() throws RepositorioException {
-        System.out.println("dentro do buscarImovelContas na class Respositorio ImovelIPTU");
         ArrayList<Imovel> list = new ArrayList<>();
         this.id = 0L;
         this.lote = 10;
@@ -156,8 +103,8 @@ public class RepositorioImovelIPTU implements IRepositorioImovelIPTU{
         this.lastCpf = 114;
         this.digitCpf = 77;
         int i = 0;
-        while (i < 5){
-            this.imovel = popularImovelParaImpressao();
+        while (i < 7){
+            this.imovel = popularImovelParaImpressao(i);
             list.add(this.imovel);
             System.out.println("add imóvel "+this.lote);
             i++;
@@ -171,17 +118,7 @@ public class RepositorioImovelIPTU implements IRepositorioImovelIPTU{
     }
 
     @Override
-    public Imovel buscarPrimeiroImovel() throws RepositorioException {
-        return null;
-    }
-
-    @Override
     public ArrayList<Integer> buscarQuadras() throws RepositorioException {
-        return null;
-    }
-
-    @Override
-    public ArrayList<Integer> getIdsNaoLidos() throws RepositorioException {
         return null;
     }
 
@@ -196,37 +133,12 @@ public class RepositorioImovelIPTU implements IRepositorioImovelIPTU{
     }
 
     @Override
-    public Integer obterIdUltimoImovelMicro(Integer num) throws RepositorioException {
-        return null;
-    }
-
-    @Override
-    public ArrayList<Integer> obterIdsImoveisMacro() throws RepositorioException {
-        return null;
-    }
-
-    @Override
-    public ArrayList<Integer> obterImovelCondominioCompleto(Integer num) throws RepositorioException {
-        return null;
-    }
-
-    @Override
-    public Integer obterIndicadorPermiteContinuarImpressao(Integer num) throws RepositorioException {
-        return null;
-    }
-
-    @Override
-    public Integer obterIndicadorRisco(Integer num) throws RepositorioException {
+    public Integer obterQuantidadeDeRegistro() throws RepositorioException {
         return null;
     }
 
     @Override
     public Integer obterPosicaoImovel(Integer num) throws RepositorioException {
-        return null;
-    }
-
-    @Override
-    public Integer obterPosicaoImovelCondominioNaoCalculado(Integer num) throws RepositorioException {
         return null;
     }
 
@@ -241,54 +153,10 @@ public class RepositorioImovelIPTU implements IRepositorioImovelIPTU{
     }
 
     @Override
-    public Integer obterQuantidadeImoveisRoteiroCadastro() throws RepositorioException {
-        return null;
-    }
-
-    @Override
     public Integer obterQuantidadeImoveisRoteiroCadastroAtualizado() throws RepositorioException {
         return null;
     }
 
-    @Override
-    public Integer obterQuantidadeImoveisRoteiroCadastroPendente() throws RepositorioException {
-        return null;
-    }
-
-    @Override
-    public Integer obterQuantidadeImoveisVisitados() throws RepositorioException {
-        return null;
-    }
-
-    @Override
-    public Integer obterQuantidadeImoveisVisitadosComAnormalidade() throws RepositorioException {
-        return null;
-    }
-
-    @Override
-    public Integer obterQuantidadeImoveisVisitadosPorQuadra(Integer num) throws RepositorioException {
-        return null;
-    }
-
-    @Override
-    public Integer obterQuantidadeImovelContratoDemanda(Integer num) throws RepositorioException {
-        return null;
-    }
-
-    @Override
-    public Integer obterQuantidadeImovelMicro(Integer num) throws RepositorioException {
-        return null;
-    }
-
-    @Override
-    public Integer pesquisarIdLocalidade() throws RepositorioException {
-        return null;
-    }
-
-    @Override
-    public Integer verificarRateioCondominio(Integer num) throws RepositorioException {
-        return null;
-    }
 
     public List<Imovel> getImoveis() {
         System.out.println("getImoveis com "+ this.imoveis.size());
@@ -296,7 +164,7 @@ public class RepositorioImovelIPTU implements IRepositorioImovelIPTU{
     }
 
 
-    public Imovel popularImovelParaImpressao() {
+    public Imovel popularImovelParaImpressao(int i) {
         this.imovel = new Imovel();
         Aliquota aliquota = new Aliquota();
         CodigoDeCobranca codigo = new CodigoDeCobranca();
@@ -317,7 +185,6 @@ public class RepositorioImovelIPTU implements IRepositorioImovelIPTU{
         Cadastro cadastro = new Cadastro();
         cadastro.setAliquota(aliquota);
         AreasDoImovel areasDoImovel = new AreasDoImovel();
-        areasDoImovel.setAliquota(aliquota);
         areasDoImovel.setAreaDoTerreno("132,00");
         areasDoImovel.setEdificado("50,00");
         areasDoImovel.setAreaTotalEdificado("50,00");
@@ -358,11 +225,26 @@ public class RepositorioImovelIPTU implements IRepositorioImovelIPTU{
         this.imovel.setEndereco(endereco);
 
         Contribuinte contribuinte = new Contribuinte();
-        contribuinte.setNome("DEMÉTRIO ANTONIO DE SANTANA");
-        contribuinte.setCpf(cpf());
-        contribuinte.setEstadoCivil("CASADO");
-        contribuinte.setNacionalidade("BRASILEIRA");
-
+        DadosCadastradosDoContribuinte doContribuinte = new DadosCadastradosDoContribuinte();
+        switch (i) {
+            case 0:
+                doContribuinte.setNome("DEMÉTRIO ANTONIO DE SANTANA");
+            case 1:
+                doContribuinte.setNome("DOUGLAS PIEDRO DE MORAIS");
+            case 2:
+                doContribuinte.setNome("AMAURI RODRIGUES DE VASCONCELOS");
+            case 3:
+                doContribuinte.setNome("RITA MARIA DE ALBUQUERQUE");
+            case 4:
+                doContribuinte.setNome("DAMIANA FARIAS DA SILVA");
+                default:
+                doContribuinte.setNome("FAVOR INFORMAR SEU NOME JUNTO AO CADASTRO");
+        }
+        doContribuinte.setNome("DEMÉTRIO ANTONIO DE SANTANA");
+        doContribuinte.setCpf("010.750.114-77");
+        doContribuinte.setEstadoCivil("CASADO");
+        doContribuinte.setNacionalidade("BRASILEIRA");
+        contribuinte.setDadosCadastradosDoContribuinte(doContribuinte);
 
         this.imovel.setContribuinte(contribuinte);
 

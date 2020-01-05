@@ -1,45 +1,21 @@
 package com.developer.demetrio.model;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.Objects;
 
 public class Contribuinte implements Serializable {
     private static final long serialVersionUID = 1L;
     private Long id;
-    private String nome;
-    private String cpf;
-    private String rg;
-    private String orgEmissor;
-    private Date dataNasc;
-    private String estadoCivil;
-    private String nacionalidade;
-    private String naturalidade;
-    private String raca;
-    private String sexo;
-    private String email;
-    private String numeroCelular;
+    private DadosCadastradosDoContribuinte dadosCadastradosDoContribuinte;
+    private AtualizacaoDoContribuinte atualizacaoDoContribuinte;
+
 
     public Contribuinte() {
     }
 
-    public Contribuinte(Long id, String nome, String cpf, String rg,
-                        String orgEmissor, Date dataNasc, String estadoCivil,
-                        String nacionalidade, String naturalidade, String raca,
-                        String sexo, String email, String numeroCelular) {
+    public Contribuinte(Long id, DadosCadastradosDoContribuinte dadosCadastradosDoContribuinte, AtualizacaoDoContribuinte atualizacaoDoContribuinte) {
         this.id = id;
-        this.nome = nome;
-        this.cpf = cpf;
-        this.rg = rg;
-        this.orgEmissor = orgEmissor;
-        this.dataNasc = dataNasc;
-        this.estadoCivil = estadoCivil;
-        this.nacionalidade = nacionalidade;
-        this.naturalidade = naturalidade;
-        this.raca = raca;
-        this.sexo = sexo;
-        this.email = email;
-        this.numeroCelular = numeroCelular;
+        this.dadosCadastradosDoContribuinte = dadosCadastradosDoContribuinte;
+        this.atualizacaoDoContribuinte = atualizacaoDoContribuinte;
     }
 
     public Long getId() {
@@ -50,100 +26,20 @@ public class Contribuinte implements Serializable {
         this.id = id;
     }
 
-    public String getNome() {
-        return nome;
+    public DadosCadastradosDoContribuinte getDadosCadastradosDoContribuinte() {
+        return dadosCadastradosDoContribuinte;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setDadosCadastradosDoContribuinte(DadosCadastradosDoContribuinte dadosCadastradosDoContribuinte) {
+        this.dadosCadastradosDoContribuinte = dadosCadastradosDoContribuinte;
     }
 
-    public String getCpf() {
-        return cpf;
+    public AtualizacaoDoContribuinte getAtualizacaoDoContribuinte() {
+        return atualizacaoDoContribuinte;
     }
 
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
-    }
-
-    public String getRg() {
-        return rg;
-    }
-
-    public void setRg(String rg) {
-        this.rg = rg;
-    }
-
-    public String getOrgEmissor() {
-        return orgEmissor;
-    }
-
-    public void setOrgEmissor(String orgEmissor) {
-        this.orgEmissor = orgEmissor;
-    }
-
-    public Date getDataNasc() {
-        return dataNasc;
-    }
-
-    public void setDataNasc(Date dataNasc) {
-        this.dataNasc = dataNasc;
-    }
-
-    public String getEstadoCivil() {
-        return estadoCivil;
-    }
-
-    public void setEstadoCivil(String estadoCivil) {
-        this.estadoCivil = estadoCivil;
-    }
-
-    public String getNacionalidade() {
-        return nacionalidade;
-    }
-
-    public void setNacionalidade(String nacionalidade) {
-        this.nacionalidade = nacionalidade;
-    }
-
-    public String getNaturalidade() {
-        return naturalidade;
-    }
-
-    public void setNaturalidade(String naturalidade) {
-        this.naturalidade = naturalidade;
-    }
-
-    public String getRaca() {
-        return raca;
-    }
-
-    public void setRaca(String raca) {
-        this.raca = raca;
-    }
-
-    public String getSexo() {
-        return sexo;
-    }
-
-    public void setSexo(String sexo) {
-        this.sexo = sexo;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getNumeroCelular() {
-        return numeroCelular;
-    }
-
-    public void setNumeroCelular(String numeroCelular) {
-        this.numeroCelular = numeroCelular;
+    public void setAtualizacaoDoContribuinte(AtualizacaoDoContribuinte atualizacaoDoContribuinte) {
+        this.atualizacaoDoContribuinte = atualizacaoDoContribuinte;
     }
 
     @Override

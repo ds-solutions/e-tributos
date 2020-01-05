@@ -14,12 +14,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.developer.demetrio.model.AtualizacaoDoProprietario;
+import com.developer.demetrio.model.AtualizacaoDoContribuinte;
 import com.developer.demetrio.etributos.R;
 
 
 public class DadosDeAtualizacaoProprietario extends Fragment {
-    private AtualizacaoDoProprietario dados;
+    private AtualizacaoDoContribuinte dados;
     private TextView nome, cpfCnpj, rg, orgaoEmissor, dataNac, nacionalidade,
     naturalidade, escolaridade, telefone, celular, email;
     private Spinner sexo, cor, tipoPessoa, estadoCivil;

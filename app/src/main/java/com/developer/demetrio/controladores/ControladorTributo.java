@@ -3,20 +3,20 @@ package com.developer.demetrio.controladores;
 import com.developer.demetrio.execoes.ControladorException;
 import com.developer.demetrio.execoes.RepositorioException;
 import com.developer.demetrio.model.Imovel;
-import com.developer.demetrio.repositorio.RepositorioImovelIPTU;
+import com.developer.demetrio.repositorio.RepositorioImovel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ControladorTributo extends ControladorBasico implements IControladorTributo {
 
-    private RepositorioImovelIPTU repositorioImovelIPTU;
+    private RepositorioImovel repositorioImovelIPTU;
 
     private static ControladorTributo instance;
     public static ControladorTributo getInstance() {
         if (instance == null) {
             instance = new ControladorTributo();
-            instance.repositorioImovelIPTU = RepositorioImovelIPTU.getInstance();
+            instance.repositorioImovelIPTU = RepositorioImovel.getInstance();
         }
         return instance;
     }

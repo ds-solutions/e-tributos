@@ -3,19 +3,19 @@ package com.developer.demetrio.controladores;
 import android.content.Context;
 import com.developer.demetrio.execoes.ControladorException;
 import com.developer.demetrio.model.Imovel;
-import com.developer.demetrio.repositorio.RepositorioImovelIPTU;
+import com.developer.demetrio.repositorio.RepositorioImovel;
 
 import java.util.ArrayList;
 
 public class ControladorImovelTributo implements IControladorImovelTributo {
    protected static Context context;
    private static ControladorImovelTributo instance;
-   private RepositorioImovelIPTU repositorioImovelIPTU;
+   private RepositorioImovel repositorioImovelIPTU;
 
     public static IControladorImovelTributo getInstance() {
         if (instance == null) {
             instance = new ControladorImovelTributo();
-            instance.repositorioImovelIPTU = RepositorioImovelIPTU.getInstance();
+            instance.repositorioImovelIPTU = RepositorioImovel.getInstance();
         }
         return instance;
     }
