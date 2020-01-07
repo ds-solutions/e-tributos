@@ -26,7 +26,7 @@ public class RepositorioCodigoDeCobranca implements IRepositorioCodigoDeCobranca
     }
 
     @Override
-    public CodigoDeCobranca buscar(Long id) throws RepositorioException {
+    public CodigoDeCobranca buscar(long id) throws RepositorioException {
         CodigoDeCobranca codigo = new CodigoDeCobranca();
         String[] parametros = new String[1];
         parametros[0] = String.valueOf(id);
@@ -58,7 +58,7 @@ public class RepositorioCodigoDeCobranca implements IRepositorioCodigoDeCobranca
     }
 
     @Override
-    public void excluir(Long id) throws RepositorioException {
+    public void excluir(long id) throws RepositorioException {
         String[] parametros = new String[1];
         parametros[0] = String.valueOf(id);
         this.conexao.delete(_CodigoDeCobranca.NOME_DA_TABELA, _CodigoDeCobranca.ID, parametros);

@@ -7,7 +7,7 @@ public interface IRepositorioCadastro {
 
     long inserir(Cadastro aliquota) throws RepositorioException;
 
-    Cadastro buscar(Long id) throws RepositorioException;
+    Cadastro buscar(long id) throws RepositorioException;
 
-    void excluir(Long id) throws RepositorioException;
+    void excluir(long id) throws RepositorioException;
 }

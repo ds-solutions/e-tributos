@@ -27,7 +27,7 @@ public class RepositorioContribuinte implements IRepositorioContribuinte {
     }
 
     @Override
-    public Contribuinte buscar(Long id) throws RepositorioException {
+    public Contribuinte buscar(long id) throws RepositorioException {
         String[] parametros = new String[1];
         parametros[0] = String.valueOf(id);
 
@@ -58,7 +58,7 @@ public class RepositorioContribuinte implements IRepositorioContribuinte {
     }
 
     @Override
-    public void excluir(Long id) throws RepositorioException {
+    public void excluir(long id) throws RepositorioException {
         String[] parametros = new String[1];
         parametros[0] = String.valueOf(id);
         this.conexao.delete(

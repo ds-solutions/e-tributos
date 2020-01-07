@@ -31,7 +31,7 @@ public class RepositorioEndereco implements IRepositorioEndereco {
     }
 
     @Override
-    public Endereco buscar(Long id) throws RepositorioException {
+    public Endereco buscar(long id) throws RepositorioException {
 
         String[] parametros = new String[1];
         parametros[0] = String.valueOf(id);
@@ -86,7 +86,7 @@ public class RepositorioEndereco implements IRepositorioEndereco {
     }
 
     @Override
-    public void excluir(Long id) throws RepositorioException {
+    public void excluir(long id) throws RepositorioException {
 
         String[] parametros = new String[1];
         parametros[0] = String.valueOf(id);

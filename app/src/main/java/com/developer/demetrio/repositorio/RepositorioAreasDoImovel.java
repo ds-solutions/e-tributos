@@ -31,7 +31,7 @@ public class RepositorioAreasDoImovel implements IRepositorioAreasDoImovel {
     }
 
     @Override
-    public AreasDoImovel buscar(Long id) throws RepositorioException {
+    public AreasDoImovel buscar(long id) throws RepositorioException {
         AreasDoImovel areas = new AreasDoImovel();
         String[] parametros = new String[1];
         parametros[0] = String.valueOf(id);
@@ -74,7 +74,7 @@ public class RepositorioAreasDoImovel implements IRepositorioAreasDoImovel {
     }
 
     @Override
-    public void excluir(Long id) throws RepositorioException {
+    public void excluir(long id) throws RepositorioException {
         String[] parametros = new String[1];
         parametros[0] = String.valueOf(id);
         this.conexao.delete(_AreasDoImovel.NOME_DA_TABELA, _AreasDoImovel.ID, parametros);

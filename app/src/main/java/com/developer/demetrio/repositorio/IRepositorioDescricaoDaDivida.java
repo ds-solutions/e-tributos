@@ -9,9 +9,9 @@ public interface IRepositorioDescricaoDaDivida {
 
     long inserir(DescricaoDaDivida aliquota) throws RepositorioException;
 
-    DescricaoDaDivida buscar(Long id) throws RepositorioException;
+    DescricaoDaDivida buscar(long id) throws RepositorioException;
 
-    void excluir(Long id) throws RepositorioException;
+    void excluir(long id) throws RepositorioException;
 
-    List<DescricaoDaDivida> descricoesDaDividaDe(Long iptu_id) throws RepositorioException;
+    List<DescricaoDaDivida> descricoesDaDividaDe(long iptu_id) throws RepositorioException;
 }

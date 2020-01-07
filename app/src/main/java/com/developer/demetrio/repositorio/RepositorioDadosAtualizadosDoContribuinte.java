@@ -6,9 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.developer.demetrio.databases.constantes._AtualizacaoDoContribuinte;
 import com.developer.demetrio.execoes.RepositorioException;
-import com.developer.demetrio.fragments.DadosDeAtualizacaoProprietario;
 import com.developer.demetrio.model.AtualizacaoDoContribuinte;
-import com.developer.demetrio.model.DadosCadastradosDoContribuinte;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
@@ -46,7 +44,7 @@ public class RepositorioDadosAtualizadosDoContribuinte implements IRepositorioDa
     }
 
     @Override
-    public AtualizacaoDoContribuinte buscar(Long id) throws RepositorioException {
+    public AtualizacaoDoContribuinte buscar(long id) throws RepositorioException {
         String[] parametros = new String[1];
         parametros[0] = String.valueOf(id);
         StringBuilder sql = query();
@@ -153,7 +151,7 @@ public class RepositorioDadosAtualizadosDoContribuinte implements IRepositorioDa
     }
 
     @Override
-    public void excluir(Long id) throws RepositorioException {
+    public void excluir(long id) throws RepositorioException {
         String[] parametros = new String[1];
         parametros[0] = String.valueOf(id);
         this.conexao.delete(_AtualizacaoDoContribuinte.NOME_DA_TABELA, _AtualizacaoDoContribuinte.ID, parametros);

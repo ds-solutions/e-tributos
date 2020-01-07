@@ -41,7 +41,7 @@ public class RepositorioDadosDoContribuinte implements IRepositorioDadosDoContri
     }
 
     @Override
-    public DadosCadastradosDoContribuinte buscar(Long id) throws RepositorioException {
+    public DadosCadastradosDoContribuinte buscar(long id) throws RepositorioException {
         String[] parametros = new String[1];
         parametros[0] = String.valueOf(id);
         StringBuilder sql = query();
@@ -114,7 +114,7 @@ public class RepositorioDadosDoContribuinte implements IRepositorioDadosDoContri
     }
 
     @Override
-    public void excluir(Long id) throws RepositorioException {
+    public void excluir(long id) throws RepositorioException {
         String[] parametros = new String[1];
         parametros[0] = String.valueOf(id);
         this.conexao.delete(_DadosCadastradosDoContribuinte.NOME_DA_TABELA, _DadosCadastradosDoContribuinte.ID, parametros);

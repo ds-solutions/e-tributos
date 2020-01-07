@@ -31,7 +31,7 @@ public class RepositorioAliquota implements IRepositorioAliquota {
     }
 
     @Override
-    public Aliquota buscar(Long id) throws RepositorioException {
+    public Aliquota buscar(long id) throws RepositorioException {
         String[] parametros = new String[1];
         parametros[0] = String.valueOf(id);
         StringBuilder sql = new StringBuilder();
@@ -68,7 +68,7 @@ public class RepositorioAliquota implements IRepositorioAliquota {
     }
 
     @Override
-    public void excluir(Long id) throws RepositorioException {
+    public void excluir(long id) throws RepositorioException {
     String[] parametros = new String[1];
     parametros[0] = String.valueOf(id);
     this.conexao.delete(_Aliquota.NOME_DA_TABELA, _Aliquota.ID+" = ? ", parametros);

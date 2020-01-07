@@ -28,7 +28,7 @@ public class RepositorioValoresVenais implements IRepositorioValoresVenais {
     }
 
     @Override
-    public ValoresVenais buscar(Long id) throws RepositorioException {
+    public ValoresVenais buscar(long id) throws RepositorioException {
         String[] parametros = new String[1];
         parametros[0] = String.valueOf(id);
         StringBuilder sql = new StringBuilder();
@@ -64,7 +64,7 @@ public class RepositorioValoresVenais implements IRepositorioValoresVenais {
     }
 
     @Override
-    public void excluir(Long id) throws RepositorioException {
+    public void excluir(long id) throws RepositorioException {
         String[] parametros = new String[1];
         parametros[0] = String.valueOf(id);
         this.conexao.delete(_ValoresVenais.NOME_DA_TABELA, _ValoresVenais.ID, parametros);

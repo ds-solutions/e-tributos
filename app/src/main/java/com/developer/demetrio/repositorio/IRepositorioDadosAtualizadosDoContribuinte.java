@@ -8,9 +8,9 @@ public interface IRepositorioDadosAtualizadosDoContribuinte {
 
     long inserir(AtualizacaoDoContribuinte aliquota) throws RepositorioException;
 
-    AtualizacaoDoContribuinte buscar(Long id) throws RepositorioException;
+    AtualizacaoDoContribuinte buscar(long id) throws RepositorioException;
 
     long atualizar(AtualizacaoDoContribuinte dados) throws RepositorioException;
 
-    void excluir(Long id) throws RepositorioException;
+    void excluir(long id) throws RepositorioException;
 }

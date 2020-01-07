@@ -7,7 +7,7 @@ public interface IRepositorioLatLng {
 
     long inserir(LatLng aliquota) throws RepositorioException;
 
-    LatLng buscar(Long id) throws RepositorioException;
+    LatLng buscar(long id) throws RepositorioException;
 
-    void excluir(Long id) throws RepositorioException;
+    void excluir(long id) throws RepositorioException;
 }

@@ -33,7 +33,7 @@ public class RepositorioDescricaoDaDivida implements IRepositorioDescricaoDaDivi
     }
 
     @Override
-    public DescricaoDaDivida buscar(Long id) throws RepositorioException {
+    public DescricaoDaDivida buscar(long id) throws RepositorioException {
         DescricaoDaDivida descricaoDaDivida = new DescricaoDaDivida();
         String[] parametros = new String[1];
         parametros[0] = String.valueOf(id);
@@ -76,15 +76,15 @@ public class RepositorioDescricaoDaDivida implements IRepositorioDescricaoDaDivi
     }
 
     @Override
-    public void excluir(Long id) throws RepositorioException {
+    public void excluir(long id) throws RepositorioException {
         String[] parametros = new String[1];
         parametros[0] = String.valueOf(id);
         this.conexao.delete(_DescricaoDaDivida.NOME_DA_TABELA, _DescricaoDaDivida.ID, parametros);
     }
 
     @Override
-    public List<DescricaoDaDivida> descricoesDaDividaDe(Long iptu_id) throws RepositorioException {
-        List<DescricaoDaDivida> descricoes = new ArrayList<DescricaoDaDivida>();
+    public List<DescricaoDaDivida> descricoesDaDividaDe(long iptu_id) throws RepositorioException {
+
         String[] parametros = new String[1];
         parametros[0] = String.valueOf(iptu_id);
         StringBuilder sql = new StringBuilder();
@@ -112,6 +112,7 @@ public class RepositorioDescricaoDaDivida implements IRepositorioDescricaoDaDivi
                 sql.append(_DescricaoDaDivida.CODIGO);
         Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
         if (resultado.getCount() > 0) {
+            List<DescricaoDaDivida> descricoes = new ArrayList<DescricaoDaDivida>();
             resultado.moveToFirst();
             do {
                 DescricaoDaDivida descricao = new DescricaoDaDivida();
@@ -124,8 +125,8 @@ public class RepositorioDescricaoDaDivida implements IRepositorioDescricaoDaDivi
                 descricao.setId_IPTU(resultado.getLong(resultado.getColumnIndexOrThrow(_DescricaoDaDivida.ID_IPTU)));
                 descricoes.add(descricao);
             }while (resultado.moveToNext());
-
+            return descricoes;
         }
-    return descricoes;
+    return null;
     }
 }

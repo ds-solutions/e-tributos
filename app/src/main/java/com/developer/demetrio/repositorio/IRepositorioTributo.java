@@ -7,7 +7,7 @@ public interface IRepositorioTributo {
 
     long inserir(Tributo aliquota) throws RepositorioException;
 
-    Tributo buscar(Long id) throws RepositorioException;
+    Tributo buscar(long id) throws RepositorioException;
 
-    void excluir(Long id) throws RepositorioException;
+    void excluir(long id) throws RepositorioException;
 }

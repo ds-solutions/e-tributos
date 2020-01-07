@@ -7,7 +7,7 @@ public interface IRepositorioAliquota {
 
     long inserir(Aliquota aliquota) throws RepositorioException;
 
-    Aliquota buscar(Long id) throws RepositorioException;
+    Aliquota buscar(long id) throws RepositorioException;
 
-    void excluir(Long id) throws RepositorioException;
+    void excluir(long id) throws RepositorioException;
 }

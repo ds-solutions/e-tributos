@@ -36,7 +36,7 @@ public class RepositorioIPTU implements IRepositorioIPTU {
     }
 
     @Override
-    public IPTU buscar(Long id) throws RepositorioException {
+    public IPTU buscar(long id) throws RepositorioException {
         String[] parametros = new String[1];
         parametros[0] = String.valueOf(id);
         StringBuilder sql = query();
@@ -105,7 +105,7 @@ public class RepositorioIPTU implements IRepositorioIPTU {
     }
 
     @Override
-    public void excluir(Long id) throws RepositorioException {
+    public void excluir(long id) throws RepositorioException {
         String[] parametros = new String[1];
         parametros[0] = String.valueOf(id);
         this.conexao.delete(_IPTU.NOME_DA_TABELA, _IPTU.ID, parametros);

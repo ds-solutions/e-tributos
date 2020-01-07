@@ -7,7 +7,7 @@ public interface IRepositorioValoresVenais {
 
     long inserir(ValoresVenais aliquota) throws RepositorioException;
 
-    ValoresVenais buscar(Long id) throws RepositorioException;
+    ValoresVenais buscar(long id) throws RepositorioException;
 
-    void excluir(Long id) throws RepositorioException;
+    void excluir(long id) throws RepositorioException;
 }

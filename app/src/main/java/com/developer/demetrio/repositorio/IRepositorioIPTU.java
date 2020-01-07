@@ -7,7 +7,7 @@ public interface IRepositorioIPTU {
 
     long inserir(IPTU aliquota) throws RepositorioException;
 
-    IPTU buscar(Long id) throws RepositorioException;
+    IPTU buscar(long id) throws RepositorioException;
 
-    void excluir(Long id) throws RepositorioException;
+    void excluir(long id) throws RepositorioException;
 }

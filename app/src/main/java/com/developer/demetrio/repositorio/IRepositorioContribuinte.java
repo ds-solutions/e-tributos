@@ -7,7 +7,7 @@ public interface IRepositorioContribuinte {
 
     long inserir(Contribuinte aliquota) throws RepositorioException;
 
-    Contribuinte buscar(Long id) throws RepositorioException;
+    Contribuinte buscar(long id) throws RepositorioException;
 
-    void excluir(Long id) throws RepositorioException;
+    void excluir(long id) throws RepositorioException;
 }

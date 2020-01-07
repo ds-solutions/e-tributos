@@ -26,7 +26,7 @@ public class RepositorioLatLng implements IRepositorioLatLng {
     }
 
     @Override
-    public LatLng buscar(Long id) throws RepositorioException {
+    public LatLng buscar(long id) throws RepositorioException {
         String[] parametros = new String[1];
         parametros[0] = String.valueOf(id);
         StringBuilder sql = new StringBuilder();
@@ -56,7 +56,7 @@ public class RepositorioLatLng implements IRepositorioLatLng {
     }
 
     @Override
-    public void excluir(Long id) throws RepositorioException {
+    public void excluir(long id) throws RepositorioException {
         String[] parametros = new String[1];
         parametros[0] = String.valueOf(id);
 

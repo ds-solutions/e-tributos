@@ -7,7 +7,7 @@ public interface IRepositorioAreasDoImovel {
 
     long inserir(AreasDoImovel aliquota) throws RepositorioException;
 
-    AreasDoImovel buscar(Long id) throws RepositorioException;
+    AreasDoImovel buscar(long id) throws RepositorioException;
 
-    void excluir(Long id) throws RepositorioException;
+    void excluir(long id) throws RepositorioException;
 }

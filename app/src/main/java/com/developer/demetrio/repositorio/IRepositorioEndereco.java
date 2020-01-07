@@ -7,7 +7,7 @@ public interface IRepositorioEndereco {
 
     long inserir(Endereco aliquota) throws RepositorioException;
 
-    Endereco buscar(Long id) throws RepositorioException;
+    Endereco buscar(long id) throws RepositorioException;
 
-    void excluir(Long id) throws RepositorioException;
+    void excluir(long id) throws RepositorioException;
 }
