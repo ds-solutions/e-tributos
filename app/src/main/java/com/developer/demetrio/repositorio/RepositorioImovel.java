@@ -3,7 +3,7 @@ package com.developer.demetrio.repositorio;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.developer.demetrio.dadabase.constantes._Imovel;
+import com.developer.demetrio.databases.constantes._Imovel;
 import com.developer.demetrio.execoes.RepositorioException;
 import com.developer.demetrio.iptu.DescricaoDaDivida;
 import com.developer.demetrio.model.Aliquota;
@@ -36,26 +36,62 @@ public class RepositorioImovel implements IRepositorioImovel {
         instancia = null;
     }
 
-    public static RepositorioImovel getInstance() {
+  /*  public static RepositorioImovel getInstance() {
         if (instancia == null) {
             instancia = new RepositorioImovel();
             instancia.objeto = new Imovel();
         }
         return instancia;
+    }*/
+
+    public RepositorioImovel(SQLiteDatabase conexao) {
+        this.conexao = conexao;
     }
 
     @Override
-    public void inserir(Imovel imovel) throws RepositorioException {
+    public long inserir(Imovel imovel) throws RepositorioException {
         ContentValues values = new ContentValues();
-        values.put(_Imovel.ID, imovel.getId());
-        values.put(_Imovel.INDCEMISSAOCONTA, imovel.getIndcEmissaoConta());
-        values.put(_Imovel.INDCENVIOEMAIL, imovel.getIndcEnvioEmail());
-        values.put(_Imovel.INDCENVIOZAP, imovel.getIndcEnvioZap());
+
+        values.put(_Imovel.INDIC_EMISSAO_CONTA, imovel.getIndcEmissaoConta());
+        values.put(_Imovel.INDIC_ENVIO_EMAIL, imovel.getIndcEnvioEmail());
+        values.put(_Imovel.INDIC_ENVIO_WHATSAAP, imovel.getIndcEnvioZap());
         values.put(_Imovel.ID_CADASTRO, imovel.getCadastro().getId());
         values.put(_Imovel.ID_CONTRIBUINTE, imovel.getContribuinte().getId());
         values.put(_Imovel.ID_ENDERECO, imovel.getEndereco().getId());
         values.put(_Imovel.ID_TRIBUTO, imovel.getTributo().getId());
         values.put(_Imovel.ID_LATLNG, imovel.getLatLng().getId());
+
+       return this.conexao.insertOrThrow(_Imovel.NOME_DA_TABELA, null, values);
+
+    }
+
+    public long atualizarIndicadorEmissao(long id, int indicador) throws RepositorioException {
+        String[] parametros = new String[1];
+        parametros[0] = String.valueOf(id);
+        ContentValues values = new ContentValues();
+
+        values.put(_Imovel.INDIC_EMISSAO_CONTA, indicador);
+        return this.conexao.update(_Imovel.NOME_DA_TABELA, values, _Imovel.ID, parametros);
+
+    }
+
+    public long atualizarIndicadorEnvioEmail(long id, int indicador) throws RepositorioException {
+        String[] parametros = new String[1];
+        parametros[0] = String.valueOf(id);
+        ContentValues values = new ContentValues();
+
+        values.put(_Imovel.INDIC_ENVIO_EMAIL, indicador);
+        return this.conexao.update(_Imovel.NOME_DA_TABELA, values, _Imovel.ID, parametros);
+
+    }
+
+    public long atualizarIndicadorEnvioWhatsAap(long id, int indicador) throws RepositorioException {
+        String[] parametros = new String[1];
+        parametros[0] = String.valueOf(id);
+        ContentValues values = new ContentValues();
+
+        values.put(_Imovel.INDIC_ENVIO_WHATSAAP, indicador);
+        return this.conexao.update(_Imovel.NOME_DA_TABELA, values, _Imovel.ID, parametros);
 
     }
 
@@ -288,9 +324,9 @@ public class RepositorioImovel implements IRepositorioImovel {
     private List<DescricaoDaDivida> listDescricao() {
         List<DescricaoDaDivida> list = new ArrayList<>();
         DescricaoDaDivida d1, d2, d3;
-        d1 = new DescricaoDaDivida(id(), "01", "IPTU", "67,73", "13,55", "0,00");
-        d2 = new DescricaoDaDivida(id(), "02", "TAXA DE EXPEDIENTE", "30,00", "6,00", "0,00");
-        d3 = new DescricaoDaDivida(id(), "03", "COLETA DE LIXO", "20,00", "4,00", "0,00");
+        d1 = new DescricaoDaDivida(id(), "01", "IPTU", "67,73", "13,55", "0,00", 0);
+        d2 = new DescricaoDaDivida(id(), "02", "TAXA DE EXPEDIENTE", "30,00", "6,00", "0,00", 0);
+        d3 = new DescricaoDaDivida(id(), "03", "COLETA DE LIXO", "20,00", "4,00", "0,00", 0);
         list.add(d1);
         list.add(d2);
         list.add(d3);

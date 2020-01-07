@@ -11,10 +11,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.developer.demetrio.controladores.ControladorTributo;
-import com.developer.demetrio.dadabase.ConexaoDataBase;
-import com.developer.demetrio.execoes.ControladorException;
-import com.developer.demetrio.execoes.RepositorioException;
+import com.developer.demetrio.databases.ConexaoDataBase;
 import com.developer.demetrio.iptu.DescricaoDaDivida;
 import com.developer.demetrio.model.Aliquota;
 import com.developer.demetrio.model.AreasDoImovel;

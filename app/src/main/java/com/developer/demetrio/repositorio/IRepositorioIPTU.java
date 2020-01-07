@@ -5,7 +5,7 @@ import com.developer.demetrio.iptu.IPTU;
 
 public interface IRepositorioIPTU {
 
-    void inserir(IPTU aliquota) throws RepositorioException;
+    long inserir(IPTU aliquota) throws RepositorioException;
 
     IPTU buscar(Long id) throws RepositorioException;
 

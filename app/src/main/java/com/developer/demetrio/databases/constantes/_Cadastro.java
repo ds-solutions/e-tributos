@@ -1,4 +1,4 @@
-package com.developer.demetrio.dadabase.constantes;
+package com.developer.demetrio.databases.constantes;
 
 public class _Cadastro {
     public static final String ID = "ID";
@@ -12,4 +12,5 @@ public class _Cadastro {
     public static final String ID_AREAS_DO_IMOVEL = "ID_AREAS_DO_IMOVEL";
     public static final String ID_VALORES_VENAIS = "ID_VALORES_VENAIS";
     public static final String ID_ALIQUOTA = "ID_ALIQUOTA";
+    public static final String NOME_DA_TABELA = "CADASTRO";
 }

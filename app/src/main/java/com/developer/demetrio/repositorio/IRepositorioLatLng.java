@@ -5,7 +5,7 @@ import com.developer.demetrio.model.LatLng;
 
 public interface IRepositorioLatLng {
 
-    void inserir(LatLng aliquota) throws RepositorioException;
+    long inserir(LatLng aliquota) throws RepositorioException;
 
     LatLng buscar(Long id) throws RepositorioException;
 

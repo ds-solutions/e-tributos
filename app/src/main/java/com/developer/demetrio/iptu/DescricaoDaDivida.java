@@ -10,19 +10,21 @@ public class DescricaoDaDivida implements Serializable {
     private String valor;
     private String pontualidade;
     private String isencao;
+    private long id_IPTU;
 
     public DescricaoDaDivida() {
     }
 
     public DescricaoDaDivida(long id, String codigo, String descricao,
                              String valor, String pontualidade,
-                             String isencao) {
+                             String isencao, long id_IPTU) {
         this.id = id;
         this.codigo = codigo;
         this.descricao = descricao;
         this.valor = valor;
         this.pontualidade = pontualidade;
         this.isencao = isencao;
+        this.id_IPTU = id_IPTU;
 
     }
 
@@ -74,6 +76,13 @@ public class DescricaoDaDivida implements Serializable {
         this.isencao = isencao;
     }
 
+    public long getId_IPTU() {
+        return id_IPTU;
+    }
+
+    public void setId_IPTU(long id_IPTU) {
+        this.id_IPTU = id_IPTU;
+    }
 
     @Override
     public boolean equals(Object o) {

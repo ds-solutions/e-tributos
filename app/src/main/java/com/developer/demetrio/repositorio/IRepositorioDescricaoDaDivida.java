@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface IRepositorioDescricaoDaDivida {
 
-    void inserir(DescricaoDaDivida aliquota) throws RepositorioException;
+    long inserir(DescricaoDaDivida aliquota) throws RepositorioException;
 
     DescricaoDaDivida buscar(Long id) throws RepositorioException;
 

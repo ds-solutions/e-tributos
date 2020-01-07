@@ -5,7 +5,7 @@ import com.developer.demetrio.model.AreasDoImovel;
 
 public interface IRepositorioAreasDoImovel {
 
-    void inserir(AreasDoImovel aliquota) throws RepositorioException;
+    long inserir(AreasDoImovel aliquota) throws RepositorioException;
 
     AreasDoImovel buscar(Long id) throws RepositorioException;
 

@@ -4,7 +4,7 @@ import com.developer.demetrio.execoes.RepositorioException;
 import com.developer.demetrio.model.CodigoDeCobranca;
 
 public interface IRepositorioCodigoDeCobranca {
-    void inserir(CodigoDeCobranca aliquota) throws RepositorioException;
+    long inserir(CodigoDeCobranca aliquota) throws RepositorioException;
 
     CodigoDeCobranca buscar(Long id) throws RepositorioException;
 

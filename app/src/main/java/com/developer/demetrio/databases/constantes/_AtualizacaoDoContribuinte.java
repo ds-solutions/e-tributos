@@ -1,4 +1,4 @@
-package com.developer.demetrio.dadabase.constantes;
+package com.developer.demetrio.databases.constantes;
 
 public class _AtualizacaoDoContribuinte {
     public static final String ID = "ID";
@@ -17,4 +17,5 @@ public class _AtualizacaoDoContribuinte {
     public static final String TELEFONE = "TELEFONE";
     public static final String CELULAR = "CELULAR";
     public static final String EMAIL = "EMAIL";
-    }
+    public static final String NOME_DA_TABELA = "AUTALIZACAO_DO_CONTRIBUINTE";
+}

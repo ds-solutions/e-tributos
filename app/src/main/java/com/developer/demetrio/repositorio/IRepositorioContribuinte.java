@@ -5,7 +5,7 @@ import com.developer.demetrio.model.Contribuinte;
 
 public interface IRepositorioContribuinte {
 
-    void inserir(Contribuinte aliquota) throws RepositorioException;
+    long inserir(Contribuinte aliquota) throws RepositorioException;
 
     Contribuinte buscar(Long id) throws RepositorioException;
 

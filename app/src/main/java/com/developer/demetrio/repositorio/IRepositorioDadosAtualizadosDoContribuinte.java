@@ -6,11 +6,11 @@ import com.developer.demetrio.model.AtualizacaoDoContribuinte;
 
 public interface IRepositorioDadosAtualizadosDoContribuinte {
 
-    void inserir(AtualizacaoDoContribuinte aliquota) throws RepositorioException;
+    long inserir(AtualizacaoDoContribuinte aliquota) throws RepositorioException;
 
-    DadosDeAtualizacaoProprietario buscar(Long id) throws RepositorioException;
+    AtualizacaoDoContribuinte buscar(Long id) throws RepositorioException;
 
-    void atualizar(DadosDeAtualizacaoProprietario dados) throws RepositorioException;
+    long atualizar(AtualizacaoDoContribuinte dados) throws RepositorioException;
 
     void excluir(Long id) throws RepositorioException;
 }

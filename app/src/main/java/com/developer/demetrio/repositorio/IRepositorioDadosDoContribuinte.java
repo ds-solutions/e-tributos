@@ -5,7 +5,7 @@ import com.developer.demetrio.model.DadosCadastradosDoContribuinte;
 
 public interface IRepositorioDadosDoContribuinte {
 
-    void inserir(DadosCadastradosDoContribuinte aliquota) throws RepositorioException;
+    long inserir(DadosCadastradosDoContribuinte aliquota) throws RepositorioException;
 
     DadosCadastradosDoContribuinte buscar(Long id) throws RepositorioException;
 

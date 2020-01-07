@@ -1,4 +1,4 @@
-package com.developer.demetrio.dadabase.constantes;
+package com.developer.demetrio.databases.constantes;
 
 public class _Aliquota {
     public static final String ID = "ID";
@@ -7,5 +7,7 @@ public class _Aliquota {
     public static final String ZONEAMENTO = "ZONEAMENTO";
     public static final String TIPO_CONSTRUCAO = "TIPO_CONSTRUCAO";
     public static final String ID_CODIGO_DE_COBRANCA = "ID_CODIGO_DE_COBRANCA";
+
+    public static final String NOME_DA_TABELA = "ALIQUOTA";
 
 }

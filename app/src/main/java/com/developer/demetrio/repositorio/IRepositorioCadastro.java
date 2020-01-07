@@ -5,7 +5,7 @@ import com.developer.demetrio.model.Cadastro;
 
 public interface IRepositorioCadastro {
 
-    void inserir(Cadastro aliquota) throws RepositorioException;
+    long inserir(Cadastro aliquota) throws RepositorioException;
 
     Cadastro buscar(Long id) throws RepositorioException;
 

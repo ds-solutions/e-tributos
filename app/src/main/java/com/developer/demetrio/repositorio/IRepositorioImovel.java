@@ -10,7 +10,12 @@ import java.util.List;
 interface IRepositorioImovel {
     void atualizarIndicadorContinuaImpressao(Integer num, Integer num2) throws RepositorioException;
 
-    void inserir(Imovel imovel) throws RepositorioException;
+    long inserir(Imovel imovel) throws RepositorioException;
+    public long atualizarIndicadorEmissao(long id, int indicador) throws RepositorioException;
+
+    long atualizarIndicadorEnvioEmail(long id, int indicador) throws RepositorioException;
+
+    long atualizarIndicadorEnvioWhatsAap(long id, int indicador) throws RepositorioException;
 
     ArrayList<Integer> buscarIdsImoveisCadastroNaoEnviados() throws RepositorioException;
 

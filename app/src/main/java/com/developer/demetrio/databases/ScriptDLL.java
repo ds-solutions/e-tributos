@@ -1,4 +1,4 @@
-package com.developer.demetrio.dadabase;
+package com.developer.demetrio.databases;
 
 public class ScriptDLL {
 
@@ -96,7 +96,7 @@ public class ScriptDLL {
         sql.append("ESTADO_CIVIL TEXT, ");
         sql.append("NACIONALIDADE TEXT, ");
         sql.append("NATURALIDADE TEXT, ");
-        sql.append("RACA TEXT, ");
+        sql.append("COR TEXT, ");
         sql.append("SEXO TEXT, ");
         sql.append("EMAIL TEXT, ");
         sql.append("CELULAR TEXT) ");
@@ -171,7 +171,7 @@ public class ScriptDLL {
     //SQL PARA CRIAÇÃO DA TABELA AREAS DO IMÓVEL
     public static String getCreateTableAreasDoImovel() {
         StringBuilder sql = new StringBuilder();
-        sql.append("    CREATE TABLE IF NOT EXISTS CADASTRO( ");
+        sql.append("    CREATE TABLE IF NOT EXISTS AREAS_DO_IMOVEL( ");
         sql.append("ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, ");
         sql.append("TESTADA TEXT, ");
         sql.append("AREA_DO_TERRENO TEXT, ");
@@ -186,7 +186,7 @@ public class ScriptDLL {
     //SQL PARA CRIAÇÃO DA TABELA CADASTRO
     public static String getCreateTableCadastro() {
         StringBuilder sql = new StringBuilder();
-        sql.append("    CREATE TABLE IF NOT EXISTS AREAS_DO_IMOVEL( ");
+        sql.append("    CREATE TABLE IF NOT EXISTS CADASTRO( ");
         sql.append("ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, ");
         sql.append("INSCRICAO TEXT, ");
         sql.append("NUM_CADASTRO TEXT, ");
@@ -209,9 +209,9 @@ public class ScriptDLL {
         StringBuilder sql = new StringBuilder();
         sql.append("    CREATE TABLE IF NOT EXISTS IMOVEL( ");
         sql.append("ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, ");
-        sql.append("INDCEMISSAOCONTA INTEGER, ");
-        sql.append("INDCENVIOZAP INTEGER, ");
-        sql.append("INDCENVIOEMAIL INTEGER, ");
+        sql.append("INDIC_EMISSAO_CONTA INTEGER, ");
+        sql.append("INDIC_ENVIO_WHATSAAP INTEGER, ");
+        sql.append("INDIC_ENVIO_EMAIL INTEGER, ");
         sql.append("ID_CADASTRO INTEGER, ");
         sql.append("ID_ENDERECO INTEGER, ");
         sql.append("ID_CONTRIBUINTE INTEGER, ");

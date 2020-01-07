@@ -1,4 +1,4 @@
-package com.developer.demetrio.dadabase.constantes;
+package com.developer.demetrio.databases.constantes;
 
 public class _DadosCadastradosDoContribuinte {
     public static final String ID = "ID";
@@ -10,8 +10,9 @@ public class _DadosCadastradosDoContribuinte {
     public static final String ESTADO_CIVIL = "ESTADO_CIVIL";
     public static final String NACIONALIDADE = "NACIONALIDADE";
     public static final String NATURALIDADE = "NATURALIDADE";
-    public static final String RACA = "RACA";
+    public static final String COR = "COR";
     public static final String SEXO = "SEXO";
     public static final String EMAIL = "EMAIL";
     public static final String CELULAR = "CELULAR";
-    }
+    public static final String NOME_DA_TABELA = "DADOS_DO_CONTRIBUINTE";
+}

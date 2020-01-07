@@ -1,4 +1,4 @@
-package com.developer.demetrio.dadabase.constantes;
+package com.developer.demetrio.databases.constantes;
 
 public class _Endereco {
     public static final String ID = "ID";
@@ -9,4 +9,5 @@ public class _Endereco {
     public static final String COMPLEMENTO = "COMPLEMENTO";
     public static final String NUMERO = "NUMERO";
     public static final String CEP = "CEP";
-    }
+    public static final String NOME_DA_TABELA = "ENDERECO" ;
+}

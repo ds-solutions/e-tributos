@@ -1,10 +1,9 @@
-package com.developer.demetrio.dadabase;
+package com.developer.demetrio.databases;
 
 import android.content.Context;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.widget.Toast;
 
 public class ConexaoDataBase {
 

@@ -5,7 +5,7 @@ import com.developer.demetrio.model.Aliquota;
 
 public interface IRepositorioAliquota {
 
-    void inserir(Aliquota aliquota) throws RepositorioException;
+    long inserir(Aliquota aliquota) throws RepositorioException;
 
     Aliquota buscar(Long id) throws RepositorioException;
 
