@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -23,23 +24,37 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.developer.demetrio.controladores.ControladorTributo;
+import com.developer.demetrio.controladores.ControladorImovel;
+import com.developer.demetrio.databases.ConexaoDataBase;
 import com.developer.demetrio.etributos.ListaImoveis;
 import com.developer.demetrio.etributos.R;
 import com.developer.demetrio.execoes.ControladorException;
 import com.developer.demetrio.execoes.RepositorioException;
 import com.developer.demetrio.fachada.Fachada;
 import com.developer.demetrio.iptu.DescricaoDaDivida;
+import com.developer.demetrio.iptu.IPTU;
 import com.developer.demetrio.model.Aliquota;
 import com.developer.demetrio.model.AreasDoImovel;
 import com.developer.demetrio.model.AtualizacaoDoContribuinte;
 import com.developer.demetrio.model.Cadastro;
-import com.developer.demetrio.model.CodigoDeCobranca;
 import com.developer.demetrio.model.Contribuinte;
 import com.developer.demetrio.model.DadosCadastradosDoContribuinte;
 import com.developer.demetrio.model.Endereco;
 import com.developer.demetrio.model.Imovel;
+import com.developer.demetrio.model.Tributo;
 import com.developer.demetrio.model.ValoresVenais;
+import com.developer.demetrio.repositorio.RepositorioAliquota;
+import com.developer.demetrio.repositorio.RepositorioAreasDoImovel;
+import com.developer.demetrio.repositorio.RepositorioCadastro;
+import com.developer.demetrio.repositorio.RepositorioContribuinte;
+import com.developer.demetrio.repositorio.RepositorioDadosAtualizadosDoContribuinte;
+import com.developer.demetrio.repositorio.RepositorioDadosDoContribuinte;
+import com.developer.demetrio.repositorio.RepositorioDescricaoDaDivida;
+import com.developer.demetrio.repositorio.RepositorioEndereco;
+import com.developer.demetrio.repositorio.RepositorioIPTU;
+import com.developer.demetrio.repositorio.RepositorioImovel;
+import com.developer.demetrio.repositorio.RepositorioTributo;
+import com.developer.demetrio.repositorio.RepositorioValoresVenais;
 import com.developer.demetrio.service.Mail;
 import com.developer.demetrio.service.Zap;
 
@@ -51,18 +66,20 @@ import java.util.List;
 import static android.widget.Toast.LENGTH_LONG;
 
 public class DadosDoImovel extends Fragment {
-
+    private long idDescricao = 0;
+    private long id;
+    private SQLiteDatabase conexao;
+    private ConexaoDataBase conexaoDataBase;
     private Spinner motivoNaoEntrega;
     private String[] motivos = new String[] {"Motivo da não entrega", "Demolido", "Imóvel não localizado", "Recusou receber",  "Terreno"};
 
-    private Imovel imovel, ultimoImovel;
+    private Imovel imovel = new Imovel();
     private AtualizacaoDoContribuinte atualizacaoDoProprietario;
     private Context context;
     private Activity activity;
 
     private Button btImprimir, btImovelAnterior, btProximoImovel;
     private Fachada fachada = Fachada.getInstance();
-    //  private OnClickListener imprimir = new C_Imprimir();
     private Location location;
     private static final int PLAY_SERVICE_RESOLUTION_REQUEST = 9000;
 
@@ -75,28 +92,28 @@ public class DadosDoImovel extends Fragment {
     zoneamento, valorTributo, contribuinte;
 
     private ImageView printer, email, whatsApp;
-    private ControladorTributo controladorTributo;
+    private ControladorImovel controladorImovel;
     private List<Imovel> imoveis = new ArrayList<Imovel>();
-    private Integer index = 0;
-    private Integer in = 0;
-    private Integer lastIndex;
+    private long in = 0;
+    private long lastIndex;
 
-    public DadosDoImovel(Context context, Activity activity, Integer index) {
+    public DadosDoImovel(Context context, Activity activity, long id) {
         this.context = context;
         this.activity = activity;
-        if (index != null) {
-            this.index = index;
+        if (id != 0) {
+            this.id = id;
         }
         Fachada.setContext(this.context);
-
+        conexaoDataBase = new ConexaoDataBase();
+        this.conexao = conexaoDataBase.concectarComBanco(this.context);
+        RepositorioImovel imoveis = new RepositorioImovel(this.conexao);
         try {
-            this.imoveis =  ControladorTributo.getInstance().buscarImovelContas();
-        } catch (ControladorException e) {
-            e.printStackTrace();
-        } catch (RepositorioException e) {
+            this.imovel = imoveis.buscarImovelPorId(id);
+            preencherView();
+        }  catch (RepositorioException e) {
             e.printStackTrace();
         }
-        lastIndex = this.imoveis.size() -1;
+        lastIndex = this.imovel.getId();
     }
 
 
@@ -126,7 +143,7 @@ public class DadosDoImovel extends Fragment {
         this.btProximoImovel = (Button) viewGroup.findViewById(R.id.bt_proximo2);
 
         preencherView();
-        in = index +1;
+        in = id +1;
 
         ArrayAdapter<String> listMotivoNaoEntregaAdapter = new ArrayAdapter<String>(this.context, android.R.layout.simple_spinner_dropdown_item, this.motivos);
         listMotivoNaoEntregaAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -143,27 +160,177 @@ public class DadosDoImovel extends Fragment {
         });
         this.btImprimir.setOnClickListener(new C_Imprimir(this.imovel));
         onCreate(savedInstanceState);
-        this.btImovelAnterior.setOnClickListener(new ImovelAnterior(this.context, index, lastIndex));
-        this.btProximoImovel.setOnClickListener(new ProximoImovel(this.context, index, lastIndex));
+        this.btImovelAnterior.setOnClickListener(new ImovelAnterior(this.context, id, lastIndex));
+        this.btProximoImovel.setOnClickListener(new ProximoImovel(this.context, id, lastIndex));
         return viewGroup;
     }
 
     private void preencherView() {
-        System.out.println("Total de imóveis cadastrados "+ this.imoveis.size());
-        this.imovel = this.imoveis.get(index);
-        this.matricula.setText(this.imovel.getCadastro().getNumCadastro());
-        this.inscricao.setText(this.imovel.getCadastro().getInscricao());
-        this.cidade.setText(this.imovel.getEndereco().getCidade());
-        this.bairro.setText(this.imovel.getEndereco().getBairro());
-        this.logradouro.setText(this.imovel.getEndereco().getLogradouro());
-        this.num.setText(this.imovel.getEndereco().getNumero());
-        this.complemento.setText(this.imovel.getEndereco().getComplemento());
-        this.zoneamento.setText(this.imovel.getCadastro().getAliquota().getZoneamento());
-        this.valorTributo.setText(this.imovel.getTributo().getIptu().getValorTotal());
+        this.imovel.setCadastro(buscarCadastroDoImovel(this.imovel.getCadastro().getId()));
+
+        this.imovel.setEndereco(buscarEndereco(this.imovel.getEndereco().getId()));
+
+        this.imovel.setContribuinte(buscarContribuinte(this.imovel.getContribuinte().getId()));
+
+        this.imovel.setTributo(buscarTributos(this.imovel.getTributo().getId()));
+        System.out.println("MATRICULA DOA COISA -> " +
+        this.imovel.getCadastro().getNumCadastro());
+       // this.matricula.setText(this.imovel.getCadastro().getNumCadastro().toString());
+        this.inscricao.setText(this.imovel.getCadastro().getInscricao().toString());
+        this.cidade.setText(this.imovel.getEndereco().getCidade().toString());
+        this.bairro.setText(this.imovel.getEndereco().getBairro().toString());
+        this.logradouro.setText(this.imovel.getEndereco().getLogradouro().toString());
+        this.num.setText(this.imovel.getEndereco().getNumero().toString());
+        this.complemento.setText(this.imovel.getEndereco().getComplemento().toString());
+        this.zoneamento.setText(this.imovel.getCadastro().getAliquota().getZoneamento().toString());
+        this.valorTributo.setText(this.imovel.getTributo().getIptu().getValorTotal().toString());
         this.contribuinte.setText(this.imovel.getContribuinte().getAtualizacaoDoContribuinte() != null ?
-                this.imovel.getContribuinte().getAtualizacaoDoContribuinte().getNome() : this.imovel.getContribuinte().getDadosCadastradosDoContribuinte().getNome());
+                this.imovel.getContribuinte().getAtualizacaoDoContribuinte().getNome().toString() : this.imovel.getContribuinte().getDadosCadastradosDoContribuinte().getNome().toString());
 
         addImagemNosStatusDoImovel();
+    }
+
+    private Tributo buscarTributos(Long id) {
+
+        System.out.println("id do parametro = "+id);
+
+        Tributo tributo = new Tributo();
+        tributo.setIptu(new IPTU());
+        RepositorioTributo tributos = new RepositorioTributo(this.conexao);
+        try {
+            tributo = tributos.buscar(id);
+        } catch (RepositorioException e) {
+            e.printStackTrace();
+        }
+        System.out.println("id do tributo = "+tributo.getId());
+       tributo.setIptu(buscarIptu(tributo.getIptu().getId()));
+
+        return tributo;
+    }
+
+    private IPTU buscarIptu(Long id) {
+        IPTU iptu = new IPTU();
+        RepositorioIPTU iptus = new RepositorioIPTU(this.conexao);
+        try {
+            iptu = iptus.buscar(id);
+        } catch (RepositorioException e) {
+            e.printStackTrace();
+        }
+        iptu.setListDescricao(buscarListasDaDescricao(iptu.getId()));
+        return iptu;
+    }
+
+    private List<DescricaoDaDivida> buscarListasDaDescricao(Long id) {
+        List<DescricaoDaDivida> descricaoDaDividas = new ArrayList<>();
+        RepositorioDescricaoDaDivida descricoes = new RepositorioDescricaoDaDivida(this.conexao);
+        try {
+            descricaoDaDividas = descricoes.descricoesDaDividaDe(id);
+        } catch (RepositorioException e) {
+            e.printStackTrace();
+        }
+        return descricaoDaDividas;
+    }
+
+    private Contribuinte buscarContribuinte(Long id) {
+        Contribuinte contribuinte = new Contribuinte();
+        RepositorioContribuinte contribuintes = new RepositorioContribuinte(this.conexao);
+        try {
+            System.out.println("O id do contribuinte é: "+id);
+
+            contribuinte = contribuintes.buscar(id);
+        } catch (RepositorioException e) {
+            e.printStackTrace();
+        }
+
+        contribuinte.setDadosCadastradosDoContribuinte(buscarDadosDoContribuinte(contribuinte.getId()));
+
+        if (contribuinte.getAtualizacaoDoContribuinte() != null) {
+            contribuinte.setAtualizacaoDoContribuinte(buscarAtualizacaoDoContribuinte(contribuinte.getAtualizacaoDoContribuinte().getId()));
+        }
+
+        return contribuinte;
+    }
+
+    private AtualizacaoDoContribuinte buscarAtualizacaoDoContribuinte(Long id) {
+        AtualizacaoDoContribuinte contribuinte = new AtualizacaoDoContribuinte();
+        RepositorioDadosAtualizadosDoContribuinte dados = new RepositorioDadosAtualizadosDoContribuinte(this.conexao);
+        try {
+            contribuinte = dados.buscar(id);
+        } catch (RepositorioException e) {
+            e.printStackTrace();
+        }
+        return contribuinte;
+    }
+
+    private DadosCadastradosDoContribuinte buscarDadosDoContribuinte(Long id)
+    {
+        DadosCadastradosDoContribuinte contribuinte = new DadosCadastradosDoContribuinte();
+        RepositorioDadosDoContribuinte dados = new RepositorioDadosDoContribuinte(this.conexao);
+        try {
+            contribuinte = dados.buscar(id);
+        } catch (RepositorioException e) {
+            e.printStackTrace();
+        }
+        return contribuinte;
+    }
+
+    private Endereco buscarEndereco(Long id) {
+        Endereco endereco = new Endereco();
+        RepositorioEndereco enderecos = new RepositorioEndereco(this.conexao);
+        try {
+            endereco = enderecos.buscar(id);
+        } catch (RepositorioException e) {
+            e.printStackTrace();
+        }
+        return endereco;
+    }
+
+    private Cadastro buscarCadastroDoImovel(long id) {
+        Cadastro cadastro = new Cadastro();
+        RepositorioCadastro cadastros = new RepositorioCadastro(this.conexao);
+        try {
+            cadastro = cadastros.buscar(id);
+        } catch (RepositorioException e) {
+            e.printStackTrace();
+        }
+        cadastro.setValoresVenais(buscarValoresVenais(cadastro.getValoresVenais().getId()));
+        cadastro.setAreasDoImovel(buscarAreas(cadastro.getAreasDoImovel().getId()));
+        cadastro.setAliquota(buscarAliquotas(cadastro.getAliquota().getId()));
+       return cadastro;
+    }
+
+    private Aliquota buscarAliquotas(Long id) {
+        Aliquota aliquota = new Aliquota();
+        RepositorioAliquota aliquotas = new RepositorioAliquota(this.conexao);
+        try {
+            aliquota = aliquotas.buscar(id);
+        } catch (RepositorioException e) {
+            e.printStackTrace();
+        }
+        return aliquota;
+    }
+
+    private AreasDoImovel buscarAreas(Long id) {
+        AreasDoImovel areasDoImovel = new AreasDoImovel();
+        RepositorioAreasDoImovel areas = new RepositorioAreasDoImovel(this.conexao);
+        try {
+            areasDoImovel = areas.buscar(id);
+        } catch (RepositorioException e) {
+            e.printStackTrace();
+        }
+
+        return areasDoImovel;
+    }
+
+    private ValoresVenais buscarValoresVenais(Long id) {
+        ValoresVenais valoresVenais = new ValoresVenais();
+        RepositorioValoresVenais valores = new RepositorioValoresVenais(this.conexao);
+        try {
+            valoresVenais = valores.buscar(id);
+        } catch (RepositorioException e) {
+            e.printStackTrace();
+        }
+         return valoresVenais;
     }
 
     private void addImagemNosStatusDoImovel() {
@@ -175,10 +342,10 @@ public class DadosDoImovel extends Fragment {
 
     class ImovelAnterior implements View.OnClickListener {
 
-        private Integer index, lastIndex;
+        private long index, lastIndex;
         private Context context;
 
-        public ImovelAnterior(Context context, Integer index, Integer lastIndex) {
+        public ImovelAnterior(Context context, long index, long lastIndex) {
             this.context = context;
             this.index = index;
             this.lastIndex = lastIndex;
@@ -186,14 +353,14 @@ public class DadosDoImovel extends Fragment {
 
         @Override
         public void onClick(View view) {
-            if (this.index != null && this.index != 0) {
+            if (this.index != 0) {
                 this.index--;
-            } else if (this.index == null || this.index == 0) {
+            } else if (this.index == 0) {
                 index = lastIndex;
             }
 
             Bundle parametros = new Bundle();
-            parametros.putInt("index", index);
+            parametros.putLong("id", index);
             Intent activity = new Intent(this.context, ListaImoveis.class);
             activity.putExtras(parametros);
             startActivity(activity);
@@ -202,10 +369,10 @@ public class DadosDoImovel extends Fragment {
 
     class ProximoImovel implements View.OnClickListener {
 
-        private Integer index, lastIndex;
+        private long index, lastIndex;
         private Context context;
 
-        public ProximoImovel(Context context, Integer index, Integer lastIndex) {
+        public ProximoImovel(Context context, long index, long lastIndex) {
             this.context = context;
             this.index = index;
             this.lastIndex = lastIndex;
@@ -213,14 +380,15 @@ public class DadosDoImovel extends Fragment {
 
         @Override
         public void onClick(View view) {
-            if (this.index < this.lastIndex) {
-                this.index++;
-            } else if (this.index == this.lastIndex) {
-                index = 0;
-            }
+           /* if (this.id < this.lastIndex) {
+                this.id++;
+            } else if (this.id == this.lastIndex) {
+                id = 0;
+            }*/
+           index++;
 
             Bundle parametros = new Bundle();
-            parametros.putInt("index", index);
+            parametros.putLong("id", index);
             Intent activity = new Intent(this.context, ListaImoveis.class);
             activity.putExtras(parametros);
             startActivity(activity);
@@ -324,8 +492,7 @@ public class DadosDoImovel extends Fragment {
                 AlertDialog.OnClickListener dialog = new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        ultimoImovel = imovel;
-                        switch (i) {
+                       switch (i) {
                             case -1:
                                 sendForEmail();
                                 try {
@@ -413,10 +580,10 @@ public class DadosDoImovel extends Fragment {
     }
 
     private void proximoImovel() {
-        this.index ++;
-       // new DadosDoImovel(this.context, this.activity, this.index);
+        this.id++;
+       // new DadosDoImovel(this.context, this.activity, this.id);
         Bundle parametros = new Bundle();
-        parametros.putInt("index", index);
+        parametros.putLong("id", id);
         Intent activity = new Intent(this.context, ListaImoveis.class);
         activity.putExtras(parametros);
         startActivity(activity);
@@ -522,111 +689,6 @@ public class DadosDoImovel extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
-
-    }
-
-    public Imovel popularImovelParaImpressao() {
-        this.imovel = new Imovel();
-        Aliquota aliquota = new Aliquota();
-        CodigoDeCobranca codigo = new CodigoDeCobranca();
-        codigo.setId(1L);
-        this.imovel.setIndcEmissaoConta(0);
-        this.imovel.setIndcEnvioZap(0);
-        this.imovel.setIndcEnvioEmail(0);
-
-        codigo.setTipo("1-NORMAL");
-        codigo.setTaxaTestada("6,00");
-        aliquota.setId(1L);
-        aliquota.setCodigoDeCobranca(codigo);
-        aliquota.setTipoConstrucao("EDIFICADO");
-        aliquota.setEdificado("1,00");
-        aliquota.setTerreno("1,00");
-        aliquota.setZoneamento("3");
-
-        Cadastro cadastro = new Cadastro();
-        cadastro.setAliquota(aliquota);
-        AreasDoImovel areasDoImovel = new AreasDoImovel();
-        areasDoImovel.setAreaDoTerreno("132,00");
-        areasDoImovel.setEdificado("50,00");
-        areasDoImovel.setAreaTotalEdificado("50,00");
-        areasDoImovel.setAreaDoTerreno("132,00");
-        areasDoImovel.setExcedente("0,00");
-        areasDoImovel.setTestada("6,00");
-        areasDoImovel.setFracao("1.000000");
-
-        cadastro.setAreasDoImovel(areasDoImovel);
-        cadastro.setDistrito("01");
-        cadastro.setId(1L);
-        cadastro.setInscricao("01.01.001.0028.000");
-        cadastro.setLote("0028");
-        cadastro.setNumCadastro("000004");
-        cadastro.setQuadra("001");
-        cadastro.setSetor("01");
-        cadastro.setUnidade("000");
-        ValoresVenais valores = new ValoresVenais();
-        valores.setId(1L);
-        valores.setEdificada("1.229,00");
-        valores.setExcedente("0,00");
-        valores.setTerreno("5.544,00");
-        valores.setTotal("6.773,00");
-        cadastro.setValoresVenais(valores);
-
-        this.imovel.setCadastro(cadastro);
-
-        Endereco endereco = new Endereco();
-        endereco.setUf("PE");
-        endereco.setNumero("129");
-        endereco.setLogradouro("JOSÉ TAVARES DO REGO");
-        endereco.setComplemento("CASA");
-        endereco.setCidade("LAGOA DE ITAENGA");
-        endereco.setCep("55840-000");
-        endereco.setBairro("INDEPENDENCIA");
-        endereco.setId(1L);
-
-        this.imovel.setEndereco(endereco);
-
-        Contribuinte contribuinte = new Contribuinte();
-        DadosCadastradosDoContribuinte doContribuinte = new DadosCadastradosDoContribuinte();
-        doContribuinte.setNome("DEMÉTRIO ANTONIO DE SANTANA");
-        doContribuinte.setCpf("010.750.114-77");
-        doContribuinte.setEstadoCivil("CASADO");
-        doContribuinte.setNacionalidade("BRASILEIRA");
-        contribuinte.setDadosCadastradosDoContribuinte(doContribuinte);
-
-        this.imovel.setContribuinte(contribuinte);
-
-        this.imovel.getTributo().getIptu().setCampo1CodigoDeBarras("81680000000-1");
-        this.imovel.getTributo().getIptu().setCampo2CodigoDeBarras("94182367201-4");
-        this.imovel.getTributo().getIptu().setCampo3CodigoDeBarras("91230010120-7");
-        this.imovel.getTributo().getIptu().setCampo4CodigoDeBarras("00125799000-0");
-        this.imovel.getTributo().getIptu().setCodigoDaDivida("125799");
-        this.imovel.getTributo().getIptu().setDigitosDoCodigoDeBarras("81680000000941823672019123001012000125799000");
-        this.imovel.getTributo().getIptu().setCodigoDeBaixa("2-125799-1-0");
-        this.imovel.getTributo().getIptu().setExercicio("2020");
-        this.imovel.getTributo().getIptu().setValorTotal("94,18");
-        this.imovel.getTributo().getIptu().setMensagem("Cota Única com desconto, após o vencimento procure o setor tributário do município ou acesse o nosso portal: http://portal.itaenga.pe.gov.br:8070/servicosweb");
-        this.imovel.getTributo().getIptu().setMensagem1(null);
-        this.imovel.getTributo().getIptu().setMensagem2(null);
-        this.imovel.getTributo().getIptu().setSomaDoDesconto("23,55");
-        this.imovel.getTributo().getIptu().setSomaDoValor("117,73");
-        this.imovel.getTributo().getIptu().setSomaIsencao("0,00");
-        this.imovel.getTributo().getIptu().setVencimento("25/09/2020");
-        this.imovel.getTributo().getIptu().setListDescricao(listDescricao());
-   return this.imovel;
-    }
-
-    private List<DescricaoDaDivida> listDescricao() {
-        List<DescricaoDaDivida> list = new ArrayList<>();
-        DescricaoDaDivida d1, d2, d3;
-        d1 = new DescricaoDaDivida(1L, "01", "IPTU", "67,73", "13,55", "0,00");
-        d2 = new DescricaoDaDivida(2L, "02", "TAXA DE EXPEDIENTE", "30,00", "6,00", "0,00");
-        d3 = new DescricaoDaDivida(3L, "03", "COLETA DE LIXO", "20,00", "4,00", "0,00");
-        list.add(d1);
-        list.add(d2);
-        list.add(d3);
-
-        return list;
     }
 
 

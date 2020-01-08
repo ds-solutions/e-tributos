@@ -1,7 +1,5 @@
 package com.developer.demetrio.model;
 
-import android.util.Log;
-
 import com.developer.demetrio.iptu.IPTU;
 
 import java.io.Serializable;
@@ -12,13 +10,14 @@ public class Tributo implements Serializable {
 
     private Long id;
 
-    private IPTU iptu = new IPTU();
+    private IPTU iptu;
 
     public Tributo() {
     }
 
-    public Tributo(Long id) {
+    public Tributo(Long id, IPTU iptu) {
         this.id = id;
+        this.iptu = iptu;
     }
 
     public Long getId() {

@@ -12,7 +12,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.developer.demetrio.databases.ConexaoDataBase;
+import com.developer.demetrio.databases.constantes._DataBase;
+import com.developer.demetrio.execoes.RepositorioException;
 import com.developer.demetrio.iptu.DescricaoDaDivida;
+import com.developer.demetrio.iptu.IPTU;
 import com.developer.demetrio.model.Aliquota;
 import com.developer.demetrio.model.AreasDoImovel;
 import com.developer.demetrio.model.Cadastro;
@@ -21,10 +24,27 @@ import com.developer.demetrio.model.Contribuinte;
 import com.developer.demetrio.model.DadosCadastradosDoContribuinte;
 import com.developer.demetrio.model.Endereco;
 import com.developer.demetrio.model.Imovel;
+import com.developer.demetrio.model.Tributo;
 import com.developer.demetrio.model.ValoresVenais;
+import com.developer.demetrio.repositorio.RepositorioAliquota;
+import com.developer.demetrio.repositorio.RepositorioAreasDoImovel;
+import com.developer.demetrio.repositorio.RepositorioCadastro;
+import com.developer.demetrio.repositorio.RepositorioCodigoDeCobranca;
+import com.developer.demetrio.repositorio.RepositorioContribuinte;
+import com.developer.demetrio.repositorio.RepositorioDadosDoContribuinte;
+import com.developer.demetrio.repositorio.RepositorioDescricaoDaDivida;
+import com.developer.demetrio.repositorio.RepositorioEndereco;
+import com.developer.demetrio.repositorio.RepositorioIPTU;
+import com.developer.demetrio.repositorio.RepositorioImovel;
+import com.developer.demetrio.repositorio.RepositorioTributo;
+import com.developer.demetrio.repositorio.RepositorioValoresVenais;
 
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 public class Carregar extends AppCompatActivity {
     Boolean carregado = false;
@@ -34,6 +54,8 @@ public class Carregar extends AppCompatActivity {
     TextView status;
     private List<Imovel> imoveis = new ArrayList<>();
     private Handler handler;
+
+    private String campo1, campo2, campo3, campo4, codigoDeBarras;
 
     private SQLiteDatabase database;
 
@@ -83,21 +105,25 @@ public class Carregar extends AppCompatActivity {
 
     private void conectarAoBanco() {
         ConexaoDataBase conexaoDataBase;
-        conexaoDataBase = new ConexaoDataBase();
+        conexaoDataBase = new ConexaoDataBase(getApplicationContext());
 
         try {
            this.database = conexaoDataBase.concectarComBanco(this);
-            this.id = 0L;
-            this.lote = 10;
-            this.preCpf = 10;
-            this.midleCpf = 750;
-            this.lastCpf = 114;
-            this.digitCpf = 77;
             int i = 0;
+            int total = 0;
+            RepositorioImovel imoveis =  new RepositorioImovel(this.database);
+            try {
+                total = imoveis.getQtdImoveis();
+                System.out.println("Total de regeistros: "+total);
+            } catch (RepositorioException e) {
+                e.printStackTrace();
+            }
             while (i < 7){
-                popularImovelParaImpressao(i);
-                 i++;
-                Toast.makeText(this, i +"º Imovel cadastrado com sucesso!", Toast.LENGTH_SHORT).show();
+                if (total < 7) {
+                    popularImovelParaImpressao(i);
+                    i++;
+                    Toast.makeText(this, i + "º Imovel cadastrado com cadastro "+this.imovel.getCadastro().getNumCadastro()+" com sucesso!", Toast.LENGTH_SHORT).show();
+                }
             }
 
         } catch (SQLException ex) {
@@ -107,107 +133,339 @@ public class Carregar extends AppCompatActivity {
     }
 
     public Imovel popularImovelParaImpressao(int i) {
+
         this.imovel = new Imovel();
-        Aliquota aliquota = new Aliquota();
-        CodigoDeCobranca codigo = new CodigoDeCobranca();
-        codigo.setId(id());
-        this.imovel.setIndcEmissaoConta(0);
-        this.imovel.setIndcEnvioZap(0);
         this.imovel.setIndcEnvioEmail(0);
+        this.imovel.setIndcEnvioZap(0);
+        this.imovel.setIndcEmissaoConta(0);
 
-        codigo.setTipo("1-NORMAL");
-        codigo.setTaxaTestada("6,00");
-        aliquota.setId(codigo.getId());
-        aliquota.setCodigoDeCobranca(codigo);
-        aliquota.setTipoConstrucao("EDIFICADO");
-        aliquota.setEdificado("1,00");
-        aliquota.setTerreno("1,00");
-        aliquota.setZoneamento("3");
+        this.imovel.setContribuinte(popularContribuinte());
 
-        Cadastro cadastro = new Cadastro();
-        cadastro.setAliquota(aliquota);
-        AreasDoImovel areasDoImovel = new AreasDoImovel();
-        areasDoImovel.setAreaDoTerreno("132,00");
-        areasDoImovel.setEdificado("50,00");
-        areasDoImovel.setAreaTotalEdificado("50,00");
-        areasDoImovel.setAreaDoTerreno("132,00");
-        areasDoImovel.setExcedente("0,00");
-        areasDoImovel.setTestada("6,00");
-        areasDoImovel.setFracao("1.000000");
+        this.imovel.setEndereco(popularEndereco());
 
-        cadastro.setAreasDoImovel(areasDoImovel);
-        cadastro.setDistrito("01");
-        cadastro.setId(codigo.getId());
-        cadastro.setLote(lote());
-        cadastro.setNumCadastro("000004");
-        cadastro.setQuadra("001");
-        cadastro.setSetor("01");
-        cadastro.setUnidade("000");
-        cadastro.setInscricao("01.01.001."+cadastro.getLote()+".000");
-        ValoresVenais valores = new ValoresVenais();
-        valores.setId(codigo.getId());
-        valores.setEdificada("1.229,00");
-        valores.setExcedente("0,00");
-        valores.setTerreno("5.544,00");
-        valores.setTotal("6.773,00");
-        cadastro.setValoresVenais(valores);
+        this.imovel.setTributo(popularTributo());
+        this.imovel.setCadastro(popularCadastro());
 
-        this.imovel.setCadastro(cadastro);
+        RepositorioImovel imoveis = new RepositorioImovel(this.database);
+        try {
+            this.imovel.setId(imoveis.inserir(this.imovel));
+        } catch (RepositorioException e) {
+            e.printStackTrace();
+        }
+        return this.imovel;
+    }
 
+    private Tributo popularTributo() {
+        Tributo tributo = new Tributo();
+        tributo.setIptu(pupularIPTU());
+        RepositorioTributo tributos = new RepositorioTributo(this.database);
+        try {
+            tributo.setId(tributos.inserir(tributo));
+        } catch (RepositorioException e) {
+            e.printStackTrace();
+        }
+        return tributo;
+    }
+
+    private IPTU pupularIPTU() {
+        IPTU iptu = new IPTU();
+        gerarCodigo();
+        iptu.setDigitosDoCodigoDeBarras(codigoDeBarras);
+        iptu.setCampo1CodigoDeBarras(campo1);
+        iptu.setCampo2CodigoDeBarras(campo2);
+        iptu.setCampo3CodigoDeBarras(campo3);
+        iptu.setCampo4CodigoDeBarras(campo4);
+        iptu.setExercicio("2020");
+        iptu.setCodigoDeBaixa("2-"+campo1.substring(1,5)+"1-0");
+        iptu.setCodigoDaDivida(campo1.substring(1,5));
+        iptu.setVencimento("30/12/2020");
+        iptu.setSomaDoValor("100,57");
+        iptu.setSomaIsencao("0,00");
+        iptu.setSomaDoDesconto("20,11");
+        iptu.setValorTotal("80,46");
+        iptu.setMensagem("Cota Única com desconto, após o vencimento procure o setor tributário do município ou acesse o nosso portal: http://portal.itaenga.pe.gov.br:8070/servicosweb");
+        RepositorioIPTU iptus = new RepositorioIPTU(this.database);
+        try {
+            iptu.setId(iptus.inserir(iptu));
+        } catch (RepositorioException e) {
+            e.printStackTrace();
+        }
+        iptu.setListDescricao(gerarDescricao(iptu.getId()));
+        return iptu;
+    }
+
+    private List<DescricaoDaDivida> gerarDescricao(Long id) {
+        int i = 0;
+        int c = 1;
+        List<DescricaoDaDivida> descricoes = new ArrayList<>();
+        while (i < 4) {
+            DescricaoDaDivida divida = new DescricaoDaDivida();
+            divida.setId_IPTU(id);
+            divida.setIsencao("0,00");
+            divida.setCodigo("0"+String.valueOf(c));
+            if (i == 0) {
+                divida.setDescricao("IMP. TERRITORIAL E PREDIAL");
+                divida.setValor("28,00");
+                divida.setPontualidade("5,60");
+            }
+            if (i == 1) {
+                divida.setDescricao("IMP. PREDIAL URBANO");
+                divida.setValor("32,57");
+                divida.setPontualidade("6,51");
+            }
+            if (i == 2) {
+                divida.setDescricao("TAXA DE EXPEDIENTE");
+                divida.setValor("30,00");
+                divida.setPontualidade("6,00");
+            }
+            if (i == 3) {
+                divida.setDescricao("TAXA DE COLETA DE LIXO");
+                divida.setValor("10,00");
+                divida.setPontualidade("2,00");
+            }
+            c++;
+            i++;
+            RepositorioDescricaoDaDivida dividas = new RepositorioDescricaoDaDivida(this.database);
+            try {
+                divida.setId_IPTU(dividas.inserir(divida));
+            } catch (RepositorioException e) {
+                e.printStackTrace();
+            }
+            descricoes.add(divida);
+        }
+        return descricoes;
+    }
+
+    private void gerarCodigo() {
+        String c1 = String.valueOf(new Random().nextLong());
+        String c2 = String.valueOf(new Random().nextLong());
+        String c3 = String.valueOf(new Random().nextLong());
+        String c4 = String.valueOf(new Random().nextLong());
+
+        campo1 = c1.substring(1, 11)+"-"+c1.substring(6, 6);
+        campo2 = c2.substring(1, 11)+"-"+c1.substring(6, 6);
+        campo3 = c3.substring(1, 11)+"-"+c1.substring(6, 6);
+        campo4 = c3.substring(1, 11)+"-"+c1.substring(6, 6);
+        codigoDeBarras = c1.substring(1, 11) +
+                c2.substring(1, 11) +
+                c3.substring(1, 11) +
+                c4.substring(1, 11);
+    }
+
+    private Endereco popularEndereco() {
         Endereco endereco = new Endereco();
-        endereco.setUf("PE");
-        endereco.setNumero(cadastro.getLote());
-        endereco.setLogradouro("JOSÉ TAVARES DO REGO");
-        endereco.setComplemento("CASA");
-        endereco.setCidade("LAGOA DE ITAENGA");
         endereco.setCep("55840-000");
-        endereco.setBairro("INDEPENDENCIA");
-        endereco.setId(codigo.getId());
+        endereco.setNumero(lote());
+        endereco.setComplemento("");
+        endereco.setBairro("INDEPENDÊNCIA");
+        endereco.setLogradouro("JOSÉ TAVARES DO REGO");
+        endereco.setCidade("LAGOA DE ITAENGA");
+        endereco.setUf("PE");
+        RepositorioEndereco enderecos = new RepositorioEndereco(this.database);
+        try {
+            endereco.setId(enderecos.inserir(endereco));
+        } catch (RepositorioException e) {
+            e.printStackTrace();
+        }
+        return endereco;
+    }
 
-        this.imovel.setEndereco(endereco);
-
+    private Contribuinte popularContribuinte() {
         Contribuinte contribuinte = new Contribuinte();
-        DadosCadastradosDoContribuinte doContribuinte = new DadosCadastradosDoContribuinte();
+
+        contribuinte.setDadosCadastradosDoContribuinte(new DadosCadastradosDoContribuinte());
+        contribuinte.setDadosCadastradosDoContribuinte(popularDadosDoContribuinte());
+
+        RepositorioContribuinte contribuintes = new RepositorioContribuinte(this.database);
+        try {
+            contribuinte.setId(contribuintes.inserir(contribuinte));
+        } catch (RepositorioException e) {
+            e.printStackTrace();
+        }
+        return contribuinte;
+    }
+
+    private DadosCadastradosDoContribuinte popularDadosDoContribuinte() {
+        DadosCadastradosDoContribuinte contribuinte = new DadosCadastradosDoContribuinte();
+        contribuinte.setNumeroCelular(getCelfone());
+        contribuinte.setEmail(getEmail());
+        contribuinte.setSexo("MASCULINO");
+        contribuinte.setRaca(pegarCor());
+        contribuinte.setNaturalidade("LAGOA DE ITAENGA");
+        contribuinte.setNacionalidade("BRASILEIRA");
+        contribuinte.setEstadoCivil("SOLTEIRO");
+        contribuinte.setDataNasc(new Date());
+        contribuinte.setOrgEmissor("SDS/PE");
+        contribuinte.setRg(getRg());
+        contribuinte.setCpf(getCpf());
+        contribuinte.setNome(getNome());
+        RepositorioDadosDoContribuinte dados = new RepositorioDadosDoContribuinte(this.database);
+        try {
+            contribuinte.setId(dados.inserir(contribuinte));
+        } catch (RepositorioException e) {
+            e.printStackTrace();
+        }
+        return contribuinte;
+    }
+
+    private String pegarCor() {
+         int i = new Random().nextInt(4);
         switch (i) {
             case 0:
-                doContribuinte.setNome("DEMÉTRIO ANTONIO DE SANTANA");
+                return "AMARELA";
             case 1:
-                doContribuinte.setNome("DOUGLAS PIEDRO DE MORAIS");
+                return "BRANCA";
             case 2:
-                doContribuinte.setNome("AMAURI RODRIGUES DE VASCONCELOS");
+                return "PARDA";
             case 3:
-                doContribuinte.setNome("RITA MARIA DE ALBUQUERQUE");
-            case 4:
-                doContribuinte.setNome("DAMIANA FARIAS DA SILVA");
+                return "PRETA";
             default:
-                doContribuinte.setNome("FAVOR INFORMAR SEU NOME JUNTO AO CADASTRO");
+                return "INDIGENA";
         }
-        doContribuinte.setNome("DEMÉTRIO ANTONIO DE SANTANA");
-        doContribuinte.setCpf("010.750.114-77");
-        doContribuinte.setEstadoCivil("CASADO");
-        doContribuinte.setNacionalidade("BRASILEIRA");
-        contribuinte.setDadosCadastradosDoContribuinte(doContribuinte);
+    }
 
-        this.imovel.setContribuinte(contribuinte);
+    private String getRg() {
+        return String.valueOf(new Random().nextInt(9999999));
+    }
 
-        this.imovel.getTributo().getIptu().setCampo1CodigoDeBarras("81680000000-1");
-        this.imovel.getTributo().getIptu().setCampo2CodigoDeBarras("94182367201-4");
-        this.imovel.getTributo().getIptu().setCampo3CodigoDeBarras("91230010120-7");
-        this.imovel.getTributo().getIptu().setCampo4CodigoDeBarras("00125799000-0");
-        this.imovel.getTributo().getIptu().setCodigoDaDivida("125799");
-        this.imovel.getTributo().getIptu().setDigitosDoCodigoDeBarras("81680000000941823672019123001012000125799000");
-        this.imovel.getTributo().getIptu().setCodigoDeBaixa("2-125799-1-0");
-        this.imovel.getTributo().getIptu().setExercicio("2020");
-        this.imovel.getTributo().getIptu().setValorTotal("94,18");
-        this.imovel.getTributo().getIptu().setMensagem("Cota Única com desconto, após o vencimento procure o setor tributário do município ou acesse o nosso portal: http://portal.itaenga.pe.gov.br:8070/servicosweb");
-        this.imovel.getTributo().getIptu().setMensagem1(null);
-        this.imovel.getTributo().getIptu().setMensagem2(null);
-        this.imovel.getTributo().getIptu().setSomaDoDesconto("23,55");
-        this.imovel.getTributo().getIptu().setSomaDoValor("117,73");
-        this.imovel.getTributo().getIptu().setSomaIsencao("0,00");
-        this.imovel.getTributo().getIptu().setVencimento("25/09/2020");
-        this.imovel.getTributo().getIptu().setListDescricao(listDescricao());
-        return this.imovel;
+    private String getNome() {
+        String[] nomes = new String[]{"PEDRO", "DANIEL", "SAULO", "ANTONIEL", "DEMÉTRIO"};
+        String[] midleNome = new String[]{" FERNANDES DA ", " ANTONIO DE ", "R ODRIGUES "};
+        String[] sobreNome = new String[]{"SILVA", "SANTANA"};
+        int n, m, s;
+        n = (new Random().nextInt(3));
+        m = (new Random().nextInt(2));
+        s = (new Random().nextInt(1));
+
+        String nome = nomes[n] + midleNome[m] + sobreNome[s];
+       return nome;
+    }
+
+    private String getCpf() {
+        return String.valueOf(new Random().nextInt(9)) +
+                String.valueOf(new Random().nextInt(9)) +
+                String.valueOf(new Random().nextInt(9))+"."+
+                String.valueOf(new Random().nextInt(9))+
+                String.valueOf(new Random().nextInt(9))+
+                String.valueOf(new Random().nextInt(9))+"."+
+                String.valueOf(new Random().nextInt(9))+
+                String.valueOf(new Random().nextInt(9))+
+                String.valueOf(new Random().nextInt(9))+"-"+
+                String.valueOf(new Random().nextInt(9))+
+                String.valueOf(new Random().nextInt(9));
+    }
+
+
+
+
+    private String getEmail() {
+        Random c = new Random();
+        int i = 0;
+        int t = c.nextInt(9);
+        String email = "";
+        char[] alfabeto = {'a','b','c','d','e','f','g','h','i','j','l','k','m','n','n','o','p','q','r','s','t','u','v','w','x','y','z',};
+        do {
+            c = new Random();
+            email+= alfabeto[c.nextInt(9)];
+            i++;
+        }while (i < t);
+
+        return email+="@gmail.com";
+    }
+
+    private String getCelfone() {
+        return "81 9"+ String.valueOf(new Random().nextInt(9999))+"-"+String.valueOf(new Random().nextInt(9999));
+    }
+
+    private Cadastro popularCadastro() {
+        Cadastro cadastro = new Cadastro();
+        cadastro.setDistrito("01");
+        cadastro.setSetor("02");
+        cadastro.setQuadra("015");
+        cadastro.setLote(lote());
+        cadastro.setUnidade("000");
+        cadastro.setNumCadastro(campo1.substring(1, 6));
+        cadastro.setAliquota(popularAliquota());
+        cadastro.setAreasDoImovel(pupularAreasDoImovel());
+        cadastro.setValoresVenais(popularValoresVenais());
+
+        RepositorioCadastro cadastros = new RepositorioCadastro(this.database);
+        try {
+            cadastro.setId(cadastros.inserir(cadastro));
+        } catch (RepositorioException e) {
+            e.printStackTrace();
+        }
+
+        return cadastro;
+    }
+
+    private ValoresVenais popularValoresVenais() {
+        ValoresVenais valoresVenais = new ValoresVenais();
+        valoresVenais.setTotal("6.057,00");
+        valoresVenais.setExcedente("0,00");
+        valoresVenais.setEdificada("3.257,00");
+        valoresVenais.setTerreno("2.800,00");
+
+        RepositorioValoresVenais valores = new RepositorioValoresVenais(this.database);
+        try {
+            valoresVenais.setId(valores.inserir(valoresVenais));
+        } catch (RepositorioException e) {
+            e.printStackTrace();
+        }
+
+        return valoresVenais;
+    }
+
+    private AreasDoImovel pupularAreasDoImovel() {
+        AreasDoImovel area = new AreasDoImovel();
+        area.setFracao("1,000000");
+        area.setTestada("5,00");
+        area.setExcedente("0,00");
+        area.setAreaTotalEdificado("135,00");
+        area.setEdificado("125,00");
+        area.setAreaDoTerreno("100,00");
+
+        RepositorioAreasDoImovel areas = new RepositorioAreasDoImovel(this.database);
+        try {
+            area.setId(areas.inserir(area));
+        } catch (RepositorioException e) {
+            e.printStackTrace();
+        }
+        return area;
+    }
+
+    private Aliquota popularAliquota() {
+        Aliquota aliquota = new Aliquota();
+        aliquota.setTipoConstrucao("EDIFICADO");
+        aliquota.setZoneamento("1");
+        aliquota.setEdificado("1,00");
+        aliquota.setCodigoDeCobranca(new CodigoDeCobranca());
+        CodigoDeCobranca codigoDeCobranca = popularCodigo();
+        aliquota.setCodigoDeCobranca(codigoDeCobranca);
+        aliquota.setTerreno("1,00");
+
+        RepositorioAliquota aliquotas = new RepositorioAliquota(this.database);
+        try {
+            aliquota.setId(aliquotas.inserir(aliquota));
+        } catch (RepositorioException e) {
+            e.printStackTrace();
+        }
+
+        return aliquota;
+    }
+
+    private CodigoDeCobranca popularCodigo() {
+        CodigoDeCobranca codigo =  new CodigoDeCobranca();
+        codigo.setTipo("1-NORMAL");
+        codigo.setTaxaTestada("5,00");
+
+        RepositorioCodigoDeCobranca codigos = new RepositorioCodigoDeCobranca(this.database);
+        try {
+            codigo.setId(codigos.inserir(codigo));
+        } catch (RepositorioException e) {
+            e.printStackTrace();
+        }
+        return codigo;
     }
 
     private String cpf() {
@@ -227,21 +485,10 @@ public class Carregar extends AppCompatActivity {
         return id++;
     }
 
-    private List<DescricaoDaDivida> listDescricao() {
-        List<DescricaoDaDivida> list = new ArrayList<>();
-        DescricaoDaDivida d1, d2, d3;
-        d1 = new DescricaoDaDivida(id(), "01", "IPTU", "67,73", "13,55", "0,00");
-        d2 = new DescricaoDaDivida(id(), "02", "TAXA DE EXPEDIENTE", "30,00", "6,00", "0,00");
-        d3 = new DescricaoDaDivida(id(), "03", "COLETA DE LIXO", "20,00", "4,00", "0,00");
-        list.add(d1);
-        list.add(d2);
-        list.add(d3);
-
-        return list;
-    }
-
     public Boolean verificarCarregamento(){
        time++;
        return time == 2000;
     }
+
+
 }

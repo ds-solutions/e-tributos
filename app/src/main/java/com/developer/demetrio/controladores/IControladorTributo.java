@@ -12,13 +12,13 @@ import java.util.List;
 
 public interface IControladorTributo {
 
-    void atualizarIndicadorContinuaImpressao(Integer num, Integer num2) throws ControladorException, ControladorException;
+    void atualizarIndicadorContinuaImpressao(Integer num, Integer num2) throws  ControladorException;
 
     void atualizarPosicaoImovel(Integer num, Integer num2) throws ControladorException;
 
     ArrayList<Integer> buscarIdsImoveisLidosNaoImpressos() throws ControladorException;
 
-    Imovel buscarImovelContaPorPosicao(Integer num) throws ControladorException;
+    Imovel buscarImovelPorId(long num) throws ControladorException, RepositorioException;
 
     Imovel buscarPrimeiroImovel() throws ControladorException;
 

@@ -5,6 +5,8 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.developer.demetrio.databases.constantes._DataBase;
+
 public class ConexaoDataBase {
 
     private ETributosDadaBaseOpenHelper getInstance;
@@ -19,7 +21,7 @@ public class ConexaoDataBase {
 
     public ConexaoDataBase(Context context) {
         this.context = context;
-
+        this.context.deleteDatabase(_DataBase.NOME_DO_BANCO);
        getInstance = new ETributosDadaBaseOpenHelper(this.context);
     }
 
@@ -28,4 +30,7 @@ public class ConexaoDataBase {
         sqLiteOpenHelper = new ETributosDadaBaseOpenHelper(this.context);
         return database = sqLiteOpenHelper.getWritableDatabase();
     }
+
+
+
 }

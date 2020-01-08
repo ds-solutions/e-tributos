@@ -77,6 +77,7 @@ public class ListaImoveis extends AppCompatActivity {
     private int ultimaDistancia = 12;
     private Integer index;
     private boolean has = false;
+    private long idImovel = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,19 +87,13 @@ public class ListaImoveis extends AppCompatActivity {
         Intent intent = getIntent();
 
         if (intent != null) {
-            System.out.println("intent não nulo");
             Bundle parametros = intent.getExtras();
             if (parametros != null) {
-                System.out.println("paramentros não nulo");
-                this.index = parametros.getInt("index");
-            } else if (parametros == null) {
-                System.out.println("paramentros está nulo");
+               this.idImovel = parametros.getLong("id");
             }
-        } else if (intent == null) {
-            System.out.println("intent está nulo");
         }
 
-        fragments.add(new DadosDoImovel(this, this, this.index));
+        fragments.add(new DadosDoImovel(this, this, this.idImovel));
         fragments.add(new DadosDeAtualizacaoProprietario(this, this.index));
 
         this.viewPager = (ViewPager) findViewById(R.id.view_page);

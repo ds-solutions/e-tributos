@@ -25,7 +25,7 @@ interface IRepositorioImovel {
 
     ArrayList<Imovel> buscarImovelContaPorQuadra(String setor, String quadra) throws RepositorioException;
 
-    Imovel buscarImovelContaPosicao(Integer num) throws RepositorioException;
+    Imovel buscarImovelPorId(long id) throws RepositorioException;
 
     ArrayList<Imovel> buscarImovelContas() throws RepositorioException;
 
@@ -48,4 +48,6 @@ interface IRepositorioImovel {
     Integer obterQuantidadeImoveisRoteiroCadastroAtualizado() throws RepositorioException;
 
     List<Imovel> getImoveis();
+
+    long primeiraPosicaoNaoEmitida() throws RepositorioException;
 }

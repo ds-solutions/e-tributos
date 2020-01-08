@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.developer.demetrio.databases.constantes._Tributo;
 import com.developer.demetrio.execoes.RepositorioException;
+import com.developer.demetrio.iptu.IPTU;
 import com.developer.demetrio.model.Tributo;
 
 public class RepositorioTributo implements IRepositorioTributo {
@@ -37,12 +38,13 @@ public class RepositorioTributo implements IRepositorioTributo {
         sql.append(_Tributo.NOME_DA_TABELA);
         sql.append(" WHERE ");
         sql.append(_Tributo.ID);
-        sql.append(" = ? ");
+        sql.append(" =? ");
 
         Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
         if (resultado.getCount() > 0){
             resultado.moveToFirst();
             Tributo tributo = new Tributo();
+            tributo.setIptu(new IPTU());
             tributo.setId(resultado.getLong(resultado.getColumnIndexOrThrow(_Tributo.ID)));
             tributo.getIptu().setId(resultado.getLong(resultado.getColumnIndexOrThrow(_Tributo.ID_IPTU)));
             return tributo;

@@ -167,7 +167,7 @@ public class ControladorImpressao extends ControladorBasico implements IControla
             imovel.setQntVezesImpressaoConta(Integer.valueOf(imovel.getQntVezesImpressaoConta().intValue() + 1));
             imovel.setIndcImovelImpresso(ConstantesSistema.SIM);
             Integer idMacro = imovel.getMatriculaCondominio();
-            if (idMacro == null || !getControladorTributo().verificarRateioCondominio(idMacro)) {
+            if (idMacro == null || !getControladorImovel().verificarRateioCondominio(idMacro)) {
                 imovel.setIndcImovelEnviado(ConstantesSistema.NAO);
             }
             ControladorBasico.getInstance().atualizar(imovel);

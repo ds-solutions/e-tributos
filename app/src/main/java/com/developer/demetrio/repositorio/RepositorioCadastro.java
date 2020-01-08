@@ -4,14 +4,23 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.developer.demetrio.databases.ConexaoDataBase;
 import com.developer.demetrio.databases.constantes._Cadastro;
 import com.developer.demetrio.execoes.RepositorioException;
+import com.developer.demetrio.model.Aliquota;
+import com.developer.demetrio.model.AreasDoImovel;
 import com.developer.demetrio.model.Cadastro;
-import com.zebra.sdk.comm.ConnectionA;
+import com.developer.demetrio.model.ValoresVenais;
 
 public class RepositorioCadastro implements IRepositorioCadastro {
 
     private SQLiteDatabase conexao;
+    private Cadastro objeto;
+    private static RepositorioCadastro instancia;
+
+    public RepositorioCadastro() {
+
+    }
 
     public RepositorioCadastro(SQLiteDatabase conexao) {
         this.conexao = conexao;
@@ -38,12 +47,41 @@ public class RepositorioCadastro implements IRepositorioCadastro {
         String[] parametros = new String[1];
         parametros[0] = String.valueOf(id);
         StringBuilder sql = new StringBuilder();
-        sql.append(" ");
+        sql.append(" SELECT ");
+        sql.append(_Cadastro.ID);
+        sql.append(", ");
+        sql.append(_Cadastro.DISTRITO);
+        sql.append(", ");
+        sql.append(_Cadastro.SETOR);
+        sql.append(", ");
+        sql.append(_Cadastro.QUADRA);
+        sql.append(", ");
+        sql.append(_Cadastro.LOTE);
+        sql.append(", ");
+        sql.append(_Cadastro.UNIDADE);
+        sql.append(", ");
+        sql.append(_Cadastro.INSCRICAO);
+        sql.append(", ");
+        sql.append(_Cadastro.NUM_CADASTRO);
+        sql.append(", ");
+        sql.append(_Cadastro.ID_VALORES_VENAIS);
+        sql.append(", ");
+        sql.append(_Cadastro.ID_ALIQUOTA);
+        sql.append(", ");
+        sql.append(_Cadastro.ID_AREAS_DO_IMOVEL);
+        sql.append(" FROM ");
+        sql.append(_Cadastro.NOME_DA_TABELA);
+        sql.append(" WHERE ");
+        sql.append(_Cadastro.ID);
+        sql.append(" =? ");
         Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
 
         if (resultado.getCount() > 0) {
             resultado.moveToFirst();
             Cadastro cadastro = new Cadastro();
+            cadastro.setAliquota(new Aliquota());
+            cadastro.setAreasDoImovel(new AreasDoImovel());
+            cadastro.setValoresVenais(new ValoresVenais());
             cadastro.getAliquota().setId(resultado.getLong(resultado.getColumnIndexOrThrow(_Cadastro.ID_ALIQUOTA)));
             cadastro.getAreasDoImovel().setId(resultado.getLong(resultado.getColumnIndexOrThrow(_Cadastro.ID_AREAS_DO_IMOVEL)));
             cadastro.getValoresVenais().setId(resultado.getLong(resultado.getColumnIndexOrThrow(_Cadastro.ID_VALORES_VENAIS)));
@@ -54,6 +92,7 @@ public class RepositorioCadastro implements IRepositorioCadastro {
             cadastro.setQuadra(resultado.getString(resultado.getColumnIndexOrThrow(_Cadastro.QUADRA)));
             cadastro.setLote(resultado.getString(resultado.getColumnIndexOrThrow(_Cadastro.LOTE)));
             cadastro.setUnidade(resultado.getString(resultado.getColumnIndexOrThrow(_Cadastro.UNIDADE)));
+            System.out.println("NUMERO DO CADASTRO - > " + resultado.getString(resultado.getColumnIndexOrThrow(_Cadastro.NUM_CADASTRO)));
             return cadastro;
 
         }

@@ -57,7 +57,7 @@ public class RepositorioAreasDoImovel implements IRepositorioAreasDoImovel {
         sql.append(_AreasDoImovel.NOME_DA_TABELA);
         sql.append(" WHERE ");
         sql.append(_AreasDoImovel.ID);
-        sql.append(" ? ");
+        sql.append(" =? ");
         Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
         if (resultado.getCount() > 0) {
             resultado.moveToFirst();

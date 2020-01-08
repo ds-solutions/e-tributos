@@ -12,7 +12,7 @@ public class ControladorBasico implements IControladorBasico {
     protected static Context context;
     private static ControladorBasico instance;
     private ControladorImpressao controladorImpressao;
-    private ControladorTributo controladorTributo;
+    private ControladorImovel controladorImovel;
     private ControladorAlertaValidarConexaoImpressora controladorAlertaValidarConexaoImpressora;
 
 
@@ -96,11 +96,11 @@ public class ControladorBasico implements IControladorBasico {
         return this.controladorImpressao;
     }
 
-    public ControladorTributo getControladorTributo() {
-        if (this.controladorTributo == null) {
-            this.controladorTributo = ControladorTributo.getInstance();
+    public ControladorImovel getControladorImovel() {
+        if (this.controladorImovel == null) {
+            this.controladorImovel = ControladorImovel.getInstance();
         }
-        return this.controladorTributo;
+        return this.controladorImovel;
     }
 
 

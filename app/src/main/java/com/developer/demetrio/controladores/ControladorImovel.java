@@ -8,15 +8,15 @@ import com.developer.demetrio.repositorio.RepositorioImovel;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ControladorTributo extends ControladorBasico implements IControladorTributo {
+public class ControladorImovel extends ControladorBasico implements IControladorTributo {
 
-    private RepositorioImovel repositorioImovelIPTU;
+    private RepositorioImovel repositorioImovel;
 
-    private static ControladorTributo instance;
-    public static ControladorTributo getInstance() {
+    private static ControladorImovel instance;
+    public static ControladorImovel getInstance() {
         if (instance == null) {
-            instance = new ControladorTributo();
-            instance.repositorioImovelIPTU = RepositorioImovel.getInstance();
+            instance = new ControladorImovel();
+            instance.repositorioImovel = RepositorioImovel.getInstance();
         }
         return instance;
     }
@@ -28,7 +28,7 @@ public class ControladorTributo extends ControladorBasico implements IControlado
 
     @Override
     public List<Imovel> getImoveis(){
-        return repositorioImovelIPTU.getImoveis();
+        return repositorioImovel.getImoveis();
     }
 
 
@@ -42,8 +42,9 @@ public class ControladorTributo extends ControladorBasico implements IControlado
     }
 
      @Override
-    public Imovel buscarImovelContaPorPosicao(Integer num) throws ControladorException {
-        return null;
+    public Imovel buscarImovelPorId(long id) throws ControladorException, RepositorioException {
+         return repositorioImovel.buscarImovelPorId(id);
+
     }
     @Override
     public Imovel buscarPrimeiroImovel() throws ControladorException {
@@ -124,7 +125,11 @@ public class ControladorTributo extends ControladorBasico implements IControlado
 
     public ArrayList<Imovel> buscarImovelContas() throws ControladorException, RepositorioException {
         System.out.println("dentro do buscarImovelContas na class Controlador Tributos");
-        return repositorioImovelIPTU.buscarImovelContas();
+        return repositorioImovel.buscarImovelContas();
     }
 
+    public long primeiraPosicaoNaoEmitida() throws ControladorException, RepositorioException {
+        RepositorioImovel.getInstance().primeiraPosicaoNaoEmitida();
+        return 0;
+    }
 }

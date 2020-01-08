@@ -3,18 +3,29 @@ package com.developer.demetrio.etributos;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.developer.demetrio.controladores.ControladorImovel;
+import com.developer.demetrio.databases.ConexaoDataBase;
+import com.developer.demetrio.execoes.ControladorException;
+import com.developer.demetrio.execoes.RepositorioException;
 import com.developer.demetrio.model.ItemMenu;
 import com.developer.demetrio.model.MenuAdapter;
+import com.developer.demetrio.repositorio.RepositorioImovel;
 
 import java.util.ArrayList;
 
 public class Menu extends AppCompatActivity {
+
+    private String conveterId;
+    private long id;
+    SQLiteDatabase conexao;
+    ConexaoDataBase conexaoDataBase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,13 +36,27 @@ public class Menu extends AppCompatActivity {
         ArrayAdapter adapter = new MenuAdapter(this, itens);
         listView.setAdapter(adapter);
 
+       // this.conexao = this.conexaoDataBase.concectarComBanco(this);
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent activity;
                 switch (itens.get(i).getDescricao()) {
                     case "Lista de Imóveis":
+                        try {
+                            SQLiteDatabase conexao = new ConexaoDataBase().concectarComBanco(getApplicationContext());
+                            RepositorioImovel imoveis = new RepositorioImovel(conexao);
+                           id = imoveis.primeiraPosicaoNaoEmitida();
+                        } catch (RepositorioException e) {
+                            e.printStackTrace();
+                        }
                         activity = new Intent(getApplicationContext(), ListaImoveis.class);
+                        if (id > 0) {
+                            Bundle bundle = new Bundle();
+                            bundle.putLong("id", id);
+                            activity.putExtras(bundle);
+                        }
                         startActivity(activity);
                         break;
 

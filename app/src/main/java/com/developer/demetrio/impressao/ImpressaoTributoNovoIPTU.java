@@ -37,7 +37,6 @@ public class ImpressaoTributoNovoIPTU extends ImpressaoTributo{
     public StringBuilder imprimirIptu() {
         this.buffer = new StringBuilder();
         if (this.imovel != null) {
-            System.out.println("O imovel não está nulo");
                 this.buffer = layoutIPTU(this.imovel);
         }
         return this.buffer;

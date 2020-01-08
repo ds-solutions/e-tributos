@@ -6,7 +6,9 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.developer.demetrio.databases.constantes._Contribuinte;
 import com.developer.demetrio.execoes.RepositorioException;
+import com.developer.demetrio.model.AtualizacaoDoContribuinte;
 import com.developer.demetrio.model.Contribuinte;
+import com.developer.demetrio.model.DadosCadastradosDoContribuinte;
 
 public class RepositorioContribuinte implements IRepositorioContribuinte {
 
@@ -42,12 +44,15 @@ public class RepositorioContribuinte implements IRepositorioContribuinte {
         sql.append(_Contribuinte.NOME_DA_TABELA);
         sql.append(" WHERE ");
         sql.append(_Contribuinte.ID);
-        sql.append(" = ? ");
+        sql.append(" =? ");
 
         Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
 
         if (resultado.getCount() > 0) {
+            resultado.moveToFirst();
             Contribuinte contribuinte = new Contribuinte();
+            contribuinte.setAtualizacaoDoContribuinte(new AtualizacaoDoContribuinte());
+            contribuinte.setDadosCadastradosDoContribuinte(new DadosCadastradosDoContribuinte());
             contribuinte.setId(resultado.getLong(resultado.getColumnIndexOrThrow(_Contribuinte.ID)));
             contribuinte.getAtualizacaoDoContribuinte().setId(resultado.getLong(resultado.getColumnIndexOrThrow(_Contribuinte.ID_AUTALIZACAO_DO_CONTRIBUINTE)));
             contribuinte.getDadosCadastradosDoContribuinte().setId(resultado.getLong(resultado.getColumnIndexOrThrow(_Contribuinte.ID_AUTALIZACAO_DO_CONTRIBUINTE)));
