@@ -47,81 +47,42 @@ public class RepositorioDadosAtualizadosDoContribuinte implements IRepositorioDa
     public AtualizacaoDoContribuinte buscar(long id) throws RepositorioException {
         String[] parametros = new String[1];
         parametros[0] = String.valueOf(id);
-        StringBuilder sql = query();
+        StringBuilder sql = new StringBuilder();
+        sql.append(" SELECT * ");
+
+        sql.append(" FROM ");
+        sql.append(_AtualizacaoDoContribuinte.NOME_DA_TABELA);
+        sql.append(" WHERE ");
+        sql.append(_AtualizacaoDoContribuinte.ID);
+        sql.append(" =? ");
 
         Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
 
         if (resultado.getCount() > 0) {
             resultado.moveToFirst();
-            AtualizacaoDoContribuinte dados = dadosColetados(resultado);
+            AtualizacaoDoContribuinte dados = new AtualizacaoDoContribuinte();
+            dados.setId(resultado.getLong(resultado.getColumnIndexOrThrow(_AtualizacaoDoContribuinte.ID)));
+            dados.setNome(resultado.getString(resultado.getColumnIndexOrThrow(_AtualizacaoDoContribuinte.NOME)));
+            dados.setCpfCnpj(resultado.getString(resultado.getColumnIndexOrThrow(_AtualizacaoDoContribuinte.CPF_CNPJ)));
+            dados.setRg(resultado.getString(resultado.getColumnIndexOrThrow(_AtualizacaoDoContribuinte.RG)));
+            dados.setOrgaoEmissor(resultado.getString(resultado.getColumnIndexOrThrow(_AtualizacaoDoContribuinte.ORG_EMISSOR)));
+            dados.setEstadoCivil(resultado.getString(resultado.getColumnIndexOrThrow(_AtualizacaoDoContribuinte.ESTADO_CIVIL)));
+            dados.setSexo(resultado.getString(resultado.getColumnIndexOrThrow(_AtualizacaoDoContribuinte.SEXO)));
+            dados.setCor(resultado.getString(resultado.getColumnIndexOrThrow(_AtualizacaoDoContribuinte.COR)));
+            dados.setNacionalidade(resultado.getString(resultado.getColumnIndexOrThrow(_AtualizacaoDoContribuinte.NACIONALIDADE)));
+            dados.setNaturalidade(resultado.getString(resultado.getColumnIndexOrThrow(_AtualizacaoDoContribuinte.NATURALIDADE)));
+            dados.setDataNascimento(resultado.getString(resultado.getColumnIndexOrThrow(_AtualizacaoDoContribuinte.DATA_NASC)));
+            dados.setTipoPessoa(resultado.getString(resultado.getColumnIndexOrThrow(_AtualizacaoDoContribuinte.TIPO_PESSOA)));
+            dados.setEscolaridade(resultado.getString(resultado.getColumnIndexOrThrow(_AtualizacaoDoContribuinte.ESCOLARIDADE)));
+            dados.setTelefone(resultado.getString(resultado.getColumnIndexOrThrow(_AtualizacaoDoContribuinte.TELEFONE)));
+            dados.setCelular(resultado.getString(resultado.getColumnIndexOrThrow(_AtualizacaoDoContribuinte.CELULAR)));
+            dados.setEmail(resultado.getString(resultado.getColumnIndexOrThrow(_AtualizacaoDoContribuinte.EMAIL)));
             return dados;
         }
         return null;
     }
 
-    private StringBuilder query() {
-         StringBuilder sql = new StringBuilder();
-        sql.append(" SELECT ");
-        sql.append(_AtualizacaoDoContribuinte.ID);
-        sql.append(", ");
-        sql.append(_AtualizacaoDoContribuinte.NOME);
-        sql.append(", ");
-        sql.append(_AtualizacaoDoContribuinte.CPF_CNPJ);
-        sql.append(", ");
-        sql.append(_AtualizacaoDoContribuinte.RG);
-        sql.append(", ");
-        sql.append(_AtualizacaoDoContribuinte.ORG_EMISSOR);
-        sql.append(", ");
-        sql.append(_AtualizacaoDoContribuinte.ESTADO_CIVIL);
-        sql.append(", ");
-        sql.append(_AtualizacaoDoContribuinte.SEXO);
-        sql.append(", ");
-        sql.append(_AtualizacaoDoContribuinte.COR);
-        sql.append(", ");
-        sql.append(_AtualizacaoDoContribuinte.NACIONALIDADE);
-        sql.append(", ");
-        sql.append(_AtualizacaoDoContribuinte.NATURALIDADE);
-        sql.append(", ");
-        sql.append(_AtualizacaoDoContribuinte.DATA_NASC);
-        sql.append(", ");
-        sql.append(_AtualizacaoDoContribuinte.TIPO_PESSOA);
-        sql.append(", ");
-        sql.append(_AtualizacaoDoContribuinte.ESCOLARIDADE);
-        sql.append(", ");
-        sql.append(_AtualizacaoDoContribuinte.TELEFONE);
-        sql.append(", ");
-        sql.append(_AtualizacaoDoContribuinte.CELULAR);
-        sql.append(", ");
-        sql.append(_AtualizacaoDoContribuinte.EMAIL);
-        sql.append(" FROM ");
-        sql.append(_AtualizacaoDoContribuinte.NOME_DA_TABELA);
-        sql.append(" WHERE ");
-        sql.append(_AtualizacaoDoContribuinte.ID);
-        sql.append(" = ? ");
-        return sql;
 
-    }
-
-    private AtualizacaoDoContribuinte dadosColetados(Cursor resultado) {
-        AtualizacaoDoContribuinte dados = new AtualizacaoDoContribuinte();
-        dados.setId(resultado.getLong(resultado.getColumnIndexOrThrow(_AtualizacaoDoContribuinte.ID)));
-        dados.setNome(resultado.getString(resultado.getColumnIndexOrThrow(_AtualizacaoDoContribuinte.NOME)));
-        dados.setCpfCnpj(resultado.getString(resultado.getColumnIndexOrThrow(_AtualizacaoDoContribuinte.CPF_CNPJ)));
-        dados.setRg(resultado.getString(resultado.getColumnIndexOrThrow(_AtualizacaoDoContribuinte.RG)));
-        dados.setOrgaoEmissor(resultado.getString(resultado.getColumnIndexOrThrow(_AtualizacaoDoContribuinte.ORG_EMISSOR)));
-        dados.setEstadoCivil(resultado.getString(resultado.getColumnIndexOrThrow(_AtualizacaoDoContribuinte.ESTADO_CIVIL)));
-        dados.setSexo(resultado.getString(resultado.getColumnIndexOrThrow(_AtualizacaoDoContribuinte.SEXO)));
-        dados.setCor(resultado.getString(resultado.getColumnIndexOrThrow(_AtualizacaoDoContribuinte.COR)));
-        dados.setNacionalidade(resultado.getString(resultado.getColumnIndexOrThrow(_AtualizacaoDoContribuinte.NACIONALIDADE)));
-        dados.setNaturalidade(resultado.getString(resultado.getColumnIndexOrThrow(_AtualizacaoDoContribuinte.NATURALIDADE)));
-        dados.setDataNascimento(Date.valueOf(resultado.getString(resultado.getColumnIndexOrThrow(_AtualizacaoDoContribuinte.DATA_NASC))));
-        dados.setTipoPessoa(resultado.getString(resultado.getColumnIndexOrThrow(_AtualizacaoDoContribuinte.TIPO_PESSOA)));
-       dados.setEscolaridade(resultado.getString(resultado.getColumnIndexOrThrow(_AtualizacaoDoContribuinte.ESCOLARIDADE)));
-       dados.setTelefone(resultado.getString(resultado.getColumnIndexOrThrow(_AtualizacaoDoContribuinte.TELEFONE)));
-        dados.setCelular(resultado.getString(resultado.getColumnIndexOrThrow(_AtualizacaoDoContribuinte.CELULAR)));
-        dados.setEmail(resultado.getString(resultado.getColumnIndexOrThrow(_AtualizacaoDoContribuinte.EMAIL)));
-        return dados;
-    }
 
     @Override
     public long atualizar(AtualizacaoDoContribuinte atualizados) throws RepositorioException {

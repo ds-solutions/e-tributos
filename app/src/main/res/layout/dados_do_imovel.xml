@@ -86,6 +86,34 @@
             android:background="@android:color/white" />
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/linear_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/colorAccent">
+
+
+        <TextView
+            android:id="@+id/id_msg_usuario"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginEnd="6sp"
+            android:layout_weight="1"
+            android:textColor="@android:color/white" />
+
+        <TextView
+            android:id="@+id/id_qtd_imoveis"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:text="1/7"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
+
     <ScrollView
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"

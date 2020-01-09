@@ -37,6 +37,7 @@ import com.developer.demetrio.model.Aliquota;
 import com.developer.demetrio.model.AreasDoImovel;
 import com.developer.demetrio.model.AtualizacaoDoContribuinte;
 import com.developer.demetrio.model.Cadastro;
+import com.developer.demetrio.model.CodigoDeCobranca;
 import com.developer.demetrio.model.Contribuinte;
 import com.developer.demetrio.model.DadosCadastradosDoContribuinte;
 import com.developer.demetrio.model.Endereco;
@@ -73,6 +74,8 @@ public class DadosDoImovel extends Fragment {
     private Spinner motivoNaoEntrega;
     private String[] motivos = new String[] {"Motivo da não entrega", "Demolido", "Imóvel não localizado", "Recusou receber",  "Terreno"};
 
+    private Integer totalImoveis;
+
     private Imovel imovel = new Imovel();
     private AtualizacaoDoContribuinte atualizacaoDoProprietario;
     private Context context;
@@ -89,14 +92,11 @@ public class DadosDoImovel extends Fragment {
     private boolean has = false;
 
     private TextView matricula, inscricao, cidade, bairro, logradouro, num, complemento,
-    zoneamento, valorTributo, contribuinte;
+    zoneamento, valorTributo, contribuinte, msgUsuario, statusQtdImoveis;
 
     private ImageView printer, email, whatsApp;
     private ControladorImovel controladorImovel;
-    private List<Imovel> imoveis = new ArrayList<Imovel>();
-    private long in = 0;
-    private long lastIndex;
-
+    private boolean concluiu = false;
     public DadosDoImovel(Context context, Activity activity, long id) {
         this.context = context;
         this.activity = activity;
@@ -109,11 +109,12 @@ public class DadosDoImovel extends Fragment {
         RepositorioImovel imoveis = new RepositorioImovel(this.conexao);
         try {
             this.imovel = imoveis.buscarImovelPorId(id);
-            preencherView();
+            this.totalImoveis = imoveis.getQtdImoveis();
+            this.concluiu = imoveis.rotaFinalizada();
         }  catch (RepositorioException e) {
             e.printStackTrace();
         }
-        lastIndex = this.imovel.getId();
+
     }
 
 
@@ -135,16 +136,17 @@ public class DadosDoImovel extends Fragment {
         this.zoneamento = (TextView) viewGroup.findViewById(R.id.zonemanento);
         this.valorTributo = (TextView) viewGroup.findViewById(R.id.valor_tributo);
         this.contribuinte = (TextView) viewGroup.findViewById(R.id.id_contribuinte);
-        this.printer = viewGroup.findViewById(R.id.status_impressora);
-        this.email =  viewGroup.findViewById(R.id.status_email);
-        this.whatsApp =  viewGroup.findViewById(R.id.status_whatsapp);
+        this.statusQtdImoveis = (TextView) viewGroup.findViewById(R.id.id_qtd_imoveis);
+        this.msgUsuario = (TextView) viewGroup.findViewById(R.id.id_msg_usuario);
+        this.printer = (ImageView) viewGroup.findViewById(R.id.status_impressora);
+        this.email = (ImageView) viewGroup.findViewById(R.id.status_email);
+        this.whatsApp = (ImageView) viewGroup.findViewById(R.id.status_whatsapp);
         this.btImprimir = (Button) viewGroup.findViewById(R.id.bt_imprimir);
         this.btImovelAnterior = (Button) viewGroup.findViewById(R.id.bt_anterior2);
         this.btProximoImovel = (Button) viewGroup.findViewById(R.id.bt_proximo2);
 
         preencherView();
-        in = id +1;
-
+        addImagemNosStatusDoImovel();
         ArrayAdapter<String> listMotivoNaoEntregaAdapter = new ArrayAdapter<String>(this.context, android.R.layout.simple_spinner_dropdown_item, this.motivos);
         listMotivoNaoEntregaAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         this.motivoNaoEntrega = viewGroup.findViewById(R.id.id_motivo_nao_entrega);
@@ -152,7 +154,6 @@ public class DadosDoImovel extends Fragment {
         this.motivoNaoEntrega.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                System.out.println(motivos[i]);
             }
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
@@ -160,8 +161,8 @@ public class DadosDoImovel extends Fragment {
         });
         this.btImprimir.setOnClickListener(new C_Imprimir(this.imovel));
         onCreate(savedInstanceState);
-        this.btImovelAnterior.setOnClickListener(new ImovelAnterior(this.context, id, lastIndex));
-        this.btProximoImovel.setOnClickListener(new ProximoImovel(this.context, id, lastIndex));
+        this.btImovelAnterior.setOnClickListener(new ImovelAnterior(this.context, id, totalImoveis));
+        this.btProximoImovel.setOnClickListener(new ProximoImovel(this.context, id, totalImoveis));
         return viewGroup;
     }
 
@@ -173,27 +174,48 @@ public class DadosDoImovel extends Fragment {
         this.imovel.setContribuinte(buscarContribuinte(this.imovel.getContribuinte().getId()));
 
         this.imovel.setTributo(buscarTributos(this.imovel.getTributo().getId()));
-        System.out.println("MATRICULA DOA COISA -> " +
-        this.imovel.getCadastro().getNumCadastro());
-       // this.matricula.setText(this.imovel.getCadastro().getNumCadastro().toString());
-        this.inscricao.setText(this.imovel.getCadastro().getInscricao().toString());
-        this.cidade.setText(this.imovel.getEndereco().getCidade().toString());
-        this.bairro.setText(this.imovel.getEndereco().getBairro().toString());
-        this.logradouro.setText(this.imovel.getEndereco().getLogradouro().toString());
-        this.num.setText(this.imovel.getEndereco().getNumero().toString());
-        this.complemento.setText(this.imovel.getEndereco().getComplemento().toString());
-        this.zoneamento.setText(this.imovel.getCadastro().getAliquota().getZoneamento().toString());
-        this.valorTributo.setText(this.imovel.getTributo().getIptu().getValorTotal().toString());
-        this.contribuinte.setText(this.imovel.getContribuinte().getAtualizacaoDoContribuinte() != null ?
-                this.imovel.getContribuinte().getAtualizacaoDoContribuinte().getNome().toString() : this.imovel.getContribuinte().getDadosCadastradosDoContribuinte().getNome().toString());
 
-        addImagemNosStatusDoImovel();
+        this.matricula.setText(this.imovel.getCadastro().getNumCadastro());
+        this.inscricao.setText(this.imovel.getCadastro().getInscricao());
+        this.cidade.setText(this.imovel.getEndereco().getCidade());
+        this.bairro.setText(this.imovel.getEndereco().getBairro());
+        this.logradouro.setText(this.imovel.getEndereco().getLogradouro());
+        this.num.setText(this.imovel.getEndereco().getNumero());
+        this.complemento.setText(this.imovel.getEndereco().getComplemento());
+        this.zoneamento.setText(this.imovel.getCadastro().getAliquota().getZoneamento());
+        this.valorTributo.setText(this.imovel.getTributo().getIptu().getValorTotal());
+        this.contribuinte.setText(getNome());
+        this.statusQtdImoveis.setText(String.valueOf(this.id)+"/"+String.valueOf(this.totalImoveis));
+        this.msgUsuario.setText(getmessage());
     }
 
+    private int getmessage() {
+        int mensagem = R.string.nulo;
+            int i = this.imovel.getContribuinte().getDadosCadastradosDoContribuinte().getCpf() == null ||
+                    this.imovel.getContribuinte().getDadosCadastradosDoContribuinte().getRg() == null  ||
+                    this.imovel.getContribuinte().getDadosCadastradosDoContribuinte().getEmail() == null ||
+                    this.imovel.getContribuinte().getDadosCadastradosDoContribuinte().getEmail() == null ? 1 : 0;
+            i = this.concluiu ? 2 : 0;
+            if (i > 0 && i == 1) {
+
+                mensagem = R.string.atualizar_dados;
+            }
+            if (i == 2) {
+                mensagem = R.string.rota_finalizada;
+                System.out.println(mensagem);
+            }
+            return mensagem;
+    }
+
+    private String getNome() {
+        String nome = this.imovel.getContribuinte().getAtualizacaoDoContribuinte() != null ?
+                this.imovel.getContribuinte().getAtualizacaoDoContribuinte().getNome() : this.imovel.getContribuinte().getDadosCadastradosDoContribuinte().getNome();
+
+        return nome;
+    }
+
+
     private Tributo buscarTributos(Long id) {
-
-        System.out.println("id do parametro = "+id);
-
         Tributo tributo = new Tributo();
         tributo.setIptu(new IPTU());
         RepositorioTributo tributos = new RepositorioTributo(this.conexao);
@@ -202,7 +224,6 @@ public class DadosDoImovel extends Fragment {
         } catch (RepositorioException e) {
             e.printStackTrace();
         }
-        System.out.println("id do tributo = "+tributo.getId());
        tributo.setIptu(buscarIptu(tributo.getIptu().getId()));
 
         return tributo;
@@ -235,9 +256,7 @@ public class DadosDoImovel extends Fragment {
         Contribuinte contribuinte = new Contribuinte();
         RepositorioContribuinte contribuintes = new RepositorioContribuinte(this.conexao);
         try {
-            System.out.println("O id do contribuinte é: "+id);
-
-            contribuinte = contribuintes.buscar(id);
+             contribuinte = contribuintes.buscar(id);
         } catch (RepositorioException e) {
             e.printStackTrace();
         }
@@ -303,6 +322,8 @@ public class DadosDoImovel extends Fragment {
         Aliquota aliquota = new Aliquota();
         RepositorioAliquota aliquotas = new RepositorioAliquota(this.conexao);
         try {
+            aliquota.setCodigoDeCobranca(new CodigoDeCobranca());
+
             aliquota = aliquotas.buscar(id);
         } catch (RepositorioException e) {
             e.printStackTrace();
@@ -334,8 +355,9 @@ public class DadosDoImovel extends Fragment {
     }
 
     private void addImagemNosStatusDoImovel() {
+
         this.printer.setImageResource(this.imovel.getIndcEmissaoConta() == 1 ? R.drawable.print : R.drawable.un_send_impressora);
-        this.whatsApp.setImageResource(this.imovel.getIndcEmissaoConta() == 1 ? R.drawable.whatsapp : R.drawable.un_send_whatsapp1);
+        this.whatsApp.setImageResource(this.imovel.getIndcEnvioZap() == 1 ? R.drawable.whatsapp : R.drawable.un_send_whatsapp1);
         this.email.setImageResource(this.imovel.getIndcEnvioEmail() == 1 ? R.drawable.email : R.drawable.un_send_email);
 
     }
@@ -353,9 +375,9 @@ public class DadosDoImovel extends Fragment {
 
         @Override
         public void onClick(View view) {
-            if (this.index != 0) {
+            if (this.index != 1) {
                 this.index--;
-            } else if (this.index == 0) {
+            } else if (this.index == 1) {
                 index = lastIndex;
             }
 
@@ -380,13 +402,11 @@ public class DadosDoImovel extends Fragment {
 
         @Override
         public void onClick(View view) {
-           /* if (this.id < this.lastIndex) {
-                this.id++;
-            } else if (this.id == this.lastIndex) {
-                id = 0;
-            }*/
-           index++;
-
+            if (this.index < this.lastIndex) {
+                this.index++;
+            } else if (this.index == this.lastIndex) {
+                index = 1;
+            }
             Bundle parametros = new Bundle();
             parametros.putLong("id", index);
             Intent activity = new Intent(this.context, ListaImoveis.class);
@@ -580,8 +600,13 @@ public class DadosDoImovel extends Fragment {
     }
 
     private void proximoImovel() {
+        if (this.imovel.getIndcEnvioZap() == 1 ||
+                this.imovel.getIndcEnvioEmail() == 1 ||
+                this.imovel.getIndcEmissaoConta() == 1) {
+            autalizarStatusDeEnvio();
+        }
         this.id++;
-       // new DadosDoImovel(this.context, this.activity, this.id);
+        new DadosDoImovel(this.context, this.activity, this.id);
         Bundle parametros = new Bundle();
         parametros.putLong("id", id);
         Intent activity = new Intent(this.context, ListaImoveis.class);
@@ -589,14 +614,28 @@ public class DadosDoImovel extends Fragment {
         startActivity(activity);
     }
 
+    private void autalizarStatusDeEnvio() {
+        RepositorioImovel imoveis =  new RepositorioImovel(this.conexao);
+        try {
+            if (this.imovel.getIndcEmissaoConta() == 1) {
+                imoveis.atualizarIndicadorEmissao(this.imovel.getId(), 1);
+            }
+            if (this.imovel.getIndcEnvioEmail() == 1) {
+                imoveis.atualizarIndicadorEnvioEmail(this.imovel.getId(), 1);
+            }
+            if (this.imovel.getIndcEnvioZap() == 1) {
+                imoveis.atualizarIndicadorEnvioWhatsAap(this.imovel.getId(), 1);
+            }
+        } catch (RepositorioException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
     private void sendForImpressora() throws ControladorException {
         if (this.fachada.verificarImpressaoConta(this.imovel, this.context.getApplicationContext()).isPeloMenosUmaImpressao()) {
-            this.imovel.setIndcEmissaoConta(1);
-            /*** TODO: método para inserir a alteração do status do imóvel
-             *   método para buscar próximo imóvel
-             */
-            addImagemNosStatusDoImovel();
+           addImagemNosStatusDoImovel();
             proximoImovel();
         } else {
             mensagemToast("Erro ao tentar imprimir!");
@@ -620,7 +659,7 @@ public class DadosDoImovel extends Fragment {
                             break;
                         }
                     }
-                };
+                };s
                 new AlertDialog.Builder(this).setMessage(mensagem)
                         .setPositiveButton("Ok", alertaDialog).show();
             }
@@ -653,6 +692,7 @@ public class DadosDoImovel extends Fragment {
         intentSend.setType("message/rfc822");
         startActivity(Intent.createChooser(intentSend,"Escolha um app para enviar o email!"));
 
+        enviadoPeloEmail();
         this.mail.rejetar();
         addImagemNosStatusDoImovel();
         return;
@@ -678,6 +718,7 @@ public class DadosDoImovel extends Fragment {
             onPause();
             Toast.makeText(this.context, "Erro ao tentar enviar mensagem via WhatsApp, tente novamente!", LENGTH_LONG).show();
         }
+        enviadoPeloZap();
         this.zap.rejetar();
         addImagemNosStatusDoImovel();
         return;

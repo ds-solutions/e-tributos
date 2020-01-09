@@ -8,6 +8,9 @@ import android.database.sqlite.SQLiteDatabase;
 import com.developer.demetrio.databases.constantes._Aliquota;
 import com.developer.demetrio.execoes.RepositorioException;
 import com.developer.demetrio.model.Aliquota;
+import com.developer.demetrio.model.CodigoDeCobranca;
+
+import java.util.AbstractList;
 
 public class RepositorioAliquota implements IRepositorioAliquota {
     private SQLiteDatabase conexao;
@@ -20,7 +23,8 @@ public class RepositorioAliquota implements IRepositorioAliquota {
     @Override
     public long inserir(Aliquota aliquota) throws RepositorioException {
         ContentValues values = new ContentValues();
-         values.put(_Aliquota.TERRENO, aliquota.getTerreno());
+        System.out.println("DENTRO DO MÉTODO INSERIR NA CLASSE REPOSITÓRIO: "+ aliquota.getTerreno());
+        values.put(_Aliquota.TERRENO, aliquota.getTerreno());
         values.put(_Aliquota.EDIFICADO, aliquota.getEdificado());
         values.put(_Aliquota.ZONEAMENTO, aliquota.getZoneamento());
         values.put(_Aliquota.TIPO_CONSTRUCAO, aliquota.getTipoConstrucao());
@@ -35,9 +39,10 @@ public class RepositorioAliquota implements IRepositorioAliquota {
         String[] parametros = new String[1];
         parametros[0] = String.valueOf(id);
         StringBuilder sql = new StringBuilder();
-        sql.append("");
-        sql.append("   SELECT ");
-        sql.append(_Aliquota.ID);
+       sql.append("   SELECT * ");
+      /*  sql.append(_Aliquota.ID);
+        sql.append(", ");
+        sql.append(_Aliquota.TERRENO);
         sql.append(", ");
         sql.append(_Aliquota.EDIFICADO);
         sql.append(", ");
@@ -45,18 +50,20 @@ public class RepositorioAliquota implements IRepositorioAliquota {
         sql.append(", ");
         sql.append(_Aliquota.TIPO_CONSTRUCAO);
         sql.append(", ");
-        sql.append(_Aliquota.ID_CODIGO_DE_COBRANCA);
+        sql.append(_Aliquota.ID_CODIGO_DE_COBRANCA); */
         sql.append(" FROM ");
         sql.append(_Aliquota.NOME_DA_TABELA);
-        sql.append("    WHERE ");
-        sql.append(_Aliquota.ID_CODIGO_DE_COBRANCA);
-        sql.append("    = ? ");
+        sql.append(" WHERE ");
+        sql.append(_Aliquota.ID);
+        sql.append(" =? ");
 
         Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
         if (resultado.getCount() > 0) {
             resultado.moveToFirst();
             Aliquota aliquota = new Aliquota();
+            aliquota.setCodigoDeCobranca(new CodigoDeCobranca());
             aliquota.setId(resultado.getLong(resultado.getColumnIndexOrThrow(_Aliquota.ID)));
+            aliquota.setTerreno(resultado.getString(resultado.getColumnIndexOrThrow(_Aliquota.TERRENO)));
             aliquota.setEdificado(resultado.getString(resultado.getColumnIndexOrThrow(_Aliquota.EDIFICADO)));
             aliquota.setZoneamento(resultado.getString(resultado.getColumnIndexOrThrow(_Aliquota.ZONEAMENTO)));
             aliquota.setTipoConstrucao(resultado.getString(resultado.getColumnIndexOrThrow(_Aliquota.TIPO_CONSTRUCAO)));

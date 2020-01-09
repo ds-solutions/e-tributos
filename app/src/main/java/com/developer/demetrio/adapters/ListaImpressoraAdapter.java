@@ -53,9 +53,6 @@ public class ListaImpressoraAdapter extends BaseAdapter {
             convertView = this.inflater.inflate(R.layout.impressora_inflater, null);
         }
         convertView.findViewById(R.id.impressora);
-        System.out.println("DENTRO DO ADAPTER");
-        System.out.println(this.impressoras.get(i).getBluetoothEndereco()
-                + " - "+ this.impressoras.get(i).getBluetoothNome());
         ((TextView) convertView.findViewById(R.id.nomeImpressora)).setText(this.impressoras.get(i).getBluetoothNome());
         ((TextView) convertView.findViewById(R.id.enderecoBluetooth)).setText(this.impressoras.get(i).getBluetoothEndereco());
         convertView.setTag(getItem(i));

@@ -50,4 +50,6 @@ interface IRepositorioImovel {
     List<Imovel> getImoveis();
 
     long primeiraPosicaoNaoEmitida() throws RepositorioException;
+
+    boolean rotaFinalizada();
 }

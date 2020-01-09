@@ -26,6 +26,10 @@
     <string name="celular">Celular</string>
     <string name="email">e-mail</string>
 
+    <string name="atualizar_dados">Atualizar dados do contribuinte</string>
+    <string name="rota_finalizada">Rota Finalizada</string>
+    <string name="nulo"></string>
+
 
     <!-- Label dos dados do imóvel -->
     <string name="cadastro">Cadastro:</string>

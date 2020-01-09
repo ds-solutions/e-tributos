@@ -11,7 +11,7 @@ public class DadosCadastradosDoContribuinte implements Serializable {
     private String cpf;
     private String rg;
     private String orgEmissor;
-    private Date dataNasc;
+    private String dataNasc;
     private String estadoCivil;
     private String nacionalidade;
     private String naturalidade;
@@ -23,7 +23,7 @@ public class DadosCadastradosDoContribuinte implements Serializable {
     public DadosCadastradosDoContribuinte() {
     }
 
-    public DadosCadastradosDoContribuinte(Long id, String nome, String cpf, String rg, String orgEmissor, Date dataNasc, String estadoCivil, String nacionalidade, String naturalidade, String raca, String sexo, String email, String numeroCelular) {
+    public DadosCadastradosDoContribuinte(Long id, String nome, String cpf, String rg, String orgEmissor, String dataNasc, String estadoCivil, String nacionalidade, String naturalidade, String raca, String sexo, String email, String numeroCelular) {
         this.id = id;
         this.nome = nome;
         this.cpf = cpf;
@@ -79,11 +79,11 @@ public class DadosCadastradosDoContribuinte implements Serializable {
         this.orgEmissor = orgEmissor;
     }
 
-    public Date getDataNasc() {
+    public String getDataNasc() {
         return dataNasc;
     }
 
-    public void setDataNasc(Date dataNasc) {
+    public void setDataNasc(String dataNasc) {
         this.dataNasc = dataNasc;
     }
 

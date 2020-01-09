@@ -88,7 +88,6 @@ public class Carregar extends AppCompatActivity {
                    } catch (InterruptedException e) {
                        Toast toast = new Toast(getApplicationContext());
                        toast.setText(e.getMessage().toString());
-                       System.out.println(e.getMessage().toString());
                        e.printStackTrace();
                    }
 
@@ -99,8 +98,6 @@ public class Carregar extends AppCompatActivity {
            }
 
        }).start();
-
-      System.out.println("Terminar sessão");
     }
 
     private void conectarAoBanco() {
@@ -114,12 +111,12 @@ public class Carregar extends AppCompatActivity {
             RepositorioImovel imoveis =  new RepositorioImovel(this.database);
             try {
                 total = imoveis.getQtdImoveis();
-                System.out.println("Total de regeistros: "+total);
             } catch (RepositorioException e) {
                 e.printStackTrace();
             }
+            if (total < 7) {
             while (i < 7){
-                if (total < 7) {
+
                     popularImovelParaImpressao(i);
                     i++;
                     Toast.makeText(this, i + "º Imovel cadastrado com cadastro "+this.imovel.getCadastro().getNumCadastro()+" com sucesso!", Toast.LENGTH_SHORT).show();
@@ -294,7 +291,7 @@ public class Carregar extends AppCompatActivity {
         contribuinte.setNaturalidade("LAGOA DE ITAENGA");
         contribuinte.setNacionalidade("BRASILEIRA");
         contribuinte.setEstadoCivil("SOLTEIRO");
-        contribuinte.setDataNasc(new Date());
+        contribuinte.setDataNasc(new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
         contribuinte.setOrgEmissor("SDS/PE");
         contribuinte.setRg(getRg());
         contribuinte.setCpf(getCpf());
@@ -439,10 +436,8 @@ public class Carregar extends AppCompatActivity {
         aliquota.setTipoConstrucao("EDIFICADO");
         aliquota.setZoneamento("1");
         aliquota.setEdificado("1,00");
-        aliquota.setCodigoDeCobranca(new CodigoDeCobranca());
-        CodigoDeCobranca codigoDeCobranca = popularCodigo();
-        aliquota.setCodigoDeCobranca(codigoDeCobranca);
         aliquota.setTerreno("1,00");
+        aliquota.setCodigoDeCobranca(popularCodigo());
 
         RepositorioAliquota aliquotas = new RepositorioAliquota(this.database);
         try {

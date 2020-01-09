@@ -15,7 +15,7 @@ public class AtualizacaoDoContribuinte implements Serializable {
     private String cor;
     private String nacionalidade;
     private String naturalidade;
-    private Date dataNascimento;
+    private String dataNascimento;
     private String tipoPessoa;
     private String escolaridade;
     private String telefone;
@@ -103,11 +103,11 @@ public class AtualizacaoDoContribuinte implements Serializable {
         this.naturalidade = naturalidade;
     }
 
-    public Date getDataNascimento() {
+    public String getDataNascimento() {
         return dataNascimento;
     }
 
-    public void setDataNascimento(Date dataNascimento) {
+    public void setDataNascimento(String dataNascimento) {
         this.dataNascimento = dataNascimento;
     }
 

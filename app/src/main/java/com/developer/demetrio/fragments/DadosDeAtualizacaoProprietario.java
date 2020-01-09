@@ -62,8 +62,7 @@ public class DadosDeAtualizacaoProprietario extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 String pegou = arrayCor[i];
-                System.out.println(pegou);
-            }
+           }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
@@ -79,7 +78,7 @@ public class DadosDeAtualizacaoProprietario extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 String pegou = arraySexo[i];
-                System.out.println(pegou);
+
             }
 
             @Override
@@ -96,7 +95,7 @@ public class DadosDeAtualizacaoProprietario extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 String pegou = arrayEstadoCivil[i];
-                System.out.println(pegou);
+
             }
 
             @Override
@@ -113,7 +112,7 @@ public class DadosDeAtualizacaoProprietario extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 String pegou = arrayTipoPessoa[i];
-                System.out.println(pegou);
+
             }
 
             @Override

@@ -3,6 +3,7 @@ package com.developer.demetrio.repositorio;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.icu.util.LocaleData;
 
 import com.developer.demetrio.databases.constantes._DadosCadastradosDoContribuinte;
 import com.developer.demetrio.execoes.RepositorioException;
@@ -44,75 +45,37 @@ public class RepositorioDadosDoContribuinte implements IRepositorioDadosDoContri
     public DadosCadastradosDoContribuinte buscar(long id) throws RepositorioException {
         String[] parametros = new String[1];
         parametros[0] = String.valueOf(id);
-        StringBuilder sql = query();
+        StringBuilder sql = new StringBuilder();
+        sql.append(" SELECT * ");
+        sql.append(" FROM ");
+        sql.append(_DadosCadastradosDoContribuinte.NOME_DA_TABELA);
+        sql.append(" WHERE ");
+        sql.append(_DadosCadastradosDoContribuinte.ID);
+        sql.append(" =? ");
 
         Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
 
         if (resultado.getCount() > 0) {
             resultado.moveToFirst();
-            DadosCadastradosDoContribuinte dados = dadosColetados(resultado);
+            DadosCadastradosDoContribuinte dados = new DadosCadastradosDoContribuinte();
+            dados.setId(resultado.getLong(resultado.getColumnIndexOrThrow(_DadosCadastradosDoContribuinte.ID)));
+            dados.setNome(resultado.getString(resultado.getColumnIndexOrThrow(_DadosCadastradosDoContribuinte.NOME)));
+            dados.setCpf(resultado.getString(resultado.getColumnIndexOrThrow(_DadosCadastradosDoContribuinte.CPF)));
+            dados.setRg(resultado.getString(resultado.getColumnIndexOrThrow(_DadosCadastradosDoContribuinte.RG)));
+            dados.setOrgEmissor(resultado.getString(resultado.getColumnIndexOrThrow(_DadosCadastradosDoContribuinte.ORG_EMISSOR)));
+            dados.setDataNasc(resultado.getString(resultado.getColumnIndexOrThrow(_DadosCadastradosDoContribuinte.DATA_NASC)));
+            dados.setEstadoCivil(resultado.getString(resultado.getColumnIndexOrThrow(_DadosCadastradosDoContribuinte.ESTADO_CIVIL)));
+            dados.setNacionalidade(resultado.getString(resultado.getColumnIndexOrThrow(_DadosCadastradosDoContribuinte.NACIONALIDADE)));
+            dados.setNaturalidade(resultado.getString(resultado.getColumnIndexOrThrow(_DadosCadastradosDoContribuinte.NATURALIDADE)));
+            dados.setRaca(resultado.getString(resultado.getColumnIndexOrThrow(_DadosCadastradosDoContribuinte.COR)));
+            dados.setSexo(resultado.getString(resultado.getColumnIndexOrThrow(_DadosCadastradosDoContribuinte.SEXO)));
+            dados.setEmail(resultado.getString(resultado.getColumnIndexOrThrow(_DadosCadastradosDoContribuinte.EMAIL)));
+            dados.setNumeroCelular(resultado.getString(resultado.getColumnIndexOrThrow(_DadosCadastradosDoContribuinte.CELULAR)));
              return dados;
         }
         return null;
     }
 
-    private DadosCadastradosDoContribuinte dadosColetados(Cursor resultado) {
-
-        DadosCadastradosDoContribuinte dados = new DadosCadastradosDoContribuinte();
-
-        dados.setId(resultado.getLong(resultado.getColumnIndexOrThrow(_DadosCadastradosDoContribuinte.ID)));
-        dados.setCpf(resultado.getString(resultado.getColumnIndexOrThrow(_DadosCadastradosDoContribuinte.NOME)));
-        dados.setCpf(resultado.getString(resultado.getColumnIndexOrThrow(_DadosCadastradosDoContribuinte.CPF)));
-        dados.setRg(resultado.getString(resultado.getColumnIndexOrThrow(_DadosCadastradosDoContribuinte.RG)));
-        dados.setOrgEmissor(resultado.getString(resultado.getColumnIndexOrThrow(_DadosCadastradosDoContribuinte.ORG_EMISSOR)));
-        java.util.Date date = new java.util.Date(resultado.getString(resultado.getColumnIndexOrThrow(_DadosCadastradosDoContribuinte.DATA_NASC)));
-        dados.setDataNasc(date);
-        dados.setEstadoCivil(resultado.getString(resultado.getColumnIndexOrThrow(_DadosCadastradosDoContribuinte.ESTADO_CIVIL)));
-        dados.setNacionalidade(resultado.getString(resultado.getColumnIndexOrThrow(_DadosCadastradosDoContribuinte.NACIONALIDADE)));
-        dados.setNaturalidade(resultado.getString(resultado.getColumnIndexOrThrow(_DadosCadastradosDoContribuinte.NATURALIDADE)));
-        dados.setRaca(resultado.getString(resultado.getColumnIndexOrThrow(_DadosCadastradosDoContribuinte.COR)));
-        dados.setSexo(resultado.getString(resultado.getColumnIndexOrThrow(_DadosCadastradosDoContribuinte.SEXO)));
-        dados.setEmail(resultado.getString(resultado.getColumnIndexOrThrow(_DadosCadastradosDoContribuinte.EMAIL)));
-        dados.setNumeroCelular(resultado.getString(resultado.getColumnIndexOrThrow(_DadosCadastradosDoContribuinte.CELULAR)));
-
-        return dados;
-    }
-
-    private StringBuilder query() {
-        StringBuilder sql = new StringBuilder();
-        sql.append(" SELECT ");
-        sql.append(_DadosCadastradosDoContribuinte.ID);
-        sql.append(", ");
-        sql.append(_DadosCadastradosDoContribuinte.NOME);
-        sql.append(", ");
-        sql.append(_DadosCadastradosDoContribuinte.CPF);
-        sql.append(", ");
-        sql.append(_DadosCadastradosDoContribuinte.RG);
-        sql.append(", ");
-        sql.append(_DadosCadastradosDoContribuinte.ORG_EMISSOR);
-        sql.append(", ");
-        sql.append(_DadosCadastradosDoContribuinte.DATA_NASC);
-        sql.append(", ");
-        sql.append(_DadosCadastradosDoContribuinte.ESTADO_CIVIL);
-        sql.append(", ");
-        sql.append(_DadosCadastradosDoContribuinte.NACIONALIDADE);
-        sql.append(", ");
-        sql.append(_DadosCadastradosDoContribuinte.NATURALIDADE);
-        sql.append(", ");
-        sql.append(_DadosCadastradosDoContribuinte.COR);
-        sql.append(", ");
-        sql.append(_DadosCadastradosDoContribuinte.SEXO);
-        sql.append(", ");
-        sql.append(_DadosCadastradosDoContribuinte.EMAIL);
-        sql.append(", ");
-        sql.append(_DadosCadastradosDoContribuinte.CELULAR);
-        sql.append(" FROM ");
-        sql.append(_DadosCadastradosDoContribuinte.NOME_DA_TABELA);
-        sql.append(" WHERE ");
-        sql.append(_DadosCadastradosDoContribuinte.ID);
-        sql.append(" = ? ");
-        return sql;
-    }
 
     @Override
     public void excluir(long id) throws RepositorioException {

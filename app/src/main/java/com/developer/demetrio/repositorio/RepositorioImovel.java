@@ -77,7 +77,7 @@ public class RepositorioImovel implements IRepositorioImovel {
         ContentValues values = new ContentValues();
 
         values.put(_Imovel.INDIC_EMISSAO_CONTA, indicador);
-        return this.conexao.update(_Imovel.NOME_DA_TABELA, values, _Imovel.ID, parametros);
+        return this.conexao.update(_Imovel.NOME_DA_TABELA, values, _Imovel.ID+"="+id, null);
     }
 
     public long atualizarIndicadorEnvioEmail(long id, int indicador) throws RepositorioException {
@@ -86,7 +86,7 @@ public class RepositorioImovel implements IRepositorioImovel {
         ContentValues values = new ContentValues();
 
         values.put(_Imovel.INDIC_ENVIO_EMAIL, indicador);
-        return this.conexao.update(_Imovel.NOME_DA_TABELA, values, _Imovel.ID, parametros);
+        return this.conexao.update(_Imovel.NOME_DA_TABELA, values, _Imovel.ID +"="+id, null);
    }
 
     public long atualizarIndicadorEnvioWhatsAap(long id, int indicador) throws RepositorioException {
@@ -95,7 +95,7 @@ public class RepositorioImovel implements IRepositorioImovel {
         ContentValues values = new ContentValues();
 
         values.put(_Imovel.INDIC_ENVIO_WHATSAAP, indicador);
-        return this.conexao.update(_Imovel.NOME_DA_TABELA, values, _Imovel.ID, parametros);
+        return this.conexao.update(_Imovel.NOME_DA_TABELA, values, _Imovel.ID + "="+ id, null);
     }
 
 
@@ -168,7 +168,6 @@ public class RepositorioImovel implements IRepositorioImovel {
              imovel.getEndereco().setId(resultado.getLong(resultado.getColumnIndexOrThrow(_Imovel.ID_ENDERECO)));
              imovel.setTributo(new Tributo());
              imovel.getTributo().setId(resultado.getLong(resultado.getColumnIndexOrThrow(_Imovel.ID_TRIBUTO)));
-             System.out.println("ID DO TRIBUTO DENTRO DO REPOSITORIO DE IMOVEL "+resultado.getLong(resultado.getColumnIndexOrThrow(_Imovel.ID_TRIBUTO)));
              return imovel;
         }
         return null;
@@ -237,7 +236,6 @@ public class RepositorioImovel implements IRepositorioImovel {
 
 
     public List<Imovel> getImoveis() {
-        System.out.println("getImoveis com "+ this.imoveis.size());
         return this.imoveis;
     }
 
@@ -268,6 +266,33 @@ public class RepositorioImovel implements IRepositorioImovel {
             return resultado.getLong(resultado.getColumnIndexOrThrow(_Imovel.ID));
         }
         return 0;
+    }
+
+    @Override
+    public boolean rotaFinalizada()  {
+        String[] parametros = new String[3];
+        parametros[0] = String.valueOf(1);
+        parametros[1] = String.valueOf(1);
+        parametros[2] = String.valueOf(1);
+
+        StringBuilder sql = new StringBuilder();
+        sql.append(" SELECT ");
+        sql.append(_Imovel.ID);
+        sql.append(" FROM ");
+        sql.append(_Imovel.NOME_DA_TABELA);
+        sql.append(" WHERE ");
+        sql.append(_Imovel.INDIC_EMISSAO_CONTA);
+        sql.append(" =? OR ");
+        sql.append(_Imovel.INDIC_ENVIO_EMAIL);
+        sql.append(" =? OR ");
+        sql.append(_Imovel.INDIC_ENVIO_WHATSAAP);
+        sql.append(" =? ");
+
+        Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
+        if (resultado.getCount() > 0) {
+            return true;
+        }
+        return false;
     }
 
 }
