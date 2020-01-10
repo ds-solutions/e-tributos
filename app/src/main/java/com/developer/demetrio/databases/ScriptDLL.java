@@ -20,6 +20,7 @@ public class ScriptDLL {
         sql.append("ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, ");
         sql.append("CODIGO_DA_DIVIDA TEXT, ");
         sql.append("CODIGO_DE_BAIXA TEXT, ");
+        sql.append("EXERCICIO TEXT, ");
         sql.append("MENSAGEM TEXT, ");
         sql.append("VALOR_TOTAL TEXT, ");
         sql.append("SOMA_DO_VALOR TEXT, ");

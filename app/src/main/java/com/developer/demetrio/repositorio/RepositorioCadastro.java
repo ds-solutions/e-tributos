@@ -47,8 +47,8 @@ public class RepositorioCadastro implements IRepositorioCadastro {
         String[] parametros = new String[1];
         parametros[0] = String.valueOf(id);
         StringBuilder sql = new StringBuilder();
-        sql.append(" SELECT ");
-        sql.append(_Cadastro.ID);
+        sql.append(" SELECT * ");
+       /* sql.append(_Cadastro.ID);
         sql.append(", ");
         sql.append(_Cadastro.DISTRITO);
         sql.append(", ");
@@ -68,7 +68,7 @@ public class RepositorioCadastro implements IRepositorioCadastro {
         sql.append(", ");
         sql.append(_Cadastro.ID_ALIQUOTA);
         sql.append(", ");
-        sql.append(_Cadastro.ID_AREAS_DO_IMOVEL);
+        sql.append(_Cadastro.ID_AREAS_DO_IMOVEL);*/
         sql.append(" FROM ");
         sql.append(_Cadastro.NOME_DA_TABELA);
         sql.append(" WHERE ");
@@ -92,7 +92,6 @@ public class RepositorioCadastro implements IRepositorioCadastro {
             cadastro.setQuadra(resultado.getString(resultado.getColumnIndexOrThrow(_Cadastro.QUADRA)));
             cadastro.setLote(resultado.getString(resultado.getColumnIndexOrThrow(_Cadastro.LOTE)));
             cadastro.setUnidade(resultado.getString(resultado.getColumnIndexOrThrow(_Cadastro.UNIDADE)));
-            System.out.println("NUMERO DO CADASTRO - > " + resultado.getString(resultado.getColumnIndexOrThrow(_Cadastro.NUM_CADASTRO)));
             return cadastro;
 
         }

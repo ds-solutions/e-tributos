@@ -30,8 +30,12 @@ public class Zap {
     public Zap prepararZap(Imovel imovel, int index) {
         this.imovel = imovel;
         this.exercicio = this.imovel.getTributo().getIptu().getExercicio();
-
-        this.destino = " 81 9977-5594"; //this.imovel.getContribuinte().getNumeroCelular();
+        this.destino = this.imovel.getContribuinte().getDadosCadastradosDoContribuinte().getNumeroCelular();
+        if (this.imovel.getContribuinte().getAtualizacaoDoContribuinte() != null) {
+            if (this.imovel.getContribuinte().getAtualizacaoDoContribuinte().getCelular() != null){
+                destino = this.imovel.getContribuinte().getAtualizacaoDoContribuinte().getCelular();
+            }
+        }
         this.tituloDoZap = "*"+TITULO_TRIBUTOS[index]+" "+this.exercicio+"*";
         this.mensagem = INICIO + formatarNome(this.imovel.getContribuinte().getAtualizacaoDoContribuinte() != null ?
                 this.imovel.getContribuinte().getAtualizacaoDoContribuinte().getNome() : this.imovel.getContribuinte().getDadosCadastradosDoContribuinte().getNome()) +EXCLAMACAO+
@@ -66,12 +70,13 @@ public class Zap {
         String fistName = "";
         String lastName = "";
         int cont = 0;
-        int startLastName = 1;
+        int startLastName = -1;
+        int countSpace = contSpace(caracateres);
         for (char l: caracateres) {
             if (l != ' ' && cont == 0) {
                 fistName +=l;
             }
-            if (cont > 0) {
+            if (cont < countSpace) {
                 startLastName++;
             }
             if (l == ' ') {
@@ -80,6 +85,16 @@ public class Zap {
         }
         lastName += nome.subSequence(startLastName, totalCaractere);
         return fistName += lastName;
+    }
+
+    private int contSpace(char[] chars) {
+        int s = 0;
+        for (char c: chars) {
+            if (c == ' ') {
+                s++;
+            }
+        }
+        return s;
     }
 
     public void rejetar() {

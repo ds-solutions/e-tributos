@@ -35,11 +35,12 @@ public class RepositorioContribuinte implements IRepositorioContribuinte {
 
         StringBuilder sql = new StringBuilder();
         sql.append(" SELECT ");
-        sql.append(_Contribuinte.ID);
+        sql.append("*");
+      /*  sql.append(_Contribuinte.ID);
         sql.append(", ");
         sql.append(_Contribuinte.ID_DADOS_DO_CONTRIBUINTE);
         sql.append(", ");
-        sql.append(_Contribuinte.ID_AUTALIZACAO_DO_CONTRIBUINTE);
+        sql.append(_Contribuinte.ID_AUTALIZACAO_DO_CONTRIBUINTE);*/
         sql.append(" FROM ");
         sql.append(_Contribuinte.NOME_DA_TABELA);
         sql.append(" WHERE ");
@@ -69,6 +70,18 @@ public class RepositorioContribuinte implements IRepositorioContribuinte {
         this.conexao.delete(
                 _Contribuinte.NOME_DA_TABELA, _Contribuinte.ID, parametros
         );
+    }
 
+    @Override
+    public void atualizar(Contribuinte contribuinte) throws RepositorioException {
+        String[] parametros = new String[1];
+        parametros[0] = String.valueOf(contribuinte.getId());
+        ContentValues values = new ContentValues();
+       if (contribuinte.getAtualizacaoDoContribuinte() != null) {
+           System.out.println("o id que veio "+ contribuinte.getAtualizacaoDoContribuinte().getId());
+           values.put(_Contribuinte.ID_AUTALIZACAO_DO_CONTRIBUINTE,
+                   contribuinte.getAtualizacaoDoContribuinte().getId());
+           this.conexao.update(_Contribuinte.NOME_DA_TABELA, values, _Contribuinte.ID+"="+ contribuinte.getId(), null);
+       }
     }
 }

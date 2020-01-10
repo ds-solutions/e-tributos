@@ -1,6 +1,7 @@
 package com.developer.demetrio.repositorio;
 
 import com.developer.demetrio.execoes.RepositorioException;
+import com.developer.demetrio.model.AtualizacaoDoContribuinte;
 import com.developer.demetrio.model.Contribuinte;
 
 public interface IRepositorioContribuinte {
@@ -10,4 +11,6 @@ public interface IRepositorioContribuinte {
     Contribuinte buscar(long id) throws RepositorioException;
 
     void excluir(long id) throws RepositorioException;
+
+    void atualizar(Contribuinte contribuinte) throws RepositorioException;
 }

@@ -14,5 +14,6 @@ public class _IPTU {
     public static final String CAMPO_2 = "CAMPO_2";
     public static final String CAMPO_3 = "CAMPO_3";
     public static final String CAMPO_4 = "CAMPO_4";
+    public static final String EXERCICIO = "EXERCICIO";
     public static final String NOME_DA_TABELA = "IPTU";
 }

@@ -6,33 +6,19 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.developer.demetrio.databases.constantes._Imovel;
 import com.developer.demetrio.execoes.RepositorioException;
-import com.developer.demetrio.iptu.DescricaoDaDivida;
-import com.developer.demetrio.model.Aliquota;
-import com.developer.demetrio.model.AreasDoImovel;
 import com.developer.demetrio.model.Cadastro;
-import com.developer.demetrio.model.CodigoDeCobranca;
 import com.developer.demetrio.model.Contribuinte;
-import com.developer.demetrio.model.DadosCadastradosDoContribuinte;
 import com.developer.demetrio.model.Endereco;
 import com.developer.demetrio.model.Imovel;
 import com.developer.demetrio.model.Tributo;
-import com.developer.demetrio.model.ValoresVenais;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class RepositorioImovel implements IRepositorioImovel {
 
+    private Imovel objeto;
     private static RepositorioImovel instancia;
-    private Imovel objeto, imovel;
-    private Long id = 0L;
-    private Integer lote = 10;
-    private Integer preCpf = 10;
-    private Integer midleCpf = 750;
-    private Integer lastCpf = 114;
-    private Integer digitCpf = 77;
-    private List<Imovel> imoveis;
-
     private SQLiteDatabase conexao;
     public void resetarInstancia() {
         instancia = null;
@@ -130,22 +116,7 @@ public class RepositorioImovel implements IRepositorioImovel {
         String[] parametros = new String[1];
         parametros[0] = String.valueOf(id);
         StringBuilder sql = new StringBuilder();
-        sql.append(" SELECT ");
-        sql.append(_Imovel.ID);
-        sql.append(", ");
-        sql.append(_Imovel.INDIC_EMISSAO_CONTA);
-        sql.append(", ");
-        sql.append(_Imovel.INDIC_ENVIO_EMAIL);
-        sql.append(", ");
-        sql.append(_Imovel.INDIC_ENVIO_WHATSAAP);
-        sql.append(", ");
-        sql.append(_Imovel.ID_CADASTRO);
-        sql.append(", ");
-        sql.append(_Imovel.ID_CONTRIBUINTE);
-        sql.append(", ");
-        sql.append(_Imovel.ID_ENDERECO);
-        sql.append(", ");
-        sql.append(_Imovel.ID_TRIBUTO);
+        sql.append(" SELECT * ");
         sql.append(" FROM ");
         sql.append(_Imovel.NOME_DA_TABELA);
         sql.append(" WHERE ");
@@ -194,9 +165,12 @@ public class RepositorioImovel implements IRepositorioImovel {
     @Override
     public Integer getQtdImoveis() throws RepositorioException {
         StringBuilder sql = new StringBuilder();
-        sql.append(" SELECT * FROM ");
+        sql.append(" SELECT ");
+        sql.append(_Imovel.ID);
+        sql.append(" ");
+        sql.append(" FROM ");
         sql.append(_Imovel.NOME_DA_TABELA);
-        Cursor resultado =  this.conexao.rawQuery(sql.toString(), null);
+       Cursor resultado =  this.conexao.rawQuery(sql.toString(), null);
         if (resultado.getCount() > 0) {
             resultado.moveToFirst();
             return resultado.getCount();
@@ -234,10 +208,11 @@ public class RepositorioImovel implements IRepositorioImovel {
         return null;
     }
 
-
+    @Override
     public List<Imovel> getImoveis() {
-        return this.imoveis;
+        return null;
     }
+
 
     @Override
     public long primeiraPosicaoNaoEmitida() throws RepositorioException {
@@ -274,7 +249,7 @@ public class RepositorioImovel implements IRepositorioImovel {
         parametros[0] = String.valueOf(1);
         parametros[1] = String.valueOf(1);
         parametros[2] = String.valueOf(1);
-
+        Integer cont = 0;
         StringBuilder sql = new StringBuilder();
         sql.append(" SELECT ");
         sql.append(_Imovel.ID);
@@ -288,8 +263,14 @@ public class RepositorioImovel implements IRepositorioImovel {
         sql.append(_Imovel.INDIC_ENVIO_WHATSAAP);
         sql.append(" =? ");
 
+        try {
+            cont = getQtdImoveis();
+        } catch (RepositorioException e) {
+            e.printStackTrace();
+        }
         Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
-        if (resultado.getCount() > 0) {
+        if (resultado.getCount() > 0
+                && resultado.getCount() == cont) {
             return true;
         }
         return false;

@@ -264,20 +264,26 @@ public class DadosDoImovel extends Fragment {
         contribuinte.setDadosCadastradosDoContribuinte(buscarDadosDoContribuinte(contribuinte.getId()));
 
         if (contribuinte.getAtualizacaoDoContribuinte() != null) {
-            contribuinte.setAtualizacaoDoContribuinte(buscarAtualizacaoDoContribuinte(contribuinte.getAtualizacaoDoContribuinte().getId()));
+            if (contribuinte.getAtualizacaoDoContribuinte().getId() != null) {
+                contribuinte.setAtualizacaoDoContribuinte(buscarAtualizacaoDoContribuinte(contribuinte.getAtualizacaoDoContribuinte().getId()));
+            }
         }
 
         return contribuinte;
     }
 
+
+
     private AtualizacaoDoContribuinte buscarAtualizacaoDoContribuinte(Long id) {
         AtualizacaoDoContribuinte contribuinte = new AtualizacaoDoContribuinte();
-        RepositorioDadosAtualizadosDoContribuinte dados = new RepositorioDadosAtualizadosDoContribuinte(this.conexao);
+        RepositorioDadosAtualizadosDoContribuinte dados
+                = new RepositorioDadosAtualizadosDoContribuinte(this.conexao);
         try {
             contribuinte = dados.buscar(id);
         } catch (RepositorioException e) {
             e.printStackTrace();
         }
+
         return contribuinte;
     }
 
@@ -670,13 +676,27 @@ public class DadosDoImovel extends Fragment {
     }
 
     private boolean isHasCellPhone() {
-        return true; //  this.imovel.getContribuinte().getNumeroCelular() != null;
+        if (this.imovel.getContribuinte().getAtualizacaoDoContribuinte() != null ||
+                this.imovel.getContribuinte().getDadosCadastradosDoContribuinte() != null){
+            if (this.imovel.getContribuinte().getDadosCadastradosDoContribuinte().getNumeroCelular() != null ||
+            this.imovel.getContribuinte().getAtualizacaoDoContribuinte().getCelular() != null) {
+                return true;
+            }
+        }
+        return false; //  this.imovel.getContribuinte().getNumeroCelular() != null;
     }
 
 
 
     private boolean isHasEmail() {
-        return true; // this.imovel.getContribuinte().getEmail() != null;
+        if (this.imovel.getContribuinte().getAtualizacaoDoContribuinte() != null ||
+                this.imovel.getContribuinte().getDadosCadastradosDoContribuinte() != null){
+            if (this.imovel.getContribuinte().getDadosCadastradosDoContribuinte().getEmail() != null ||
+                    this.imovel.getContribuinte().getAtualizacaoDoContribuinte().getEmail() != null) {
+                return true;
+            }
+        }
+        return false;
     }
 
 

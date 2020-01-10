@@ -21,6 +21,7 @@ public class RepositorioIPTU implements IRepositorioIPTU {
         ContentValues values = new ContentValues();
         values.put(_IPTU.CODIGO_DA_DIVIDA, iptu.getCodigoDaDivida());
         values.put(_IPTU.CODIGO_DE_BAIXA, iptu.getCodigoDeBaixa());
+        values.put(_IPTU.EXERCICIO, iptu.getExercicio());
         values.put(_IPTU.MENSAGEM, iptu.getMensagem());
         values.put(_IPTU.VALOR_TOTAL, iptu.getValorTotal());
         values.put(_IPTU.SOMA_DO_VALOR, iptu.getSomaDoValor());
@@ -55,6 +56,7 @@ public class RepositorioIPTU implements IRepositorioIPTU {
         iptu.setId(resultado.getLong(resultado.getColumnIndexOrThrow(_IPTU.ID)));
         iptu.setCodigoDaDivida(resultado.getString(resultado.getColumnIndexOrThrow(_IPTU.CODIGO_DA_DIVIDA)));
         iptu.setCodigoDeBaixa(resultado.getString(resultado.getColumnIndexOrThrow(_IPTU.CODIGO_DE_BAIXA)));
+        iptu.setExercicio(resultado.getString(resultado.getColumnIndexOrThrow(_IPTU.EXERCICIO)));
         iptu.setMensagem(resultado.getString(resultado.getColumnIndexOrThrow(_IPTU.MENSAGEM)));
         iptu.setValorTotal(resultado.getString(resultado.getColumnIndexOrThrow(_IPTU.VALOR_TOTAL)));
         iptu.setSomaDoValor(resultado.getString(resultado.getColumnIndexOrThrow(_IPTU.SOMA_DO_VALOR)));
@@ -70,8 +72,8 @@ public class RepositorioIPTU implements IRepositorioIPTU {
 
     private StringBuilder query() {
         StringBuilder sql = new StringBuilder();
-        sql.append(" SELECT ");
-        sql.append(_IPTU.ID);
+        sql.append(" SELECT * ");
+        /*sql.append(_IPTU.ID);
         sql.append(", ");
         sql.append(_IPTU.CODIGO_DA_DIVIDA);
         sql.append(", ");
@@ -95,12 +97,12 @@ public class RepositorioIPTU implements IRepositorioIPTU {
         sql.append(", ");
         sql.append(_IPTU.CAMPO_3);
         sql.append(", ");
-        sql.append(_IPTU.CAMPO_4);
+        sql.append(_IPTU.CAMPO_4); */
         sql.append(" FROM ");
         sql.append(_IPTU.NOME_DA_TABELA);
         sql.append(" WHERE ");
         sql.append(_IPTU.ID);
-        sql.append(" = ? ");
+        sql.append(" =? ");
         return sql;
     }
 

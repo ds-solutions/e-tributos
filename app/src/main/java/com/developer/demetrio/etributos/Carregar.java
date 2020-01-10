@@ -104,32 +104,24 @@ public class Carregar extends AppCompatActivity {
         ConexaoDataBase conexaoDataBase;
         conexaoDataBase = new ConexaoDataBase(getApplicationContext());
 
-        try {
            this.database = conexaoDataBase.concectarComBanco(this);
             int i = 0;
-            int total = 0;
             RepositorioImovel imoveis =  new RepositorioImovel(this.database);
             try {
-                total = imoveis.getQtdImoveis();
+                if (imoveis.getQtdImoveis() < 7) {
+                    while (i < 7){
+                        popularImovelParaImpressao();
+                        i++;
+                        Toast.makeText(this, i + "º Imovel cadastrado com cadastro "+this.imovel.getCadastro().getNumCadastro()+" com sucesso!", Toast.LENGTH_SHORT).show();
+                    }
+                }
             } catch (RepositorioException e) {
                 e.printStackTrace();
             }
-            if (total < 7) {
-            while (i < 7){
 
-                    popularImovelParaImpressao(i);
-                    i++;
-                    Toast.makeText(this, i + "º Imovel cadastrado com cadastro "+this.imovel.getCadastro().getNumCadastro()+" com sucesso!", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
-        }
     }
 
-    public Imovel popularImovelParaImpressao(int i) {
+    public Imovel popularImovelParaImpressao() {
 
         this.imovel = new Imovel();
         this.imovel.setIndcEnvioEmail(0);
@@ -291,7 +283,7 @@ public class Carregar extends AppCompatActivity {
         contribuinte.setNaturalidade("LAGOA DE ITAENGA");
         contribuinte.setNacionalidade("BRASILEIRA");
         contribuinte.setEstadoCivil("SOLTEIRO");
-        contribuinte.setDataNasc(new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
+        contribuinte.setDataNasc((new SimpleDateFormat("dd/MM/yyyy").format(new Date())).toString());
         contribuinte.setOrgEmissor("SDS/PE");
         contribuinte.setRg(getRg());
         contribuinte.setCpf(getCpf());
@@ -381,6 +373,8 @@ public class Carregar extends AppCompatActivity {
         cadastro.setQuadra("015");
         cadastro.setLote(lote());
         cadastro.setUnidade("000");
+        cadastro.setInscricao(cadastro.getDistrito() + "." + cadastro.getSetor() +"."+
+                cadastro.getQuadra() +"."+ cadastro.getLote()+"."+ cadastro.getUnidade());
         cadastro.setNumCadastro(campo1.substring(1, 6));
         cadastro.setAliquota(popularAliquota());
         cadastro.setAreasDoImovel(pupularAreasDoImovel());

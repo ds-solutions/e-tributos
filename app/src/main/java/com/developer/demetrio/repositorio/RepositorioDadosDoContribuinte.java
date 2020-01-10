@@ -28,8 +28,7 @@ public class RepositorioDadosDoContribuinte implements IRepositorioDadosDoContri
         values.put(_DadosCadastradosDoContribuinte.CPF, dados.getCpf());
         values.put(_DadosCadastradosDoContribuinte.RG, dados.getRg());
         values.put(_DadosCadastradosDoContribuinte.ORG_EMISSOR, dados.getOrgEmissor());
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        values.put(_DadosCadastradosDoContribuinte.DATA_NASC, dateFormat.format(dados.getDataNasc()));
+        values.put(_DadosCadastradosDoContribuinte.DATA_NASC, dados.getDataNasc());
         values.put(_DadosCadastradosDoContribuinte.ESTADO_CIVIL, dados.getEstadoCivil());
         values.put(_DadosCadastradosDoContribuinte.NACIONALIDADE, dados.getNacionalidade());
         values.put(_DadosCadastradosDoContribuinte.NATURALIDADE, dados.getNaturalidade());
