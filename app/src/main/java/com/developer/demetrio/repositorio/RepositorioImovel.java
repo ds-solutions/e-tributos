@@ -57,33 +57,16 @@ public class RepositorioImovel implements IRepositorioImovel {
        return this.conexao.insertOrThrow(_Imovel.NOME_DA_TABELA, null, values);
     }
 
-    public long atualizarIndicadorEmissao(long id, int indicador) throws RepositorioException {
+    public long atualizarIndicadorDeEnvio(long id, Imovel i) throws RepositorioException {
         String[] parametros = new String[1];
         parametros[0] = String.valueOf(id);
         ContentValues values = new ContentValues();
 
-        values.put(_Imovel.INDIC_EMISSAO_CONTA, indicador);
+        values.put(_Imovel.INDIC_EMISSAO_CONTA, i.getIndcEmissaoConta());
+        values.put(_Imovel.INDIC_ENVIO_WHATSAAP, i.getIndcEnvioZap());
+        values.put(_Imovel.INDIC_ENVIO_EMAIL, i.getIndcEnvioEmail());
         return this.conexao.update(_Imovel.NOME_DA_TABELA, values, _Imovel.ID+"="+id, null);
     }
-
-    public long atualizarIndicadorEnvioEmail(long id, int indicador) throws RepositorioException {
-        String[] parametros = new String[1];
-        parametros[0] = String.valueOf(id);
-        ContentValues values = new ContentValues();
-
-        values.put(_Imovel.INDIC_ENVIO_EMAIL, indicador);
-        return this.conexao.update(_Imovel.NOME_DA_TABELA, values, _Imovel.ID +"="+id, null);
-   }
-
-    public long atualizarIndicadorEnvioWhatsAap(long id, int indicador) throws RepositorioException {
-        String[] parametros = new String[1];
-        parametros[0] = String.valueOf(id);
-        ContentValues values = new ContentValues();
-
-        values.put(_Imovel.INDIC_ENVIO_WHATSAAP, indicador);
-        return this.conexao.update(_Imovel.NOME_DA_TABELA, values, _Imovel.ID + "="+ id, null);
-    }
-
 
     @Override
     public void atualizarIndicadorContinuaImpressao(Integer num, Integer num2) throws RepositorioException {

@@ -11,11 +11,8 @@ interface IRepositorioImovel {
     void atualizarIndicadorContinuaImpressao(Integer num, Integer num2) throws RepositorioException;
 
     long inserir(Imovel imovel) throws RepositorioException;
-    public long atualizarIndicadorEmissao(long id, int indicador) throws RepositorioException;
 
-    long atualizarIndicadorEnvioEmail(long id, int indicador) throws RepositorioException;
-
-    long atualizarIndicadorEnvioWhatsAap(long id, int indicador) throws RepositorioException;
+    long atualizarIndicadorDeEnvio(long id, Imovel i) throws RepositorioException;
 
     ArrayList<Integer> buscarIdsImoveisCadastroNaoEnviados() throws RepositorioException;
 
