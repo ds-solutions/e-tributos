@@ -5,6 +5,7 @@ public class _Imovel {
     public static final String INDIC_EMISSAO_CONTA = "INDIC_EMISSAO_CONTA";
     public static final String INDIC_ENVIO_WHATSAAP = "INDIC_ENVIO_WHATSAAP";
     public static final String INDIC_ENVIO_EMAIL = "INDIC_ENVIO_EMAIL";
+    public static final String MOTIVO_NAO_ENTREGA = "MOTIVO_NAO_ENTREGA";
     public static final String ID_CADASTRO = "ID_CADASTRO";
     public static final String ID_ENDERECO = "ID_ENDERECO";
     public static final String ID_CONTRIBUINTE = "ID_CONTRIBUINTE";

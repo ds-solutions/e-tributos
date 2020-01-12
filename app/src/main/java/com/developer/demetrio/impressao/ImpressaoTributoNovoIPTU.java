@@ -86,7 +86,7 @@ public class ImpressaoTributoNovoIPTU extends ImpressaoTributo{
         linha += 66;
         iptuBuilder.append(formarLinha(7, 0, 40, linha, "Cód.", 0, 0));
 
-        iptuBuilder.append(formarLinha(7, 0, 130, linha, "Descrição", 0, 0));
+        iptuBuilder.append(formarLinha(7, 0, 120, linha, "Descrição", 0, 0));
 
         iptuBuilder.append(formarLinha(7, 0, 370, linha, "Valor", 0, 0));
 
@@ -105,7 +105,7 @@ public class ImpressaoTributoNovoIPTU extends ImpressaoTributo{
             if (i <= t) {
                 iptuBuilder.append(formarLinha(7, 0, 47, linha, descricaoDaDivida.getCodigo(), 0, 0));
 
-                iptuBuilder.append(formarLinha(7, 0, 129, linha, margemDireita(descricaoDaDivida.getDescricao()), 0, 0));
+                iptuBuilder.append(formarLinha(7, 0, 120, linha, descricaoDaDivida.getDescricao(), 0, 0));
 
                 iptuBuilder.append(formarLinha(7, 0, 373, linha, margemDireita(descricaoDaDivida.getValor()), 0, 0));
 
@@ -121,7 +121,7 @@ public class ImpressaoTributoNovoIPTU extends ImpressaoTributo{
          * INSERIR A SOMA DOS VALORES QUE COMPOEM O IPTU
          */
         //iptuBuilder.append("[COMAND] [INICIO] [EIXO Y INICIO] [FIM] [EIXO Y FIM] [EXPESSURA DA LINHA]\n");
-        iptuBuilder.append("LINE 370 "+ linha +" 808 "+ linha +" 1\n");
+        iptuBuilder.append("LINE 375 "+ linha +" 808 "+ linha +" 1\n");
             linha+=15;
         iptuBuilder.append(formarLinha(7, 0, 130, linha, "SOMA", 0, 0));
 

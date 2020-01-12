@@ -38,7 +38,8 @@ public class RepositorioAreasDoImovel implements IRepositorioAreasDoImovel {
 
         StringBuilder sql = new StringBuilder();
         sql.append(" SELECT ");
-        sql.append(_AreasDoImovel.ID);
+        sql.append("*");
+       /* sql.append(_AreasDoImovel.ID);
         sql.append(", ");
         sql.append(_AreasDoImovel.TESTADA);
         sql.append(", ");
@@ -52,7 +53,7 @@ public class RepositorioAreasDoImovel implements IRepositorioAreasDoImovel {
         sql.append(", ");
         sql.append(_AreasDoImovel.EXCEDENTE);
         sql.append(", ");
-        sql.append(_AreasDoImovel.FRACAO);
+        sql.append(_AreasDoImovel.FRACAO);*/
         sql.append(" FROM ");
         sql.append(_AreasDoImovel.NOME_DA_TABELA);
         sql.append(" WHERE ");
@@ -62,6 +63,7 @@ public class RepositorioAreasDoImovel implements IRepositorioAreasDoImovel {
         if (resultado.getCount() > 0) {
             resultado.moveToFirst();
             areas.setId(resultado.getLong(resultado.getColumnIndexOrThrow(_AreasDoImovel.ID)));
+            areas.setTestada(resultado.getString(resultado.getColumnIndexOrThrow(_AreasDoImovel.TESTADA)));
             areas.setAreaDoTerreno(resultado.getString(resultado.getColumnIndexOrThrow(_AreasDoImovel.AREA_DO_TERRENO)));
             areas.setAreaTotalDoTerreno(resultado.getString(resultado.getColumnIndexOrThrow(_AreasDoImovel.AREA_TOTAL_DO_TERRENO)));
             areas.setEdificado(resultado.getString(resultado.getColumnIndexOrThrow(_AreasDoImovel.EDIFICADO)));

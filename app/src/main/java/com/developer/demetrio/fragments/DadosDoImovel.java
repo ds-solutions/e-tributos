@@ -47,6 +47,7 @@ import com.developer.demetrio.model.ValoresVenais;
 import com.developer.demetrio.repositorio.RepositorioAliquota;
 import com.developer.demetrio.repositorio.RepositorioAreasDoImovel;
 import com.developer.demetrio.repositorio.RepositorioCadastro;
+import com.developer.demetrio.repositorio.RepositorioCodigoDeCobranca;
 import com.developer.demetrio.repositorio.RepositorioContribuinte;
 import com.developer.demetrio.repositorio.RepositorioDadosAtualizadosDoContribuinte;
 import com.developer.demetrio.repositorio.RepositorioDadosDoContribuinte;
@@ -67,7 +68,7 @@ import java.util.List;
 import static android.widget.Toast.LENGTH_LONG;
 
 public class DadosDoImovel extends Fragment {
-    private long idDescricao = 0;
+    private static final String[] SEND_FOR = new String[]{"EMAIL", "WHATSAPP"};
     private long id;
     private SQLiteDatabase conexao;
     private ConexaoDataBase conexaoDataBase;
@@ -334,7 +335,19 @@ public class DadosDoImovel extends Fragment {
         } catch (RepositorioException e) {
             e.printStackTrace();
         }
+        aliquota.setCodigoDeCobranca(buscarCodigoDeCobranca(aliquota.getCodigoDeCobranca().getId()));
         return aliquota;
+    }
+
+    private CodigoDeCobranca buscarCodigoDeCobranca(Long id) {
+        CodigoDeCobranca codigo = new CodigoDeCobranca();
+        RepositorioCodigoDeCobranca codigos = new RepositorioCodigoDeCobranca(this.conexao);
+        try {
+            codigo = codigos.buscar(id);
+        } catch (RepositorioException e) {
+            e.printStackTrace();
+        }
+        return codigo;
     }
 
     private AreasDoImovel buscarAreas(Long id) {
@@ -446,17 +459,15 @@ public class DadosDoImovel extends Fragment {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         switch (i) {
                             case -1:
-                                sendForWhatsApp();
                                 try {
+                                    sendForWhatsApp();
                                     Thread.sleep(1500);
+
                                 } catch (InterruptedException e) {
                                     mensagemToast("Erro ao tentar enviar por WhatsApp!");
                                     e.printStackTrace();
                                 }
-                                if (enviado()) {
-                                    enviadoPeloZap();
-                                }
-                                isImprimir();
+                                enviado(SEND_FOR[1]);
                                 break;
                             default:
                                 try {
@@ -492,10 +503,7 @@ public class DadosDoImovel extends Fragment {
                                     mensagemToast("Erro ao tentar enviar por e-mail!");
                                     e.printStackTrace();
                                 }
-                                if (enviado()) {
-                                    enviadoPeloEmail();
-                                }
-                                isImprimir();
+                                enviado(SEND_FOR[0]);
                                 break;
                             default:
                                 try {
@@ -531,10 +539,7 @@ public class DadosDoImovel extends Fragment {
                                     mensagemToast("Erro ao tentar enviar por e-mail!");
                                     e.printStackTrace();
                                 }
-                                if (enviado()) {
-                                    enviadoPeloEmail();
-                                }
-                                isImprimir();
+                                enviado(SEND_FOR[0]);
                                 break;
                             case -2:
                                 sendForWhatsApp();
@@ -544,10 +549,7 @@ public class DadosDoImovel extends Fragment {
                                     mensagemToast("Erro ao tentar enviar por WhatsApp!");
                                     e.printStackTrace();
                                 }
-                                if (enviado()) {
-                                    enviadoPeloZap();
-                                }
-                                isImprimir();
+                                enviado(SEND_FOR[1]);
                                 break;
                             default:
                                 try {
@@ -580,25 +582,29 @@ public class DadosDoImovel extends Fragment {
         }
     }
 
-    private boolean enviado() {
-        final boolean[] retorno = {false};
+    private void enviado(final String s) {
         AlertDialog.OnClickListener dialog = new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 switch (i) {
                     case -1:
-                    retorno[0] =  true;
+                        if (s == SEND_FOR[0]){
+                            enviadoPeloEmail();
+                        } else
+                            if (s == SEND_FOR[1]) {
+                                enviadoPeloZap();
+                            }
                     break;
                     default:
-                    retorno[0] = false;
                     break;
                 }
+                isImprimir();
             }
         };
-        new AlertDialog.Builder(this.context).setMessage("Foi enviado a mensagem com êxito?")
+        new AlertDialog.Builder(this.context).setMessage("A mensagem foi enviada com êxito?")
                 .setPositiveButton("Sim", dialog).setNegativeButton("Não", dialog).show();
-        return retorno[0];
+//
     }
 
     private void enviadoPeloZap() {
@@ -642,7 +648,12 @@ public class DadosDoImovel extends Fragment {
                 this.imovel.getIndcEmissaoConta() == 1) {
             autalizarStatusDeEnvio();
         }
-        this.id++;
+        if (this.id < this.totalImoveis) {
+            this.id++;
+        } else if (this.id == this.totalImoveis) {
+            this.id = 1;
+        }
+
         new DadosDoImovel(this.context, this.activity, this.id);
         Bundle parametros = new Bundle();
         parametros.putLong("id", id);
@@ -663,13 +674,19 @@ public class DadosDoImovel extends Fragment {
 
 
     private void sendForImpressora() throws ControladorException {
-        if (this.fachada.verificarImpressaoConta(this.imovel, this.context.getApplicationContext()).isPeloMenosUmaImpressao()) {
-            this.imovel.setIndcEmissaoConta(1);
-            addImagemNosStatusDoImovel();
+        if (this.motivoNaoEntrega.getSelectedItem() != this.motivos[0]) {
+            this.imovel.setMotivoDaNãoEntrega(this.motivoNaoEntrega.getSelectedItem().toString());
             proximoImovel();
-        } else {
-            mensagemToast("Erro ao tentar imprimir!");
-            return;
+        }
+
+        if (this.motivoNaoEntrega.getSelectedItem() == this.motivos[0]) {
+            if (this.fachada.verificarImpressaoConta(this.imovel, this.context.getApplicationContext()).isPeloMenosUmaImpressao()) {
+                this.imovel.setIndcEmissaoConta(1);
+                addImagemNosStatusDoImovel();
+                proximoImovel();
+            } else {
+                mensagemToast("Erro ao tentar imprimir!");
+            }
         }
     }
 
@@ -738,7 +755,7 @@ public class DadosDoImovel extends Fragment {
 
         this.mail.rejetar();
         addImagemNosStatusDoImovel();
-        return;
+
     }
 
     private void sendForWhatsApp() {
@@ -763,7 +780,6 @@ public class DadosDoImovel extends Fragment {
         }
         this.zap.rejetar();
         addImagemNosStatusDoImovel();
-        return;
     }
 
 

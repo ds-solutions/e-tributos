@@ -77,12 +77,13 @@ public class DadosDeAtualizacaoProprietario extends Fragment {
     public void getDadosDoContribuinteAtualizado() {
         RepositorioContribuinte repositorioContribuinte = new RepositorioContribuinte(this.conexao);
         Contribuinte contribuinte = new Contribuinte();
-        try {
-            contribuinte = repositorioContribuinte.buscar(this.imovel.getContribuinte().getId());
-        } catch (RepositorioException e) {
-        e.printStackTrace();
-    }
-
+        if (this.imovel.getContribuinte() == null) {
+            try {
+                contribuinte = repositorioContribuinte.buscar(this.imovel.getContribuinte().getId());
+            } catch (RepositorioException e) {
+                e.printStackTrace();
+            }
+        }
         RepositorioDadosAtualizadosDoContribuinte contribuintes
                 = new RepositorioDadosAtualizadosDoContribuinte(this.conexao);
         if (contribuinte != null && contribuinte.getAtualizacaoDoContribuinte() != null) {
@@ -237,14 +238,14 @@ public class DadosDeAtualizacaoProprietario extends Fragment {
 
     public AtualizacaoDoContribuinte novoCadastro() {
         AtualizacaoDoContribuinte contribuinte = new AtualizacaoDoContribuinte();
-        contribuinte.setNome(this.nome.getText().toString());
+        contribuinte.setNome(this.nome.getText().toString().toUpperCase());
         contribuinte.setCpfCnpj(this.cpfCnpj.getText().toString());
         contribuinte.setRg(this.rg.getText().toString());
-        contribuinte.setOrgaoEmissor(this.orgaoEmissor.getText().toString());
-        contribuinte.setNacionalidade(this.nacionalidade.getText().toString());
-        contribuinte.setNaturalidade(this.naturalidade.getText().toString());
+        contribuinte.setOrgaoEmissor(this.orgaoEmissor.getText().toString().toUpperCase());
+        contribuinte.setNacionalidade(this.nacionalidade.getText().toString().toUpperCase());
+        contribuinte.setNaturalidade(this.naturalidade.getText().toString().toUpperCase());
         contribuinte.setTipoPessoa(this.tipoPessoa.getSelectedItem().toString());
-        contribuinte.setEscolaridade(this.escolaridade.getText().toString());
+        contribuinte.setEscolaridade(this.escolaridade.getText().toString().toUpperCase());
         contribuinte.setEstadoCivil(this.estadoCivil.getSelectedItem().toString());
         contribuinte.setTelefone(this.telefone.getText().toString());
         contribuinte.setCelular(this.celular.getText().toString());

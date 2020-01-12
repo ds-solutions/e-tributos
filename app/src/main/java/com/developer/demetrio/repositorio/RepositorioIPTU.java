@@ -27,6 +27,7 @@ public class RepositorioIPTU implements IRepositorioIPTU {
         values.put(_IPTU.SOMA_DO_VALOR, iptu.getSomaDoValor());
         values.put(_IPTU.SOMA_DO_DESCONTO, iptu.getSomaDoDesconto());
         values.put(_IPTU.SOMA_DA_ISENCAO, iptu.getSomaIsencao());
+        values.put(_IPTU.VENCIMENTO, iptu.getVencimento());
         values.put(_IPTU.CODIGO_DE_BARRAS, iptu.getDigitosDoCodigoDeBarras());
         values.put(_IPTU.CAMPO_1, iptu.getCampo1CodigoDeBarras());
         values.put(_IPTU.CAMPO_2, iptu.getCampo2CodigoDeBarras());
@@ -62,6 +63,7 @@ public class RepositorioIPTU implements IRepositorioIPTU {
         iptu.setSomaDoValor(resultado.getString(resultado.getColumnIndexOrThrow(_IPTU.SOMA_DO_VALOR)));
         iptu.setSomaDoDesconto(resultado.getString(resultado.getColumnIndexOrThrow(_IPTU.SOMA_DO_DESCONTO)));
         iptu.setSomaIsencao(resultado.getString(resultado.getColumnIndexOrThrow(_IPTU.SOMA_DA_ISENCAO)));
+        iptu.setVencimento(resultado.getString(resultado.getColumnIndexOrThrow(_IPTU.VENCIMENTO)));
         iptu.setDigitosDoCodigoDeBarras(resultado.getString(resultado.getColumnIndexOrThrow(_IPTU.CODIGO_DE_BARRAS)));
         iptu.setCampo1CodigoDeBarras(resultado.getString(resultado.getColumnIndexOrThrow(_IPTU.CAMPO_1)));
         iptu.setCampo2CodigoDeBarras(resultado.getString(resultado.getColumnIndexOrThrow(_IPTU.CAMPO_2)));

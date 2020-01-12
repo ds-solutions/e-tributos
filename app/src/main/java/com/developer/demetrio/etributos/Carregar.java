@@ -193,7 +193,7 @@ public class Carregar extends AppCompatActivity {
             divida.setIsencao("0,00");
             divida.setCodigo("0"+String.valueOf(c));
             if (i == 0) {
-                divida.setDescricao("IMP. TERRITORIAL E PREDIAL");
+                divida.setDescricao("IPTU");
                 divida.setValor("28,00");
                 divida.setPontualidade("5,60");
             }

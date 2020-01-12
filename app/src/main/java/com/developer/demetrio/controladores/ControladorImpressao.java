@@ -101,12 +101,7 @@ public class ControladorImpressao extends ControladorBasico implements IControla
       return flagsImpressao;
     }
 
-
-//parei aqui
-
     private boolean imprimirTributo(Imovel imovel, Context context) throws ControladorException, ImpressaoException {
-
-//        Parametros sistemaParametros = Parametros.getInstancia()
 
         if (!ConstantesSistemas.SIMULADOR) {
             this.conta = ImpressaoTributoNovoIPTU.getInstancia(imovel).imprimirIptu();
@@ -114,7 +109,6 @@ public class ControladorImpressao extends ControladorBasico implements IControla
             Log.v("STRING IMPRESSAO IPTU", this.conta.toString());
             imovel.setIndcEmissaoConta(ConstantesSistemas.SIM);
            if (!instancia.enviarTributoImpressora(this)) {
-               System.out.println("retornou true para enviar conta para impressora "+conta.toString());
                return false;
            }
 

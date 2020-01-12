@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.developer.demetrio.databases.ConexaoDataBase;
 import com.developer.demetrio.execoes.RepositorioException;
+import com.developer.demetrio.model.Imovel;
 import com.developer.demetrio.repositorio.RepositorioImovel;
 
 public class MainActivity extends AppCompatActivity {
@@ -39,8 +40,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onEntrar() {
+        ConexaoDataBase conexaoDataBase = new ConexaoDataBase();
         Toast.makeText(this, "Logando...", Toast.LENGTH_LONG).show();
         RepositorioImovel imoveis = new RepositorioImovel(this.conexao);
+
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {

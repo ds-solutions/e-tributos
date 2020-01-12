@@ -26,6 +26,7 @@ public class ScriptDLL {
         sql.append("SOMA_DO_VALOR TEXT, ");
         sql.append("SOMA_DO_DESCONTO TEXT, ");
         sql.append("SOMA_DA_ISENCAO TEXT, ");
+        sql.append("VENCIMENTO TEXT, ");
         sql.append("CODIGO_DE_BARRAS TEXT, ");
         sql.append("CAMPO_1 TEXT, ");
         sql.append("CAMPO_2 TEXT, ");
@@ -213,6 +214,7 @@ public class ScriptDLL {
         sql.append("INDIC_EMISSAO_CONTA INTEGER, ");
         sql.append("INDIC_ENVIO_WHATSAAP INTEGER, ");
         sql.append("INDIC_ENVIO_EMAIL INTEGER, ");
+        sql.append("MOTIVO_NAO_ENTREGA INTEGER, ");
         sql.append("ID_CADASTRO INTEGER, ");
         sql.append("ID_ENDERECO INTEGER, ");
         sql.append("ID_CONTRIBUINTE INTEGER, ");

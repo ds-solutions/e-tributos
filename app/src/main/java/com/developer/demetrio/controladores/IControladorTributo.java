@@ -54,5 +54,4 @@ public interface IControladorTributo {
 
     void setContext(Context context);
 
-    List<Imovel> getImoveis();
 }

@@ -93,7 +93,7 @@ public class ListaImoveis extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        startActivity(new Intent(this, Menu.class));
+        startActivity(new Intent(this, ConsultarImoveis.class));
         finishAffinity();
         return;
     }

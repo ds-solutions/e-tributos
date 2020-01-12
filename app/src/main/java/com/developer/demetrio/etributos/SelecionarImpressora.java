@@ -94,8 +94,7 @@ public class SelecionarImpressora extends AppCompatActivity {
                     DiscoveredPrinterBluetooth p = (DiscoveredPrinterBluetooth)
                             SelecionarImpressora.this.impressoras.get(SelecionarImpressora.this.impressora.getBluetoothNome() +
                                     " ("+ SelecionarImpressora.this.impressora.getBluetoothEndereco() + ")");
-                    System.out.println("valor de impressoras "+  SelecionarImpressora.this.impressoras.get(SelecionarImpressora.this.impressora.getBluetoothNome() +
-                            " ("+ SelecionarImpressora.this.impressora.getBluetoothEndereco() + ")"));
+
                     SettingsHelper.saveBluetoothAddress(SelecionarImpressora.this.getApplicationContext(), p.address);
                     SettingsHelper.savePrinterName(SelecionarImpressora.this.getApplicationContext(), /*"@" + "zebra" + "@" +*/p.friendlyName);
                     SelecionarImpressora.this.iptu = (IPTU) SelecionarImpressora.this.getIntent().getSerializableExtra("iptu");
@@ -152,22 +151,13 @@ public class SelecionarImpressora extends AppCompatActivity {
         BluetoothAdapter bA = BluetoothAdapter.getDefaultAdapter();
         for (BluetoothDevice dispositivo: bA.getBondedDevices()){
             BluetoothDevice device = bA.getRemoteDevice(dispositivo.toString());
-    System.out.println(device.getBluetoothClass()+"\n"+
-                    device.getAddress()+"\n"+ device.getName()+"\n"+
-                    device.getBluetoothClass().getMajorDeviceClass()+"\n"+
-                    (device.getBluetoothClass().getDeviceClass() & 128));
-            boolean x = !(device.getBluetoothClass() == null
+          boolean x = !(device.getBluetoothClass() == null
                     || device.getBluetoothClass().getMajorDeviceClass() != 1536
                     || (device.getBluetoothClass().getDeviceClass() & 128) == 0);
-    System.out.println("Resultado: "+x);
             if (!(device.getBluetoothClass() == null)){
-    System.out.println("Entrou na condição "+ "Verdadeiro");
                 DiscoveredPrinterBluetooth p = new DiscoveredPrinterBluetooth(device.getAddress(), device.getName());
-    System.out.println(p.address+" "+p.friendlyName);
     String key = p.friendlyName + " (" + p.address +")";
-    System.out.println(key);
                 Impressora impressora = new Impressora();
-    System.out.println(device.getAddress()+" "+device.getName());
                 impressora.setBluetoothEndereco(device.getAddress());
                 impressora.setBluetoothNome(device.getName());
                 if (!this.impressorasEncontradas.contains(impressora)){

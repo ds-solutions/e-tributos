@@ -10,6 +10,7 @@ public class _IPTU {
     public static final String SOMA_DO_DESCONTO = "SOMA_DO_DESCONTO";
     public static final String SOMA_DA_ISENCAO = "SOMA_DA_ISENCAO";
     public static final String CODIGO_DE_BARRAS = "CODIGO_DE_BARRAS";
+    public static final String VENCIMENTO = "VENCIMENTO";
     public static final String CAMPO_1 = "CAMPO_1";
     public static final String CAMPO_2 = "CAMPO_2";
     public static final String CAMPO_3 = "CAMPO_3";

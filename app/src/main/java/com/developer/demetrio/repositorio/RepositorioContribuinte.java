@@ -36,11 +36,6 @@ public class RepositorioContribuinte implements IRepositorioContribuinte {
         StringBuilder sql = new StringBuilder();
         sql.append(" SELECT ");
         sql.append("*");
-      /*  sql.append(_Contribuinte.ID);
-        sql.append(", ");
-        sql.append(_Contribuinte.ID_DADOS_DO_CONTRIBUINTE);
-        sql.append(", ");
-        sql.append(_Contribuinte.ID_AUTALIZACAO_DO_CONTRIBUINTE);*/
         sql.append(" FROM ");
         sql.append(_Contribuinte.NOME_DA_TABELA);
         sql.append(" WHERE ");

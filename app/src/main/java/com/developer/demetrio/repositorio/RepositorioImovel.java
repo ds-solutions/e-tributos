@@ -4,13 +4,23 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.developer.demetrio.databases.constantes._AtualizacaoDoContribuinte;
+import com.developer.demetrio.databases.constantes._Cadastro;
+import com.developer.demetrio.databases.constantes._Contribuinte;
+import com.developer.demetrio.databases.constantes._DadosCadastradosDoContribuinte;
+import com.developer.demetrio.databases.constantes._Endereco;
 import com.developer.demetrio.databases.constantes._Imovel;
 import com.developer.demetrio.execoes.RepositorioException;
+import com.developer.demetrio.model.Aliquota;
+import com.developer.demetrio.model.AreasDoImovel;
+import com.developer.demetrio.model.AtualizacaoDoContribuinte;
 import com.developer.demetrio.model.Cadastro;
 import com.developer.demetrio.model.Contribuinte;
+import com.developer.demetrio.model.DadosCadastradosDoContribuinte;
 import com.developer.demetrio.model.Endereco;
 import com.developer.demetrio.model.Imovel;
 import com.developer.demetrio.model.Tributo;
+import com.developer.demetrio.model.ValoresVenais;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,12 +52,129 @@ public class RepositorioImovel implements IRepositorioImovel {
     }
 
     @Override
+    public List<Imovel> buscarTodosEnviadosPorEmail() throws RepositorioException {
+        String[] parametros = new String[1];
+        parametros[0] = "1";
+        StringBuilder sql = new StringBuilder();
+        sql.append("    SELECT * FROM ");
+        sql.append(_Imovel.NOME_DA_TABELA);
+        sql.append(" WHERE ");
+        sql.append(_Imovel.INDIC_ENVIO_EMAIL);
+        sql.append(" =? ");
+
+        Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
+        if (resultado.getCount() > 0){
+            resultado.moveToFirst();
+            return getResultado(resultado);
+        }
+        return null;
+    }
+
+    @Override
+    public List<Imovel> buscarTodosEnviadosPorWhatsApp() throws RepositorioException {
+        String[] parametros = new String[1];
+        parametros[0] = "1";
+        StringBuilder sql = new StringBuilder();
+        sql.append("    SELECT * FROM ");
+        sql.append(_Imovel.NOME_DA_TABELA);
+        sql.append(" WHERE ");
+        sql.append(_Imovel.INDIC_ENVIO_WHATSAAP);
+        sql.append(" =? ");
+
+        Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
+        if (resultado.getCount() > 0){
+            resultado.moveToFirst();
+            return getResultado(resultado);
+        }
+        return null;
+    }
+
+    @Override
+    public List<Imovel> buscarTodosImoveisImpressos() throws RepositorioException {
+        String[] parametros = new String[1];
+        parametros[0] = "1";
+        StringBuilder sql = new StringBuilder();
+        sql.append("    SELECT * FROM ");
+        sql.append(_Imovel.NOME_DA_TABELA);
+        sql.append(" WHERE ");
+        sql.append(_Imovel.INDIC_EMISSAO_CONTA);
+        sql.append(" =? ");
+
+        Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
+        if (resultado.getCount() > 0){
+            resultado.moveToFirst();
+            return getResultado(resultado);
+        }
+        return null;
+    }
+
+    @Override
+    public List<Imovel> buscarTodosImoveisNaoImpressos() throws RepositorioException {
+        String[] parametros = new String[1];
+        parametros[0] = "0";
+        StringBuilder sql = new StringBuilder();
+        sql.append("    SELECT * FROM ");
+        sql.append(_Imovel.NOME_DA_TABELA);
+        sql.append(" WHERE ");
+        sql.append(_Imovel.INDIC_EMISSAO_CONTA);
+        sql.append(" =? ");
+
+        Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
+        if (resultado.getCount() > 0){
+            resultado.moveToFirst();
+            return getResultado(resultado);
+        }
+        return null;
+    }
+
+    @Override
+    public List<Imovel> buscarTodosImoveisPorInscricao(String[] parametros) throws RepositorioException {
+        return null;
+    }
+
+    @Override
+    public List<Imovel> buscarTodosPorLogradouro(String[] parametros) throws RepositorioException {
+        return null;
+    }
+
+    @Override
+    public List<Imovel> buscarImoveisNaoEntregues() throws RepositorioException {
+        String[] parametros = new String[1];
+        parametros[0] = "0";
+        parametros[1] = "0";
+        parametros[2] = "0";
+        StringBuilder sql = new StringBuilder();
+        sql.append("    SELECT * FROM ");
+        sql.append(_Imovel.NOME_DA_TABELA);
+        sql.append(" WHERE ");
+        sql.append(_Imovel.INDIC_ENVIO_EMAIL);
+        sql.append(" =? AND ");
+        sql.append(_Imovel.INDIC_ENVIO_WHATSAAP);
+        sql.append(" =? AND ");
+        sql.append(_Imovel.INDIC_EMISSAO_CONTA);
+        sql.append(" =? ");
+
+        Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
+        if (resultado.getCount() > 0){
+            resultado.moveToFirst();
+            return getResultado(resultado);
+        }
+        return null;
+    }
+
+    @Override
+    public ArrayList<Imovel> buscarPorSetorQuadra(String[] parametros) throws RepositorioException {
+        return null;
+    }
+
+    @Override
     public long inserir(Imovel imovel) throws RepositorioException {
         ContentValues values = new ContentValues();
 
         values.put(_Imovel.INDIC_EMISSAO_CONTA, imovel.getIndcEmissaoConta());
         values.put(_Imovel.INDIC_ENVIO_EMAIL, imovel.getIndcEnvioEmail());
         values.put(_Imovel.INDIC_ENVIO_WHATSAAP, imovel.getIndcEnvioZap());
+        values.put(_Imovel.MOTIVO_NAO_ENTREGA, imovel.getMotivoDaNãoEntrega());
         values.put(_Imovel.ID_CADASTRO, imovel.getCadastro().getId());
         values.put(_Imovel.ID_CONTRIBUINTE, imovel.getContribuinte().getId());
         values.put(_Imovel.ID_ENDERECO, imovel.getEndereco().getId());
@@ -65,33 +192,8 @@ public class RepositorioImovel implements IRepositorioImovel {
         values.put(_Imovel.INDIC_EMISSAO_CONTA, i.getIndcEmissaoConta());
         values.put(_Imovel.INDIC_ENVIO_WHATSAAP, i.getIndcEnvioZap());
         values.put(_Imovel.INDIC_ENVIO_EMAIL, i.getIndcEnvioEmail());
+        values.put(_Imovel.MOTIVO_NAO_ENTREGA, i.getMotivoDaNãoEntrega());
         return this.conexao.update(_Imovel.NOME_DA_TABELA, values, _Imovel.ID+"="+id, null);
-    }
-
-    @Override
-    public void atualizarIndicadorContinuaImpressao(Integer num, Integer num2) throws RepositorioException {
-
-    }
-
-
-    @Override
-    public ArrayList<Integer> buscarIdsImoveisCadastroNaoEnviados() throws RepositorioException {
-        return null;
-    }
-
-    @Override
-    public ArrayList<Integer> buscarIdsImoveisLidos() throws RepositorioException {
-        return null;
-    }
-
-    @Override
-    public ArrayList<Integer> buscarIdsImoveisLidosNaoEnviados() throws RepositorioException {
-        return null;
-    }
-
-    @Override
-    public ArrayList<Imovel> buscarImovelContaPorQuadra(String setor, String quadra) throws RepositorioException {
-        return null;
     }
 
     @Override
@@ -114,6 +216,7 @@ public class RepositorioImovel implements IRepositorioImovel {
              imovel.setIndcEmissaoConta(resultado.getInt(resultado.getColumnIndexOrThrow(_Imovel.INDIC_EMISSAO_CONTA)));
              imovel.setIndcEnvioEmail(resultado.getInt(resultado.getColumnIndexOrThrow(_Imovel.INDIC_ENVIO_EMAIL)));
              imovel.setIndcEnvioZap(resultado.getInt(resultado.getColumnIndexOrThrow(_Imovel.INDIC_ENVIO_WHATSAAP)));
+             imovel.setMotivoDaNãoEntrega(resultado.getString(resultado.getColumnIndexOrThrow(_Imovel.MOTIVO_NAO_ENTREGA)));
              imovel.setCadastro(new Cadastro());
              imovel.getCadastro().setId(resultado.getLong(resultado.getColumnIndexOrThrow(_Imovel.ID_CADASTRO)));
              imovel.setContribuinte(new Contribuinte());
@@ -124,24 +227,6 @@ public class RepositorioImovel implements IRepositorioImovel {
              imovel.getTributo().setId(resultado.getLong(resultado.getColumnIndexOrThrow(_Imovel.ID_TRIBUTO)));
              return imovel;
         }
-        return null;
-    }
-
-
-
-    @Override
-    public ArrayList<Imovel> buscarImovelContas() throws RepositorioException {
-
-        return null;
-    }
-
-    @Override
-    public ArrayList<Imovel> buscarImovelContasLidos() throws RepositorioException {
-        return null;
-    }
-
-    @Override
-    public ArrayList<Integer> buscarQuadras() throws RepositorioException {
         return null;
     }
 
@@ -161,38 +246,20 @@ public class RepositorioImovel implements IRepositorioImovel {
         return 0;
     }
 
-    @Override
-    public void inverterRoteiroImoveis() throws RepositorioException {
 
-    }
 
     @Override
-    public Integer obterQuantidadeDeRegistro() throws RepositorioException {
-        return null;
-    }
+    public List<Imovel> getImoveis()throws RepositorioException {
 
-    @Override
-    public Integer obterPosicaoImovel(Integer num) throws RepositorioException {
-        return null;
-    }
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT * FROM ");
+        sql.append(_Imovel.NOME_DA_TABELA);
 
-    @Override
-    public Integer obterQuantidadeImoveisNaoVisitadosPorQuadra(Integer num) throws RepositorioException {
-        return null;
-    }
-
-    @Override
-    public Integer obterQuantidadeImoveisPorQuadra(Integer num) throws RepositorioException {
-        return null;
-    }
-
-    @Override
-    public Integer obterQuantidadeImoveisRoteiroCadastroAtualizado() throws RepositorioException {
-        return null;
-    }
-
-    @Override
-    public List<Imovel> getImoveis() {
+        Cursor resultado = this.conexao.rawQuery(sql.toString(), null);
+        if (resultado.getCount() > 0) {
+            resultado.moveToFirst();
+            return getResultado(resultado);
+        }
         return null;
     }
 
@@ -257,6 +324,198 @@ public class RepositorioImovel implements IRepositorioImovel {
             return true;
         }
         return false;
+    }
+
+    public List<Imovel> getResultado(Cursor resultado) {
+        List<Imovel> imoveis = new ArrayList<>();
+
+        if (resultado.getCount() > 0) {
+            resultado.moveToFirst();
+            do {
+                Imovel imovel = new Imovel();
+                imovel.setId(resultado.getLong(resultado.getColumnIndexOrThrow(_Imovel.ID)));
+                imovel.setIndcEmissaoConta(resultado.getInt(resultado.getColumnIndexOrThrow(_Imovel.INDIC_EMISSAO_CONTA)));
+                imovel.setIndcEnvioEmail(resultado.getInt(resultado.getColumnIndexOrThrow(_Imovel.INDIC_ENVIO_EMAIL)));
+                imovel.setIndcEnvioZap(resultado.getInt(resultado.getColumnIndexOrThrow(_Imovel.INDIC_ENVIO_WHATSAAP)));
+                imovel.setMotivoDaNãoEntrega(resultado.getString(resultado.getColumnIndexOrThrow(_Imovel.MOTIVO_NAO_ENTREGA)));
+
+                imovel.setCadastro(getCadastro(resultado.getLong(resultado.getColumnIndexOrThrow(_Imovel.ID_CADASTRO))));
+
+                imovel.setContribuinte(getContribuinte(resultado.getLong(resultado.getColumnIndexOrThrow(_Imovel.ID_CONTRIBUINTE))));
+
+                imovel.setEndereco(getEndereco(resultado.getLong(resultado.getColumnIndexOrThrow(_Imovel.ID_ENDERECO))));
+
+                imovel.setTributo(new Tributo());
+                imovel.getTributo().setId(resultado.getLong(resultado.getColumnIndexOrThrow(_Imovel.ID_TRIBUTO)));
+                imoveis.add(imovel);
+            }while (resultado.moveToNext());
+
+            return imoveis;
+        }
+        return null;
+    }
+
+    public Endereco getEndereco(long id) {
+        Endereco endereco = new Endereco();
+        String[] parametros = new String[]{String.valueOf(id)};
+        StringBuilder sql = new StringBuilder();
+        sql.append("    SELECT * FROM ");
+        sql.append(_Endereco.NOME_DA_TABELA);
+        sql.append(" WHERE ");
+        sql.append(_Endereco.ID);
+        sql.append(" =? ");
+
+        Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
+        if (resultado.getCount() > 0) {
+            resultado.moveToFirst();
+            endereco.setId(resultado.getLong(resultado.getColumnIndexOrThrow(_Endereco.ID)));
+            endereco.setCidade(resultado.getString(resultado.getColumnIndexOrThrow(_Endereco.CIDADE)));
+            endereco.setUf(resultado.getString(resultado.getColumnIndexOrThrow(_Endereco.UF)));
+            endereco.setBairro(resultado.getString(resultado.getColumnIndexOrThrow(_Endereco.BAIRRO)));
+            endereco.setLogradouro(resultado.getString(resultado.getColumnIndexOrThrow(_Endereco.LOGRADOURO)));
+            endereco.setComplemento(resultado.getString(resultado.getColumnIndexOrThrow(_Endereco.COMPLEMENTO)));
+            endereco.setNumero(resultado.getString(resultado.getColumnIndexOrThrow(_Endereco.NUMERO)));
+            endereco.setCep(resultado.getString(resultado.getColumnIndexOrThrow(_Endereco.CEP)));
+            return endereco;
+        }
+        return null;
+    }
+
+    public Contribuinte getContribuinte(long id) {
+        String[] parametros = new String[1];
+        parametros[0] = String.valueOf(id);
+
+        StringBuilder sql = new StringBuilder();
+        sql.append(" SELECT ");
+        sql.append("*");
+        sql.append(" FROM ");
+        sql.append(_Contribuinte.NOME_DA_TABELA);
+        sql.append(" WHERE ");
+        sql.append(_Contribuinte.ID);
+        sql.append(" =? ");
+        System.out.println("id do contribuinte "+id);
+        Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
+
+        if (resultado.getCount() > 0) {
+            resultado.moveToFirst();
+            Contribuinte contribuinte = new Contribuinte();
+
+            contribuinte.setId(resultado.getLong(resultado.getColumnIndexOrThrow(_Contribuinte.ID)));
+
+            contribuinte.setAtualizacaoDoContribuinte(getContribuinteAtualizado(resultado.getLong(resultado.getColumnIndexOrThrow(_Contribuinte.ID_AUTALIZACAO_DO_CONTRIBUINTE))));
+
+            contribuinte.setDadosCadastradosDoContribuinte(getDadosDoContribuinte(resultado.getLong(resultado.getColumnIndexOrThrow(_Contribuinte.ID_DADOS_DO_CONTRIBUINTE))));
+
+            System.out.println("id do contribuinte cadastrado " +contribuinte.getDadosCadastradosDoContribuinte().getId());
+            return contribuinte;
+        }
+
+        return null;
+    }
+
+    public AtualizacaoDoContribuinte getContribuinteAtualizado(long id) {
+        String[] parametros = new String[1];
+        parametros[0] = String.valueOf(id);
+        StringBuilder sql = new StringBuilder();
+        sql.append(" SELECT * ");
+        sql.append(" FROM ");
+        sql.append(_AtualizacaoDoContribuinte.NOME_DA_TABELA);
+        sql.append(" WHERE ");
+        sql.append(_AtualizacaoDoContribuinte.ID);
+        sql.append(" =? ");
+
+        Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
+
+        if (resultado.getCount() > 0) {
+            resultado.moveToFirst();
+            AtualizacaoDoContribuinte dados = new AtualizacaoDoContribuinte();
+            dados.setId(resultado.getLong(resultado.getColumnIndexOrThrow(_AtualizacaoDoContribuinte.ID)));
+            dados.setNome(resultado.getString(resultado.getColumnIndexOrThrow(_AtualizacaoDoContribuinte.NOME)));
+            dados.setCpfCnpj(resultado.getString(resultado.getColumnIndexOrThrow(_AtualizacaoDoContribuinte.CPF_CNPJ)));
+            dados.setRg(resultado.getString(resultado.getColumnIndexOrThrow(_AtualizacaoDoContribuinte.RG)));
+            dados.setOrgaoEmissor(resultado.getString(resultado.getColumnIndexOrThrow(_AtualizacaoDoContribuinte.ORG_EMISSOR)));
+            dados.setEstadoCivil(resultado.getString(resultado.getColumnIndexOrThrow(_AtualizacaoDoContribuinte.ESTADO_CIVIL)));
+            dados.setSexo(resultado.getString(resultado.getColumnIndexOrThrow(_AtualizacaoDoContribuinte.SEXO)));
+            dados.setCor(resultado.getString(resultado.getColumnIndexOrThrow(_AtualizacaoDoContribuinte.COR)));
+            dados.setNacionalidade(resultado.getString(resultado.getColumnIndexOrThrow(_AtualizacaoDoContribuinte.NACIONALIDADE)));
+            dados.setNaturalidade(resultado.getString(resultado.getColumnIndexOrThrow(_AtualizacaoDoContribuinte.NATURALIDADE)));
+            dados.setDataNascimento(resultado.getString(resultado.getColumnIndexOrThrow(_AtualizacaoDoContribuinte.DATA_NASC)));
+            dados.setTipoPessoa(resultado.getString(resultado.getColumnIndexOrThrow(_AtualizacaoDoContribuinte.TIPO_PESSOA)));
+            dados.setEscolaridade(resultado.getString(resultado.getColumnIndexOrThrow(_AtualizacaoDoContribuinte.ESCOLARIDADE)));
+            dados.setTelefone(resultado.getString(resultado.getColumnIndexOrThrow(_AtualizacaoDoContribuinte.TELEFONE)));
+            dados.setCelular(resultado.getString(resultado.getColumnIndexOrThrow(_AtualizacaoDoContribuinte.CELULAR)));
+            dados.setEmail(resultado.getString(resultado.getColumnIndexOrThrow(_AtualizacaoDoContribuinte.EMAIL)));
+            return dados;
+        }
+        return  null;
+    }
+
+    public DadosCadastradosDoContribuinte getDadosDoContribuinte(long id) {
+        String[] parametros = new String[1];
+        parametros[0] = String.valueOf(id);
+        StringBuilder sql = new StringBuilder();
+        sql.append(" SELECT * ");
+        sql.append(" FROM ");
+        sql.append(_DadosCadastradosDoContribuinte.NOME_DA_TABELA);
+        sql.append(" WHERE ");
+        sql.append(_DadosCadastradosDoContribuinte.ID);
+        sql.append(" =? ");
+
+        Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
+
+        if (resultado.getCount() > 0) {
+            resultado.moveToFirst();
+            DadosCadastradosDoContribuinte dados = new DadosCadastradosDoContribuinte();
+            dados.setId(resultado.getLong(resultado.getColumnIndexOrThrow(_DadosCadastradosDoContribuinte.ID)));
+            dados.setNome(resultado.getString(resultado.getColumnIndexOrThrow(_DadosCadastradosDoContribuinte.NOME)));
+            dados.setCpf(resultado.getString(resultado.getColumnIndexOrThrow(_DadosCadastradosDoContribuinte.CPF)));
+            dados.setRg(resultado.getString(resultado.getColumnIndexOrThrow(_DadosCadastradosDoContribuinte.RG)));
+            dados.setOrgEmissor(resultado.getString(resultado.getColumnIndexOrThrow(_DadosCadastradosDoContribuinte.ORG_EMISSOR)));
+            dados.setDataNasc(resultado.getString(resultado.getColumnIndexOrThrow(_DadosCadastradosDoContribuinte.DATA_NASC)));
+            dados.setEstadoCivil(resultado.getString(resultado.getColumnIndexOrThrow(_DadosCadastradosDoContribuinte.ESTADO_CIVIL)));
+            dados.setNacionalidade(resultado.getString(resultado.getColumnIndexOrThrow(_DadosCadastradosDoContribuinte.NACIONALIDADE)));
+            dados.setNaturalidade(resultado.getString(resultado.getColumnIndexOrThrow(_DadosCadastradosDoContribuinte.NATURALIDADE)));
+            dados.setRaca(resultado.getString(resultado.getColumnIndexOrThrow(_DadosCadastradosDoContribuinte.COR)));
+            dados.setSexo(resultado.getString(resultado.getColumnIndexOrThrow(_DadosCadastradosDoContribuinte.SEXO)));
+            dados.setEmail(resultado.getString(resultado.getColumnIndexOrThrow(_DadosCadastradosDoContribuinte.EMAIL)));
+            dados.setNumeroCelular(resultado.getString(resultado.getColumnIndexOrThrow(_DadosCadastradosDoContribuinte.CELULAR)));
+            return dados;
+        }
+        return null;
+    }
+
+    public Cadastro getCadastro(long id) {
+        String[] parametros = new String[1];
+        parametros[0] = String.valueOf(id);
+        StringBuilder sql = new StringBuilder();
+        sql.append(" SELECT * ");
+        sql.append(" FROM ");
+        sql.append(_Cadastro.NOME_DA_TABELA);
+        sql.append(" WHERE ");
+        sql.append(_Cadastro.ID);
+        sql.append(" =? ");
+        Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
+
+        if (resultado.getCount() > 0) {
+            resultado.moveToFirst();
+            Cadastro cadastro = new Cadastro();
+            cadastro.setAliquota(new Aliquota());
+            cadastro.setAreasDoImovel(new AreasDoImovel());
+            cadastro.setValoresVenais(new ValoresVenais());
+            cadastro.getAliquota().setId(resultado.getLong(resultado.getColumnIndexOrThrow(_Cadastro.ID_ALIQUOTA)));
+            cadastro.getAreasDoImovel().setId(resultado.getLong(resultado.getColumnIndexOrThrow(_Cadastro.ID_AREAS_DO_IMOVEL)));
+            cadastro.getValoresVenais().setId(resultado.getLong(resultado.getColumnIndexOrThrow(_Cadastro.ID_VALORES_VENAIS)));
+            cadastro.setInscricao(resultado.getString(resultado.getColumnIndexOrThrow(_Cadastro.INSCRICAO)));
+            cadastro.setNumCadastro(resultado.getString(resultado.getColumnIndexOrThrow(_Cadastro.NUM_CADASTRO)));
+            cadastro.setDistrito(resultado.getString(resultado.getColumnIndexOrThrow(_Cadastro.DISTRITO)));
+            cadastro.setSetor(resultado.getString(resultado.getColumnIndexOrThrow(_Cadastro.SETOR)));
+            cadastro.setQuadra(resultado.getString(resultado.getColumnIndexOrThrow(_Cadastro.QUADRA)));
+            cadastro.setLote(resultado.getString(resultado.getColumnIndexOrThrow(_Cadastro.LOTE)));
+            cadastro.setUnidade(resultado.getString(resultado.getColumnIndexOrThrow(_Cadastro.UNIDADE)));
+            return cadastro;
+         }
+
+        return null;
     }
 
 }

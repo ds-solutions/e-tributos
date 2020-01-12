@@ -30,6 +30,10 @@
     <string name="rota_finalizada">Rota Finalizada</string>
     <string name="nulo"></string>
 
+    <!-- Label do listView -->
+    <string name="mat">Mat.:</string>
+    <string name="insc">Insc.:</string>
+    <string name="rua">Rua:</string>
 
     <!-- Label dos dados do imóvel -->
     <string name="cadastro">Cadastro:</string>

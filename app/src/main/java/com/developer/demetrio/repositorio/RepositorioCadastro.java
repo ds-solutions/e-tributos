@@ -48,27 +48,6 @@ public class RepositorioCadastro implements IRepositorioCadastro {
         parametros[0] = String.valueOf(id);
         StringBuilder sql = new StringBuilder();
         sql.append(" SELECT * ");
-       /* sql.append(_Cadastro.ID);
-        sql.append(", ");
-        sql.append(_Cadastro.DISTRITO);
-        sql.append(", ");
-        sql.append(_Cadastro.SETOR);
-        sql.append(", ");
-        sql.append(_Cadastro.QUADRA);
-        sql.append(", ");
-        sql.append(_Cadastro.LOTE);
-        sql.append(", ");
-        sql.append(_Cadastro.UNIDADE);
-        sql.append(", ");
-        sql.append(_Cadastro.INSCRICAO);
-        sql.append(", ");
-        sql.append(_Cadastro.NUM_CADASTRO);
-        sql.append(", ");
-        sql.append(_Cadastro.ID_VALORES_VENAIS);
-        sql.append(", ");
-        sql.append(_Cadastro.ID_ALIQUOTA);
-        sql.append(", ");
-        sql.append(_Cadastro.ID_AREAS_DO_IMOVEL);*/
         sql.append(" FROM ");
         sql.append(_Cadastro.NOME_DA_TABELA);
         sql.append(" WHERE ");

@@ -26,10 +26,7 @@ public class ControladorImovel extends ControladorBasico implements IControlador
 
     }
 
-    @Override
-    public List<Imovel> getImoveis(){
-        return repositorioImovel.getImoveis();
-    }
+
 
 
     @Override
@@ -123,10 +120,7 @@ public class ControladorImovel extends ControladorBasico implements IControlador
         return null;
     }
 
-    public ArrayList<Imovel> buscarImovelContas() throws ControladorException, RepositorioException {
-        System.out.println("dentro do buscarImovelContas na class Controlador Tributos");
-        return repositorioImovel.buscarImovelContas();
-    }
+
 
     public long primeiraPosicaoNaoEmitida() throws ControladorException, RepositorioException {
         RepositorioImovel.getInstance().primeiraPosicaoNaoEmitida();
