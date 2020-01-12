@@ -115,10 +115,7 @@ public class DadosDoImovel extends Fragment {
         }  catch (RepositorioException e) {
             e.printStackTrace();
         }
-
     }
-
-
 
     @Nullable
     @Override
@@ -717,23 +714,32 @@ public class DadosDoImovel extends Fragment {
     }
 
     private boolean isHasCellPhone() {
-        if (this.imovel.getContribuinte().getAtualizacaoDoContribuinte() != null ||
-                this.imovel.getContribuinte().getDadosCadastradosDoContribuinte() != null){
-            if (this.imovel.getContribuinte().getDadosCadastradosDoContribuinte().getNumeroCelular() != null ||
-            this.imovel.getContribuinte().getAtualizacaoDoContribuinte().getCelular() != null) {
+        if (this.imovel.getContribuinte().getAtualizacaoDoContribuinte() != null &&
+                this.imovel.getContribuinte().getAtualizacaoDoContribuinte().getCelular() != null
+        && this.imovel.getContribuinte().getAtualizacaoDoContribuinte().getCelular() != ""){
+            return true;
+        }
+        if (this.imovel.getContribuinte().getAtualizacaoDoContribuinte() == null) {
+            if (this.imovel.getContribuinte().getDadosCadastradosDoContribuinte().getNumeroCelular() != null
+            && this.imovel.getContribuinte().getDadosCadastradosDoContribuinte().getNumeroCelular() != "") {
                 return true;
             }
         }
-        return false; //  this.imovel.getContribuinte().getNumeroCelular() != null;
+        return false;
     }
 
 
 
     private boolean isHasEmail() {
-        if (this.imovel.getContribuinte().getAtualizacaoDoContribuinte() != null ||
-                this.imovel.getContribuinte().getDadosCadastradosDoContribuinte() != null){
-            if (this.imovel.getContribuinte().getDadosCadastradosDoContribuinte().getEmail() != null ||
-                    this.imovel.getContribuinte().getAtualizacaoDoContribuinte().getEmail() != null) {
+        if (this.imovel.getContribuinte().getAtualizacaoDoContribuinte() != null &&
+                this.imovel.getContribuinte().getAtualizacaoDoContribuinte().getEmail() != null &&
+        this.imovel.getContribuinte().getAtualizacaoDoContribuinte().getEmail() != ""){
+            return true;
+        }
+        if (this.imovel.getContribuinte().getAtualizacaoDoContribuinte() == null) {
+            if (this.imovel.getContribuinte().getDadosCadastradosDoContribuinte().getEmail() != null
+                    &&
+                    this.imovel.getContribuinte().getAtualizacaoDoContribuinte().getEmail() != "") {
                 return true;
             }
         }

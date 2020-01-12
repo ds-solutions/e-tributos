@@ -58,8 +58,7 @@ public class DadosDeAtualizacaoProprietario extends Fragment {
             this.index = index;
         }
         this.context = context;
-        this.dados = new AtualizacaoDoContribuinte();
-        conexaoDataBase = new ConexaoDataBase();
+       conexaoDataBase = new ConexaoDataBase();
         this.conexao = conexaoDataBase.concectarComBanco(this.context);
         RepositorioImovel imoveis = new RepositorioImovel(this.conexao);
 
@@ -88,6 +87,7 @@ public class DadosDeAtualizacaoProprietario extends Fragment {
                 = new RepositorioDadosAtualizadosDoContribuinte(this.conexao);
         if (contribuinte != null && contribuinte.getAtualizacaoDoContribuinte() != null) {
             try {
+                this.dados = new AtualizacaoDoContribuinte();
                 this.dados = contribuintes.buscar(contribuinte.getAtualizacaoDoContribuinte().getId());
             } catch (RepositorioException e) {
                 e.printStackTrace();

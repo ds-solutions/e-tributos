@@ -54,10 +54,16 @@ public class ListImoveisAdapter extends BaseAdapter {
         ((TextView) view.findViewById(R.id.id_view_logradouro)).setText(getLogradouro(this.imoveis.get(i)));
         ((TextView) view.findViewById(R.id.id_view_numero)).setText(getNumero(this.imoveis.get(i)));
         ((ImageView) view.findViewById(R.id.id_status_impressora)).setImageResource(getStatusImpressora(this.imoveis.get(i)));
+        ((ImageView) view.findViewById(R.id.id_status_impressora)).setBackgroundColor(getBackgroundColor(this.imoveis.get(i)));
         ((ImageView) view.findViewById(R.id.id_status_email)).setImageResource(getStatusEmail(this.imoveis.get(i)));
         ((ImageView) view.findViewById(R.id.id_status_whatsaap)).setImageResource(getStatusWhatsApp(this.imoveis.get(i)));
 
+
         return view;
+    }
+
+    private int getBackgroundColor(Imovel imovel) {
+        return imovel.getIndcEmissaoConta() != 1 ? android.R.color.transparent : R.color.colorAccent;
     }
 
     private int getStatusWhatsApp(Imovel imovel) {

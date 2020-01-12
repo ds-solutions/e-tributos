@@ -47,38 +47,7 @@ public class RepositorioDadosAtualizadosDoContribuinte implements IRepositorioDa
         String[] parametros = new String[1];
         parametros[0] = String.valueOf(id);
         StringBuilder sql = new StringBuilder();
-        sql.append(" SELECT ");
-        sql.append(_AtualizacaoDoContribuinte.ID);
-        sql.append(", ");
-        sql.append(_AtualizacaoDoContribuinte.NOME);
-        sql.append(", ");
-        sql.append(_AtualizacaoDoContribuinte.CPF_CNPJ);
-        sql.append(", ");
-        sql.append(_AtualizacaoDoContribuinte.RG);
-        sql.append(", ");
-        sql.append(_AtualizacaoDoContribuinte.ORG_EMISSOR);
-        sql.append(", ");
-        sql.append(_AtualizacaoDoContribuinte.ESTADO_CIVIL);
-        sql.append(", ");
-        sql.append(_AtualizacaoDoContribuinte.SEXO);
-        sql.append(", ");
-        sql.append(_AtualizacaoDoContribuinte.COR);
-        sql.append(", ");
-        sql.append(_AtualizacaoDoContribuinte.NACIONALIDADE);
-        sql.append(", ");
-        sql.append(_AtualizacaoDoContribuinte.NATURALIDADE);
-        sql.append(", ");
-        sql.append(_AtualizacaoDoContribuinte.DATA_NASC);
-        sql.append(", ");
-        sql.append(_AtualizacaoDoContribuinte.TIPO_PESSOA);
-        sql.append(", ");
-        sql.append(_AtualizacaoDoContribuinte.ESCOLARIDADE);
-        sql.append(", ");
-        sql.append(_AtualizacaoDoContribuinte.TELEFONE);
-        sql.append(", ");
-        sql.append(_AtualizacaoDoContribuinte.CELULAR);
-        sql.append(", ");
-        sql.append(_AtualizacaoDoContribuinte.EMAIL);
+        sql.append(" SELECT * ");
         sql.append(" FROM ");
         sql.append(_AtualizacaoDoContribuinte.NOME_DA_TABELA);
         sql.append(" WHERE ");
@@ -116,6 +85,7 @@ public class RepositorioDadosAtualizadosDoContribuinte implements IRepositorioDa
     @Override
     public long atualizar(AtualizacaoDoContribuinte atualizados) throws RepositorioException {
         ContentValues values = new ContentValues();
+        values.put(_AtualizacaoDoContribuinte.ID, atualizados.getId());
         values.put(_AtualizacaoDoContribuinte.NOME, atualizados.getNome());
         values.put(_AtualizacaoDoContribuinte.CPF_CNPJ, atualizados.getCpfCnpj());
         values.put(_AtualizacaoDoContribuinte.RG, atualizados.getRg());
