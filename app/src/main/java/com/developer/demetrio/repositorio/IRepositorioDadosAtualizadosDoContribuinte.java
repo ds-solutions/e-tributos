@@ -10,7 +10,7 @@ public interface IRepositorioDadosAtualizadosDoContribuinte {
 
     AtualizacaoDoContribuinte buscar(long id) throws RepositorioException;
 
-    long atualizar(AtualizacaoDoContribuinte dados) throws RepositorioException;
+    void atualizar(AtualizacaoDoContribuinte dados) throws RepositorioException;
 
     void excluir(long id) throws RepositorioException;
 }

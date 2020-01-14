@@ -8,9 +8,6 @@ import com.developer.demetrio.databases.constantes._AtualizacaoDoContribuinte;
 import com.developer.demetrio.execoes.RepositorioException;
 import com.developer.demetrio.model.AtualizacaoDoContribuinte;
 
-import java.sql.Date;
-import java.text.SimpleDateFormat;
-
 public class RepositorioDadosAtualizadosDoContribuinte implements IRepositorioDadosAtualizadosDoContribuinte {
 
     private SQLiteDatabase conexao;
@@ -22,7 +19,6 @@ public class RepositorioDadosAtualizadosDoContribuinte implements IRepositorioDa
     @Override
     public long inserir(AtualizacaoDoContribuinte atualizados) throws RepositorioException {
         ContentValues values = new ContentValues();
-
         values.put(_AtualizacaoDoContribuinte.NOME, atualizados.getNome());
         values.put(_AtualizacaoDoContribuinte.CPF_CNPJ, atualizados.getCpfCnpj());
         values.put(_AtualizacaoDoContribuinte.RG, atualizados.getRg());
@@ -83,25 +79,26 @@ public class RepositorioDadosAtualizadosDoContribuinte implements IRepositorioDa
 
 
     @Override
-    public long atualizar(AtualizacaoDoContribuinte atualizados) throws RepositorioException {
+    public void atualizar(AtualizacaoDoContribuinte atualizado) throws RepositorioException {
         ContentValues values = new ContentValues();
-        values.put(_AtualizacaoDoContribuinte.ID, atualizados.getId());
-        values.put(_AtualizacaoDoContribuinte.NOME, atualizados.getNome());
-        values.put(_AtualizacaoDoContribuinte.CPF_CNPJ, atualizados.getCpfCnpj());
-        values.put(_AtualizacaoDoContribuinte.RG, atualizados.getRg());
-        values.put(_AtualizacaoDoContribuinte.ORG_EMISSOR, atualizados.getOrgaoEmissor());
-        values.put(_AtualizacaoDoContribuinte.ESTADO_CIVIL, atualizados.getEstadoCivil());
-        values.put(_AtualizacaoDoContribuinte.SEXO, atualizados.getSexo());
-        values.put(_AtualizacaoDoContribuinte.COR, atualizados.getCor());
-        values.put(_AtualizacaoDoContribuinte.NACIONALIDADE, atualizados.getNacionalidade());
-        values.put(_AtualizacaoDoContribuinte.NATURALIDADE, atualizados.getNaturalidade());
-        values.put(_AtualizacaoDoContribuinte.DATA_NASC, atualizados.getDataNascimento());
-        values.put(_AtualizacaoDoContribuinte.TIPO_PESSOA, atualizados.getTipoPessoa());
-        values.put(_AtualizacaoDoContribuinte.ESCOLARIDADE, atualizados.getEscolaridade());
-        values.put(_AtualizacaoDoContribuinte.TELEFONE, atualizados.getTelefone());
-        values.put(_AtualizacaoDoContribuinte.CELULAR, atualizados.getCelular());
-        values.put(_AtualizacaoDoContribuinte.EMAIL, atualizados.getEmail());
-        return this.conexao.update(_AtualizacaoDoContribuinte.NOME_DA_TABELA, values, _AtualizacaoDoContribuinte.ID+"="+atualizados.getId(), null);
+        values.put(_AtualizacaoDoContribuinte.ID, atualizado.getId());
+        values.put(_AtualizacaoDoContribuinte.NOME, atualizado.getNome());
+        values.put(_AtualizacaoDoContribuinte.CPF_CNPJ, atualizado.getCpfCnpj());
+        values.put(_AtualizacaoDoContribuinte.RG, atualizado.getRg());
+        values.put(_AtualizacaoDoContribuinte.ORG_EMISSOR, atualizado.getOrgaoEmissor());
+        values.put(_AtualizacaoDoContribuinte.ESTADO_CIVIL, atualizado.getEstadoCivil());
+        values.put(_AtualizacaoDoContribuinte.SEXO, atualizado.getSexo());
+        values.put(_AtualizacaoDoContribuinte.COR, atualizado.getCor());
+        values.put(_AtualizacaoDoContribuinte.NACIONALIDADE, atualizado.getNacionalidade());
+        values.put(_AtualizacaoDoContribuinte.NATURALIDADE, atualizado.getNaturalidade());
+        values.put(_AtualizacaoDoContribuinte.DATA_NASC, atualizado.getDataNascimento());
+        values.put(_AtualizacaoDoContribuinte.TIPO_PESSOA, atualizado.getTipoPessoa());
+        values.put(_AtualizacaoDoContribuinte.ESCOLARIDADE, atualizado.getEscolaridade());
+        values.put(_AtualizacaoDoContribuinte.TELEFONE, atualizado.getTelefone());
+        values.put(_AtualizacaoDoContribuinte.CELULAR, atualizado.getCelular());
+        values.put(_AtualizacaoDoContribuinte.EMAIL, atualizado.getEmail());
+        this.conexao.update(_AtualizacaoDoContribuinte.NOME_DA_TABELA, values, _AtualizacaoDoContribuinte.ID+" = "+atualizado.getId(), null);
+
     }
 
     @Override

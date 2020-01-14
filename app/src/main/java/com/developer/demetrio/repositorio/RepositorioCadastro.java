@@ -6,11 +6,15 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.developer.demetrio.databases.ConexaoDataBase;
 import com.developer.demetrio.databases.constantes._Cadastro;
+import com.developer.demetrio.etributos.R;
 import com.developer.demetrio.execoes.RepositorioException;
 import com.developer.demetrio.model.Aliquota;
 import com.developer.demetrio.model.AreasDoImovel;
 import com.developer.demetrio.model.Cadastro;
 import com.developer.demetrio.model.ValoresVenais;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RepositorioCadastro implements IRepositorioCadastro {
 
@@ -82,5 +86,35 @@ public class RepositorioCadastro implements IRepositorioCadastro {
         String[] parametros = new String[1];
         parametros[0] = String.valueOf(id);
         this.conexao.delete(_Cadastro.NOME_DA_TABELA, _Cadastro.ID, parametros);
+    }
+
+    @Override
+    public List<Cadastro> registrados() throws RepositorioException{
+        StringBuilder sql = new StringBuilder();
+        sql.append(" SELECT ");
+        sql.append(_Cadastro.ID);
+        sql.append(", ");
+        sql.append(_Cadastro.SETOR);
+        sql.append(", ");
+        sql.append(_Cadastro.QUADRA);
+        sql.append(" FROM ");
+        sql.append(_Cadastro.NOME_DA_TABELA);
+        Cursor resultado = this.conexao.rawQuery(sql.toString(), null);
+
+        if (resultado.getCount() > 0) {
+            resultado.moveToFirst();
+            List<Cadastro> cadastros = new ArrayList<>();
+            do {
+                Cadastro cadastro = new Cadastro();
+                cadastro.setId(resultado.getLong(resultado.getColumnIndexOrThrow(_Cadastro.ID)));
+                cadastro.setSetor(resultado.getString(resultado.getColumnIndexOrThrow(_Cadastro.SETOR)));
+                cadastro.setQuadra(resultado.getString(resultado.getColumnIndexOrThrow(_Cadastro.QUADRA)));
+                cadastros.add(cadastro);
+                System.out.println("Entro do repositorio setor: "+cadastro.getSetor()+" quadra "+cadastro.getQuadra());
+            } while (resultado.moveToNext());
+
+            return cadastros;
+        }
+        return null;
     }
 }

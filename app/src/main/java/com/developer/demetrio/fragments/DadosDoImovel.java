@@ -31,39 +31,14 @@ import com.developer.demetrio.etributos.R;
 import com.developer.demetrio.execoes.ControladorException;
 import com.developer.demetrio.execoes.RepositorioException;
 import com.developer.demetrio.fachada.Fachada;
-import com.developer.demetrio.iptu.DescricaoDaDivida;
-import com.developer.demetrio.iptu.IPTU;
-import com.developer.demetrio.model.Aliquota;
-import com.developer.demetrio.model.AreasDoImovel;
 import com.developer.demetrio.model.AtualizacaoDoContribuinte;
-import com.developer.demetrio.model.Cadastro;
-import com.developer.demetrio.model.CodigoDeCobranca;
-import com.developer.demetrio.model.Contribuinte;
-import com.developer.demetrio.model.DadosCadastradosDoContribuinte;
-import com.developer.demetrio.model.Endereco;
 import com.developer.demetrio.model.Imovel;
-import com.developer.demetrio.model.Tributo;
-import com.developer.demetrio.model.ValoresVenais;
-import com.developer.demetrio.repositorio.RepositorioAliquota;
-import com.developer.demetrio.repositorio.RepositorioAreasDoImovel;
-import com.developer.demetrio.repositorio.RepositorioCadastro;
-import com.developer.demetrio.repositorio.RepositorioCodigoDeCobranca;
-import com.developer.demetrio.repositorio.RepositorioContribuinte;
-import com.developer.demetrio.repositorio.RepositorioDadosAtualizadosDoContribuinte;
-import com.developer.demetrio.repositorio.RepositorioDadosDoContribuinte;
-import com.developer.demetrio.repositorio.RepositorioDescricaoDaDivida;
-import com.developer.demetrio.repositorio.RepositorioEndereco;
-import com.developer.demetrio.repositorio.RepositorioIPTU;
 import com.developer.demetrio.repositorio.RepositorioImovel;
-import com.developer.demetrio.repositorio.RepositorioTributo;
-import com.developer.demetrio.repositorio.RepositorioValoresVenais;
 import com.developer.demetrio.service.Mail;
 import com.developer.demetrio.service.Zap;
 
 import java.io.IOException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
 
 import static android.widget.Toast.LENGTH_LONG;
 
@@ -78,27 +53,21 @@ public class DadosDoImovel extends Fragment {
     private Integer totalImoveis;
 
     private Imovel imovel = new Imovel();
-    private AtualizacaoDoContribuinte atualizacaoDoProprietario;
     private Context context;
     private Activity activity;
 
     private Button btImprimir, btImovelAnterior, btProximoImovel;
     private Fachada fachada = Fachada.getInstance();
-    private Location location;
     private static final int PLAY_SERVICE_RESOLUTION_REQUEST = 9000;
 
     private Mail mail;
     private Zap zap;
-
-    private boolean has = false;
-
     private TextView matricula, inscricao, cidade, bairro, logradouro, num, complemento,
     zoneamento, valorTributo, contribuinte, msgUsuario, statusQtdImoveis;
 
     private ImageView printer, email, whatsApp;
-    private ControladorImovel controladorImovel;
     private boolean concluiu = false;
-    public DadosDoImovel(Context context, Activity activity, long id) {
+ /*   public DadosDoImovel(Context context, Activity activity, long id) {
         this.context = context;
         this.activity = activity;
         if (id != 0) {
@@ -116,7 +85,27 @@ public class DadosDoImovel extends Fragment {
             e.printStackTrace();
         }
     }
+*/
 
+    public DadosDoImovel(Context context, Activity activity, Imovel imovel) {
+        this.context = context;
+        this.activity = activity;
+        if (imovel != null) {
+           this.imovel = imovel;
+           this.id = imovel.getId();
+        }
+        Fachada.setContext(this.context);
+        conexaoDataBase = new ConexaoDataBase();
+        this.conexao = conexaoDataBase.concectarComBanco(this.context);
+        RepositorioImovel imoveis = new RepositorioImovel(this.conexao);
+        try {
+         //   this.imovel = imoveis.buscarImovelPorId(id);
+            this.totalImoveis = imoveis.getQtdImoveis();
+            this.concluiu = imoveis.rotaFinalizada();
+        }  catch (RepositorioException e) {
+            e.printStackTrace();
+        }
+    }
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -143,7 +132,7 @@ public class DadosDoImovel extends Fragment {
         this.btImovelAnterior = (Button) viewGroup.findViewById(R.id.bt_anterior2);
         this.btProximoImovel = (Button) viewGroup.findViewById(R.id.bt_proximo2);
 
-        preencherView();
+
         addImagemNosStatusDoImovel();
         ArrayAdapter<String> listMotivoNaoEntregaAdapter = new ArrayAdapter<String>(this.context, android.R.layout.simple_spinner_dropdown_item, this.motivos);
         listMotivoNaoEntregaAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -161,18 +150,13 @@ public class DadosDoImovel extends Fragment {
         onCreate(savedInstanceState);
         this.btImovelAnterior.setOnClickListener(new ImovelAnterior(this.context, id, totalImoveis));
         this.btProximoImovel.setOnClickListener(new ProximoImovel(this.context, id, totalImoveis));
+
+        preencherView();
+
         return viewGroup;
     }
 
     private void preencherView() {
-        this.imovel.setCadastro(buscarCadastroDoImovel(this.imovel.getCadastro().getId()));
-
-        this.imovel.setEndereco(buscarEndereco(this.imovel.getEndereco().getId()));
-
-        this.imovel.setContribuinte(buscarContribuinte(this.imovel.getContribuinte().getId()));
-
-        this.imovel.setTributo(buscarTributos(this.imovel.getTributo().getId()));
-
         this.matricula.setText(this.imovel.getCadastro().getNumCadastro());
         this.inscricao.setText(this.imovel.getCadastro().getInscricao());
         this.cidade.setText(this.imovel.getEndereco().getCidade());
@@ -206,183 +190,21 @@ public class DadosDoImovel extends Fragment {
     }
 
     private String getNome() {
-        String nome = this.imovel.getContribuinte().getAtualizacaoDoContribuinte() != null ?
+        String nome = this.imovel.getContribuinte().getAtualizacaoDoContribuinte() != null && this.imovel.getContribuinte().getAtualizacaoDoContribuinte().getId() != 0?
                 this.imovel.getContribuinte().getAtualizacaoDoContribuinte().getNome() : this.imovel.getContribuinte().getDadosCadastradosDoContribuinte().getNome();
 
         return nome;
     }
 
-
-    private Tributo buscarTributos(Long id) {
-        Tributo tributo = new Tributo();
-        tributo.setIptu(new IPTU());
-        RepositorioTributo tributos = new RepositorioTributo(this.conexao);
-        try {
-            tributo = tributos.buscar(id);
-        } catch (RepositorioException e) {
-            e.printStackTrace();
-        }
-       tributo.setIptu(buscarIptu(tributo.getIptu().getId()));
-
-        return tributo;
-    }
-
-    private IPTU buscarIptu(Long id) {
-        IPTU iptu = new IPTU();
-        RepositorioIPTU iptus = new RepositorioIPTU(this.conexao);
-        try {
-            iptu = iptus.buscar(id);
-        } catch (RepositorioException e) {
-            e.printStackTrace();
-        }
-        iptu.setListDescricao(buscarListasDaDescricao(iptu.getId()));
-        return iptu;
-    }
-
-    private List<DescricaoDaDivida> buscarListasDaDescricao(Long id) {
-        List<DescricaoDaDivida> descricaoDaDividas = new ArrayList<>();
-        RepositorioDescricaoDaDivida descricoes = new RepositorioDescricaoDaDivida(this.conexao);
-        try {
-            descricaoDaDividas = descricoes.descricoesDaDividaDe(id);
-        } catch (RepositorioException e) {
-            e.printStackTrace();
-        }
-        return descricaoDaDividas;
-    }
-
-    private Contribuinte buscarContribuinte(Long id) {
-        Contribuinte contribuinte = new Contribuinte();
-        RepositorioContribuinte contribuintes = new RepositorioContribuinte(this.conexao);
-        try {
-             contribuinte = contribuintes.buscar(id);
-        } catch (RepositorioException e) {
-            e.printStackTrace();
-        }
-
-        contribuinte.setDadosCadastradosDoContribuinte(buscarDadosDoContribuinte(contribuinte.getId()));
-
-        if (contribuinte.getAtualizacaoDoContribuinte() != null) {
-            if (contribuinte.getAtualizacaoDoContribuinte().getId() != null) {
-                contribuinte.setAtualizacaoDoContribuinte(buscarAtualizacaoDoContribuinte(contribuinte.getAtualizacaoDoContribuinte().getId()));
-            }
-        }
-
-        return contribuinte;
-    }
-
-
-
-    private AtualizacaoDoContribuinte buscarAtualizacaoDoContribuinte(Long id) {
-        AtualizacaoDoContribuinte contribuinte = new AtualizacaoDoContribuinte();
-        RepositorioDadosAtualizadosDoContribuinte dados
-                = new RepositorioDadosAtualizadosDoContribuinte(this.conexao);
-        try {
-            contribuinte = dados.buscar(id);
-        } catch (RepositorioException e) {
-            e.printStackTrace();
-        }
-
-        return contribuinte;
-    }
-
-    private DadosCadastradosDoContribuinte buscarDadosDoContribuinte(Long id)
-    {
-        DadosCadastradosDoContribuinte contribuinte = new DadosCadastradosDoContribuinte();
-        RepositorioDadosDoContribuinte dados = new RepositorioDadosDoContribuinte(this.conexao);
-        try {
-            contribuinte = dados.buscar(id);
-        } catch (RepositorioException e) {
-            e.printStackTrace();
-        }
-        return contribuinte;
-    }
-
-    private Endereco buscarEndereco(Long id) {
-        Endereco endereco = new Endereco();
-        RepositorioEndereco enderecos = new RepositorioEndereco(this.conexao);
-        try {
-            endereco = enderecos.buscar(id);
-        } catch (RepositorioException e) {
-            e.printStackTrace();
-        }
-        return endereco;
-    }
-
-    private Cadastro buscarCadastroDoImovel(long id) {
-        Cadastro cadastro = new Cadastro();
-        RepositorioCadastro cadastros = new RepositorioCadastro(this.conexao);
-        try {
-            cadastro = cadastros.buscar(id);
-        } catch (RepositorioException e) {
-            e.printStackTrace();
-        }
-        cadastro.setValoresVenais(buscarValoresVenais(cadastro.getValoresVenais().getId()));
-        cadastro.setAreasDoImovel(buscarAreas(cadastro.getAreasDoImovel().getId()));
-        cadastro.setAliquota(buscarAliquotas(cadastro.getAliquota().getId()));
-       return cadastro;
-    }
-
-    private Aliquota buscarAliquotas(Long id) {
-        Aliquota aliquota = new Aliquota();
-        RepositorioAliquota aliquotas = new RepositorioAliquota(this.conexao);
-        try {
-            aliquota.setCodigoDeCobranca(new CodigoDeCobranca());
-
-            aliquota = aliquotas.buscar(id);
-        } catch (RepositorioException e) {
-            e.printStackTrace();
-        }
-        aliquota.setCodigoDeCobranca(buscarCodigoDeCobranca(aliquota.getCodigoDeCobranca().getId()));
-        return aliquota;
-    }
-
-    private CodigoDeCobranca buscarCodigoDeCobranca(Long id) {
-        CodigoDeCobranca codigo = new CodigoDeCobranca();
-        RepositorioCodigoDeCobranca codigos = new RepositorioCodigoDeCobranca(this.conexao);
-        try {
-            codigo = codigos.buscar(id);
-        } catch (RepositorioException e) {
-            e.printStackTrace();
-        }
-        return codigo;
-    }
-
-    private AreasDoImovel buscarAreas(Long id) {
-        AreasDoImovel areasDoImovel = new AreasDoImovel();
-        RepositorioAreasDoImovel areas = new RepositorioAreasDoImovel(this.conexao);
-        try {
-            areasDoImovel = areas.buscar(id);
-        } catch (RepositorioException e) {
-            e.printStackTrace();
-        }
-
-        return areasDoImovel;
-    }
-
-    private ValoresVenais buscarValoresVenais(Long id) {
-        ValoresVenais valoresVenais = new ValoresVenais();
-        RepositorioValoresVenais valores = new RepositorioValoresVenais(this.conexao);
-        try {
-            valoresVenais = valores.buscar(id);
-        } catch (RepositorioException e) {
-            e.printStackTrace();
-        }
-         return valoresVenais;
-    }
-
     private void addImagemNosStatusDoImovel() {
-
         this.printer.setImageResource(this.imovel.getIndcEmissaoConta() == 1 ? R.drawable.print : R.drawable.un_send_impressora);
         this.whatsApp.setImageResource(this.imovel.getIndcEnvioZap() == 1 ? R.drawable.whatsapp : R.drawable.un_send_whatsapp1);
         this.email.setImageResource(this.imovel.getIndcEnvioEmail() == 1 ? R.drawable.email : R.drawable.un_send_email);
-
     }
 
     class ImovelAnterior implements View.OnClickListener {
-
         private long index, lastIndex;
         private Context context;
-
         public ImovelAnterior(Context context, long index, long lastIndex) {
             this.context = context;
             this.index = index;
@@ -396,7 +218,6 @@ public class DadosDoImovel extends Fragment {
             } else if (this.index == 1) {
                 index = lastIndex;
             }
-
             Bundle parametros = new Bundle();
             parametros.putLong("id", index);
             Intent activity = new Intent(this.context, ListaImoveis.class);
@@ -651,7 +472,7 @@ public class DadosDoImovel extends Fragment {
             this.id = 1;
         }
 
-        new DadosDoImovel(this.context, this.activity, this.id);
+       // new DadosDoImovel(this.context, this.activity, this.id);
         Bundle parametros = new Bundle();
         parametros.putLong("id", id);
         Intent activity = new Intent(this.context, ListaImoveis.class);

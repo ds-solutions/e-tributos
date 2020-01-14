@@ -21,7 +21,6 @@ public class ListImoveisAdapter extends BaseAdapter {
     private LayoutInflater inflater;
     private List<Imovel> imoveis;
 
-
     public ListImoveisAdapter(Context context, List<Imovel> listImoveis, LayoutInflater inflater) {
         this.context = context;
         this.imoveis = listImoveis;
@@ -34,7 +33,7 @@ public class ListImoveisAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int i) {
+    public Imovel getItem(int i) {
         return this.imoveis.get(i);
     }
 
@@ -57,7 +56,6 @@ public class ListImoveisAdapter extends BaseAdapter {
         ((ImageView) view.findViewById(R.id.id_status_impressora)).setBackgroundColor(getBackgroundColor(this.imoveis.get(i)));
         ((ImageView) view.findViewById(R.id.id_status_email)).setImageResource(getStatusEmail(this.imoveis.get(i)));
         ((ImageView) view.findViewById(R.id.id_status_whatsaap)).setImageResource(getStatusWhatsApp(this.imoveis.get(i)));
-
 
         return view;
     }

@@ -129,17 +129,61 @@ public class RepositorioImovel implements IRepositorioImovel {
 
     @Override
     public List<Imovel> buscarTodosImoveisPorInscricao(String[] parametros) throws RepositorioException {
+        StringBuilder sql = new StringBuilder();
+        sql.append("    SELECT * FROM ");
+        sql.append(_Imovel.NOME_DA_TABELA);
+        sql.append(" INNER JOIN ");
+        sql.append(_Cadastro.NOME_DA_TABELA);
+        sql.append(" ON ");
+        sql.append(_Cadastro.NOME_DA_TABELA);
+        sql.append(".");
+        sql.append(_Cadastro.ID);
+        sql.append(" = ");
+        sql.append(_Imovel.ID_CADASTRO);
+        sql.append(" WHERE ");
+        sql.append(_Cadastro.NOME_DA_TABELA);
+        sql.append(".");
+        sql.append(_Cadastro.INSCRICAO);
+        sql.append(" =? ");
+
+        Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
+        if (resultado.getCount() > 0){
+            resultado.moveToFirst();
+            return getResultado(resultado);
+        }
         return null;
     }
 
     @Override
     public List<Imovel> buscarTodosPorLogradouro(String[] parametros) throws RepositorioException {
+        StringBuilder sql = new StringBuilder();
+        sql.append("    SELECT * FROM ");
+        sql.append(_Imovel.NOME_DA_TABELA);
+        sql.append(" INNER JOIN ");
+        sql.append(_Endereco.NOME_DA_TABELA);
+        sql.append(" ON ");
+        sql.append(_Endereco.NOME_DA_TABELA);
+        sql.append(".");
+        sql.append(_Cadastro.ID);
+        sql.append(" = ");
+        sql.append(_Imovel.ID_CADASTRO);
+        sql.append(" WHERE ");
+        sql.append(_Endereco.NOME_DA_TABELA);
+        sql.append(".");
+        sql.append(_Endereco.LOGRADOURO);
+        sql.append(" =? ");
+
+        Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
+        if (resultado.getCount() > 0){
+            resultado.moveToFirst();
+            return getResultado(resultado);
+        }
         return null;
     }
 
     @Override
     public List<Imovel> buscarImoveisNaoEntregues() throws RepositorioException {
-        String[] parametros = new String[1];
+        String[] parametros = new String[3];
         parametros[0] = "0";
         parametros[1] = "0";
         parametros[2] = "0";

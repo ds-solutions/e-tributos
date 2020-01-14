@@ -3,7 +3,6 @@ package com.developer.demetrio.etributos;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,7 +11,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.developer.demetrio.databases.ConexaoDataBase;
-import com.developer.demetrio.databases.constantes._DataBase;
 import com.developer.demetrio.execoes.RepositorioException;
 import com.developer.demetrio.iptu.DescricaoDaDivida;
 import com.developer.demetrio.iptu.IPTU;
@@ -57,7 +55,7 @@ public class Carregar extends AppCompatActivity {
 
     private String campo1, campo2, campo3, campo4, codigoDeBarras;
 
-    private SQLiteDatabase database;
+    private SQLiteDatabase conexao;
 
     private Imovel imovel;
     private Long id = 0L;
@@ -104,9 +102,9 @@ public class Carregar extends AppCompatActivity {
         ConexaoDataBase conexaoDataBase;
         conexaoDataBase = new ConexaoDataBase(getApplicationContext());
 
-           this.database = conexaoDataBase.concectarComBanco(this);
+           this.conexao = conexaoDataBase.concectarComBanco(this);
             int i = 0;
-            RepositorioImovel imoveis =  new RepositorioImovel(this.database);
+            RepositorioImovel imoveis =  new RepositorioImovel(this.conexao);
             try {
                 if (imoveis.getQtdImoveis() < 7) {
                     while (i < 7){
@@ -135,7 +133,7 @@ public class Carregar extends AppCompatActivity {
         this.imovel.setTributo(popularTributo());
         this.imovel.setCadastro(popularCadastro());
 
-        RepositorioImovel imoveis = new RepositorioImovel(this.database);
+        RepositorioImovel imoveis = new RepositorioImovel(this.conexao);
         try {
             this.imovel.setId(imoveis.inserir(this.imovel));
         } catch (RepositorioException e) {
@@ -147,7 +145,7 @@ public class Carregar extends AppCompatActivity {
     private Tributo popularTributo() {
         Tributo tributo = new Tributo();
         tributo.setIptu(pupularIPTU());
-        RepositorioTributo tributos = new RepositorioTributo(this.database);
+        RepositorioTributo tributos = new RepositorioTributo(this.conexao);
         try {
             tributo.setId(tributos.inserir(tributo));
         } catch (RepositorioException e) {
@@ -173,7 +171,7 @@ public class Carregar extends AppCompatActivity {
         iptu.setSomaDoDesconto("20,11");
         iptu.setValorTotal("80,46");
         iptu.setMensagem("Cota Única com desconto, após o vencimento procure o setor tributário do município ou acesse o nosso portal: http://portal.itaenga.pe.gov.br:8070/servicosweb");
-        RepositorioIPTU iptus = new RepositorioIPTU(this.database);
+        RepositorioIPTU iptus = new RepositorioIPTU(this.conexao);
         try {
             iptu.setId(iptus.inserir(iptu));
         } catch (RepositorioException e) {
@@ -214,7 +212,7 @@ public class Carregar extends AppCompatActivity {
             }
             c++;
             i++;
-            RepositorioDescricaoDaDivida dividas = new RepositorioDescricaoDaDivida(this.database);
+            RepositorioDescricaoDaDivida dividas = new RepositorioDescricaoDaDivida(this.conexao);
             try {
                 divida.setId_IPTU(dividas.inserir(divida));
             } catch (RepositorioException e) {
@@ -250,7 +248,7 @@ public class Carregar extends AppCompatActivity {
         endereco.setLogradouro("JOSÉ TAVARES DO REGO");
         endereco.setCidade("LAGOA DE ITAENGA");
         endereco.setUf("PE");
-        RepositorioEndereco enderecos = new RepositorioEndereco(this.database);
+        RepositorioEndereco enderecos = new RepositorioEndereco(this.conexao);
         try {
             endereco.setId(enderecos.inserir(endereco));
         } catch (RepositorioException e) {
@@ -265,7 +263,7 @@ public class Carregar extends AppCompatActivity {
         contribuinte.setDadosCadastradosDoContribuinte(new DadosCadastradosDoContribuinte());
         contribuinte.setDadosCadastradosDoContribuinte(popularDadosDoContribuinte());
 
-        RepositorioContribuinte contribuintes = new RepositorioContribuinte(this.database);
+        RepositorioContribuinte contribuintes = new RepositorioContribuinte(this.conexao);
         try {
             contribuinte.setId(contribuintes.inserir(contribuinte));
         } catch (RepositorioException e) {
@@ -288,7 +286,7 @@ public class Carregar extends AppCompatActivity {
         contribuinte.setRg(getRg());
         contribuinte.setCpf(getCpf());
         contribuinte.setNome(getNome());
-        RepositorioDadosDoContribuinte dados = new RepositorioDadosDoContribuinte(this.database);
+        RepositorioDadosDoContribuinte dados = new RepositorioDadosDoContribuinte(this.conexao);
         try {
             contribuinte.setId(dados.inserir(contribuinte));
         } catch (RepositorioException e) {
@@ -380,7 +378,7 @@ public class Carregar extends AppCompatActivity {
         cadastro.setAreasDoImovel(pupularAreasDoImovel());
         cadastro.setValoresVenais(popularValoresVenais());
 
-        RepositorioCadastro cadastros = new RepositorioCadastro(this.database);
+        RepositorioCadastro cadastros = new RepositorioCadastro(this.conexao);
         try {
             cadastro.setId(cadastros.inserir(cadastro));
         } catch (RepositorioException e) {
@@ -397,7 +395,7 @@ public class Carregar extends AppCompatActivity {
         valoresVenais.setEdificada("3.257,00");
         valoresVenais.setTerreno("2.800,00");
 
-        RepositorioValoresVenais valores = new RepositorioValoresVenais(this.database);
+        RepositorioValoresVenais valores = new RepositorioValoresVenais(this.conexao);
         try {
             valoresVenais.setId(valores.inserir(valoresVenais));
         } catch (RepositorioException e) {
@@ -416,7 +414,7 @@ public class Carregar extends AppCompatActivity {
         area.setEdificado("125,00");
         area.setAreaDoTerreno("100,00");
 
-        RepositorioAreasDoImovel areas = new RepositorioAreasDoImovel(this.database);
+        RepositorioAreasDoImovel areas = new RepositorioAreasDoImovel(this.conexao);
         try {
             area.setId(areas.inserir(area));
         } catch (RepositorioException e) {
@@ -433,7 +431,7 @@ public class Carregar extends AppCompatActivity {
         aliquota.setTerreno("1,00");
         aliquota.setCodigoDeCobranca(popularCodigo());
 
-        RepositorioAliquota aliquotas = new RepositorioAliquota(this.database);
+        RepositorioAliquota aliquotas = new RepositorioAliquota(this.conexao);
         try {
             aliquota.setId(aliquotas.inserir(aliquota));
         } catch (RepositorioException e) {
@@ -448,7 +446,7 @@ public class Carregar extends AppCompatActivity {
         codigo.setTipo("1-NORMAL");
         codigo.setTaxaTestada("5,00");
 
-        RepositorioCodigoDeCobranca codigos = new RepositorioCodigoDeCobranca(this.database);
+        RepositorioCodigoDeCobranca codigos = new RepositorioCodigoDeCobranca(this.conexao);
         try {
             codigo.setId(codigos.inserir(codigo));
         } catch (RepositorioException e) {

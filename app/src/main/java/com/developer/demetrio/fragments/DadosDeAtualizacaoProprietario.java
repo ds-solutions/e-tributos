@@ -2,6 +2,7 @@ package com.developer.demetrio.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -53,7 +54,7 @@ public class DadosDeAtualizacaoProprietario extends Fragment {
 
     private Imovel imovel;
 
-    public DadosDeAtualizacaoProprietario(Context context, long index) {
+  /*  public DadosDeAtualizacaoProprietario(Context context, long index) {
         if (index != 0) {
             this.index = index;
         }
@@ -72,7 +73,33 @@ public class DadosDeAtualizacaoProprietario extends Fragment {
             getDadosDoContribuinteAtualizado();
         }
     }
+*/
 
+    public DadosDeAtualizacaoProprietario(Context context, Imovel imovel) {
+        if (imovel != null) {
+            this.imovel = imovel;
+            this.index = imovel.getId();
+            if (this.imovel.getContribuinte().getAtualizacaoDoContribuinte() != null) {
+                this.dados = this.imovel.getContribuinte().getAtualizacaoDoContribuinte();
+            }
+        }
+        this.context = context;
+        conexaoDataBase = new ConexaoDataBase();
+        this.conexao = conexaoDataBase.concectarComBanco(this.context);
+       // RepositorioImovel imoveis = new RepositorioImovel(this.conexao);
+
+      /*  if (this.index != 0) {
+            this.imovel = new Imovel();
+            try {
+                this.imovel = imoveis.buscarImovelPorId(this.index);
+            }catch (RepositorioException e) {
+                e.printStackTrace();
+            }
+        }*/
+
+
+    }
+/*
     public void getDadosDoContribuinteAtualizado() {
         RepositorioContribuinte repositorioContribuinte = new RepositorioContribuinte(this.conexao);
         Contribuinte contribuinte = new Contribuinte();
@@ -95,7 +122,7 @@ public class DadosDeAtualizacaoProprietario extends Fragment {
         }
 
     }
-
+*/
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -181,7 +208,7 @@ public class DadosDeAtualizacaoProprietario extends Fragment {
             }
         });
 
-        if (this.dados != null)  {
+        if (this.dados != null && this.dados.getId() != 0)  {
             preencherView();
         }
 
@@ -191,14 +218,14 @@ public class DadosDeAtualizacaoProprietario extends Fragment {
     }
 
     public void preencherView() {
-        this.nome.setText(this.dados.getNome());
+        this.nome.setText(this.dados.getNome().toUpperCase());
         this.cpfCnpj.setText(this.dados.getCpfCnpj());
         this.rg.setText(this.dados.getRg());
-        this.orgaoEmissor.setText(this.dados.getOrgaoEmissor());
+        this.orgaoEmissor.setText(this.dados.getOrgaoEmissor().toUpperCase());
         this.dataNac.setText(this.dados.getDataNascimento());
-        this.nacionalidade.setText(this.dados.getNacionalidade());
-        this.naturalidade.setText(this.dados.getNaturalidade());
-        this.escolaridade.setText(this.dados.getEscolaridade());
+        this.nacionalidade.setText(this.dados.getNacionalidade().toUpperCase());
+        this.naturalidade.setText(this.dados.getNaturalidade().toUpperCase());
+        this.escolaridade.setText(this.dados.getEscolaridade().toUpperCase());
         this.telefone.setText(this.dados.getTelefone());
         this.celular.setText(this.dados.getCelular());
         this.email.setText(this.dados.getEmail());
@@ -237,7 +264,11 @@ public class DadosDeAtualizacaoProprietario extends Fragment {
     }
 
     public AtualizacaoDoContribuinte novoCadastro() {
+
         AtualizacaoDoContribuinte contribuinte = new AtualizacaoDoContribuinte();
+        if (this.dados != null && this.dados.getId() != 0) {
+            contribuinte.setId(this.dados.getId());
+        }
         contribuinte.setNome(this.nome.getText().toString().toUpperCase());
         contribuinte.setCpfCnpj(this.cpfCnpj.getText().toString());
         contribuinte.setRg(this.rg.getText().toString());
@@ -282,8 +313,8 @@ public class DadosDeAtualizacaoProprietario extends Fragment {
         RepositorioDadosAtualizadosDoContribuinte contribuintes =
                 new RepositorioDadosAtualizadosDoContribuinte(this.conexao);
         try {
-            if (contribuinte.getId() != null) {
-                contribuinte.setId(contribuintes.atualizar(contribuinte));
+            if (contribuinte.getId() != null && contribuinte.getId() != 0) {
+               contribuintes.atualizar(contribuinte);
             }
             if (contribuinte.getId() == null) {
                 contribuinte.setId(contribuintes.inserir(contribuinte));
@@ -297,9 +328,7 @@ public class DadosDeAtualizacaoProprietario extends Fragment {
 
     public void atualizarContribuinte(AtualizacaoDoContribuinte dados) {
         RepositorioContribuinte contribuintes = new RepositorioContribuinte(this.conexao);
-        Contribuinte contribuinte = new Contribuinte();
-        contribuinte = this.imovel.getContribuinte();
-
+        Contribuinte contribuinte = this.imovel.getContribuinte();
         contribuinte.setAtualizacaoDoContribuinte(dados);
         try {
             contribuintes.atualizar(contribuinte);

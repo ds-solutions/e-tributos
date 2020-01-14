@@ -11,9 +11,10 @@
         android:id="@+id/id_item_de_pesquisa"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="5dp"
-        android:layout_marginLeft="5dp"/>
+        android:background="@color/colorPrimary" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,28 +26,24 @@
 
         <LinearLayout
             android:id="@+id/layour_setor_quadra"
-            android:layout_width="274dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="5dp"
+            android:layout_marginEnd="5dp"
             android:orientation="horizontal">
 
             <Spinner
-                android:id="@+id/id_spinner_quadra"
-                android:layout_width="176dp"
+                android:id="@+id/id_spinner_setor"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="30"
-                android:ems="5"
-                android:inputType="textPersonName"
-                android:text="Name" />
+                android:background="@color/colorPrimary" />
 
             <Spinner
-                android:id="@+id/id_spinner_setor"
-                android:layout_width="143dp"
+                android:id="@+id/id_spinner_quadra"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="5"
-                android:inputType="textPersonName"
-                android:text="Name" />
+                android:background="@color/colorPrimary" />
+
+
         </LinearLayout>
 
         <EditText
@@ -55,16 +52,15 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="text"
-            android:hint="Exemplo: 01.01.001.0001.000" />
+            android:hint="@string/exemplo_01_01_001_0001_000"
+            android:autofillHints="" />
 
-        <EditText
-            android:id="@+id/id_edt_logradouro"
-            style="@style/Widget.AppCompat.EditText"
+        <Spinner
+            android:id="@+id/id_spinner_logradouro"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:ems="10"
-            android:hint="Logradouro" />
+            android:background="@color/colorPrimary" />
 
         <ImageButton
             android:id="@+id/id_consultar"

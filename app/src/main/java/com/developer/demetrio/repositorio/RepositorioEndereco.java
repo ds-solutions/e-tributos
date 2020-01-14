@@ -8,6 +8,9 @@ import com.developer.demetrio.databases.constantes._Endereco;
 import com.developer.demetrio.execoes.RepositorioException;
 import com.developer.demetrio.model.Endereco;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class RepositorioEndereco implements IRepositorioEndereco {
 
     private SQLiteDatabase conexao;
@@ -61,23 +64,7 @@ public class RepositorioEndereco implements IRepositorioEndereco {
 
     private StringBuilder query() {
         StringBuilder sql = new StringBuilder();
-        sql.append(" SELECT ");
-        sql.append(_Endereco.ID);
-        sql.append(", ");
-        sql.append(_Endereco.CIDADE);
-        sql.append(", ");
-        sql.append(_Endereco.UF);
-        sql.append(", ");
-        sql.append(_Endereco.BAIRRO);
-        sql.append(", ");
-        sql.append(_Endereco.LOGRADOURO);
-        sql.append(", ");
-        sql.append(_Endereco.COMPLEMENTO);
-        sql.append(", ");
-        sql.append(_Endereco.NUMERO);
-        sql.append(", ");
-        sql.append(_Endereco.CEP);
-        sql.append(" FROM ");
+        sql.append(" SELECT * FROM ");
         sql.append(_Endereco.NOME_DA_TABELA);
         sql.append(" WHERE ");
         sql.append(_Endereco.ID);
@@ -92,5 +79,28 @@ public class RepositorioEndereco implements IRepositorioEndereco {
         parametros[0] = String.valueOf(id);
         this.conexao.delete(_Endereco.NOME_DA_TABELA, _Endereco.ID, parametros);
 
+    }
+
+    @Override
+    public List<String> nomesLogradouros() throws RepositorioException {
+        StringBuilder sql = new StringBuilder();
+        sql.append(" SELECT ");
+        sql.append(_Endereco.LOGRADOURO);
+        sql.append(" FROM ");
+        sql.append(_Endereco.NOME_DA_TABELA);
+        Cursor resultado = this.conexao.rawQuery(sql.toString(), null);
+        if (resultado.getCount() > 0) {
+            resultado.moveToNext();
+            List<String> logradouros = new ArrayList<>();
+            logradouros.add("Logradouro");
+            do {
+                if (!logradouros.contains(resultado.getString(resultado.getColumnIndexOrThrow(_Endereco.LOGRADOURO)))) {
+                    logradouros.add(resultado.getString(resultado.getColumnIndexOrThrow(_Endereco.LOGRADOURO)));
+                }
+            }while (resultado.moveToNext());
+
+            return logradouros;
+        }
+        return null;
     }
 }
