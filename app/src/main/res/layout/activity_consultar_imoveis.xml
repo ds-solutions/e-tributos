@@ -9,12 +9,12 @@
 
     <Spinner
         android:id="@+id/id_item_de_pesquisa"
+        style="@android:style/Widget.Spinner"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40sp"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="10dp"
-        android:layout_marginRight="5dp"
-        android:background="@color/colorPrimary" />
+        android:layout_marginRight="5dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,43 +24,48 @@
         android:orientation="horizontal">
 
 
-        <LinearLayout
-            android:id="@+id/layour_setor_quadra"
+        <Spinner
+            android:id="@+id/id_spinner_setor"
+            style="@android:style/Widget.Spinner"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
-            android:orientation="horizontal">
+            android:layout_weight="1"
+            android:layout_height="40sp"
+            android:textColor="@android:color/black"/>
 
-            <Spinner
-                android:id="@+id/id_spinner_setor"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/colorPrimary" />
-
-            <Spinner
-                android:id="@+id/id_spinner_quadra"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/colorPrimary" />
-
-
-        </LinearLayout>
+        <Spinner
+            android:id="@+id/id_spinner_quadra"
+            style="@android:style/Widget.Spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="40sp"
+            android:layout_weight="1"
+            android:textColor="@android:color/black" />
 
         <EditText
             android:id="@+id/id_edt_inscricao"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
+            android:layout_weight="1"
             android:inputType="text"
             android:hint="@string/exemplo_01_01_001_0001_000"
             android:autofillHints="" />
 
-        <Spinner
-            android:id="@+id/id_spinner_logradouro"
+        <EditText
+            android:id="@+id/id_edt_matricula"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@color/colorPrimary" />
+            android:autofillHints=""
+            android:ems="10"
+            android:hint="@string/exemplo_01_01_001_0001_000"
+            android:inputType="text" />
+
+        <Spinner
+            android:id="@+id/id_spinner_logradouro"
+            style="@android:style/Widget.Spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="40sp"
+            android:layout_weight="1" />
 
         <ImageButton
             android:id="@+id/id_consultar"

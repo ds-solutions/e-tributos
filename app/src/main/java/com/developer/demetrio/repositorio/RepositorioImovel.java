@@ -207,7 +207,46 @@ public class RepositorioImovel implements IRepositorioImovel {
     }
 
     @Override
-    public ArrayList<Imovel> buscarPorSetorQuadra(String[] parametros) throws RepositorioException {
+    public List<Imovel> buscarPorSetorQuadra(String[] parametros) throws RepositorioException {
+       String setor = null, quadra = null;
+           setor = parametros[0];
+           quadra = parametros[1];
+System.out.println("Setor "+setor+" quadra "+quadra);
+        StringBuilder sql = new StringBuilder();
+        sql.append("    SELECT * FROM ");
+        sql.append(_Imovel.NOME_DA_TABELA);
+        sql.append(" INNER JOIN ");
+        sql.append(_Cadastro.NOME_DA_TABELA);
+        sql.append(" ON ");
+        sql.append(_Cadastro.NOME_DA_TABELA);
+        sql.append(".");
+        sql.append(_Cadastro.ID);
+        sql.append(" = ");
+        sql.append(_Imovel.ID_CADASTRO);
+        sql.append(" WHERE ");
+        if (setor != null) {
+        sql.append(_Cadastro.NOME_DA_TABELA);
+        sql.append(".");
+            sql.append(_Cadastro.SETOR);
+            sql.append(" =? ");
+        }
+
+        if (setor != null && quadra != null) {
+            sql.append(" AND ");
+        }
+
+        if (quadra != null) {
+            sql.append(_Cadastro.NOME_DA_TABELA);
+            sql.append(".");
+            sql.append(_Cadastro.QUADRA);
+            sql.append(" =? ");
+        }
+
+        Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
+        if (resultado.getCount() > 0){
+            resultado.moveToFirst();
+            return getResultado(resultado);
+        }
         return null;
     }
 
@@ -368,6 +407,47 @@ public class RepositorioImovel implements IRepositorioImovel {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public List<Imovel> buscarDaMatricula(String[] parametros) throws RepositorioException {
+        StringBuilder sql = new StringBuilder();
+        sql.append("    SELECT * FROM ");
+        sql.append(_Imovel.NOME_DA_TABELA);
+        sql.append(" INNER JOIN ");
+        sql.append(_Cadastro.NOME_DA_TABELA);
+        sql.append(" ON ");
+        sql.append(_Cadastro.NOME_DA_TABELA);
+        sql.append(".");
+        sql.append(_Cadastro.ID);
+        sql.append(" = ");
+        sql.append(_Imovel.ID_CADASTRO);
+        sql.append(" WHERE ");
+        sql.append(_Cadastro.NOME_DA_TABELA);
+        sql.append(".");
+        sql.append(_Cadastro.NUM_CADASTRO);
+        sql.append(" =? ");
+
+        Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
+        if (resultado.getCount() > 0){
+            resultado.moveToFirst();
+            return getResultado(resultado);
+        }
+        return null;
+    }
+
+    @Override
+    public long primeiraPosicao() throws RepositorioException {
+        StringBuilder sql = new StringBuilder();
+        sql.append(" SELECT ID FROM ");
+        sql.append(_Imovel.NOME_DA_TABELA);
+
+        Cursor resultado = this.conexao.rawQuery(sql.toString(), null);
+        if (resultado.getCount() > 0){
+            resultado.moveToFirst();
+            return resultado.getLong(resultado.getColumnIndexOrThrow(_Imovel.ID));
+        }
+        return 0;
     }
 
     public List<Imovel> getResultado(Cursor resultado) {

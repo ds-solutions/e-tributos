@@ -48,6 +48,9 @@ public class Menu extends AppCompatActivity {
                             SQLiteDatabase conexao = new ConexaoDataBase().concectarComBanco(getApplicationContext());
                             RepositorioImovel imoveis = new RepositorioImovel(conexao);
                            id = imoveis.primeiraPosicaoNaoEmitida();
+                           if (id == 0) {
+                               id = imoveis.primeiraPosicao();
+                           }
                         } catch (RepositorioException e) {
                             e.printStackTrace();
                         }

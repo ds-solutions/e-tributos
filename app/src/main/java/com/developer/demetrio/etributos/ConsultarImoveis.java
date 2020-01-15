@@ -70,20 +70,22 @@ public class ConsultarImoveis extends AppCompatActivity {
         setContentView(R.layout.activity_consultar_imoveis);
         connectDataBase = new ConexaoDataBase();
         this.conexao = connectDataBase.concectarComBanco(this);
-        this.btConsultar = findViewById(R.id.id_consultar);
 
         this.inscricao = findViewById(R.id.id_edt_inscricao);
-        this.layoutSetorQuadra = findViewById(R.id.layour_setor_quadra);
         this.btConsultar = findViewById(R.id.id_consultar);
         this.listView = (ListView) findViewById(R.id.id_list_view_imoveis);
+        this.matricula = (EditText) findViewById(R.id.id_edt_matricula);
         this.context = getApplicationContext();
+
+        limparParametros();
 
         consultar();
 
         popularSpinnerLogradouro();
         popularSpinnerSetorQuadra();
+        ocultarCampos();
 
-        ArrayAdapter<String> parametrosParaConsulta = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, consultarPor);
+        final ArrayAdapter<String> parametrosParaConsulta = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, consultarPor);
         parametrosParaConsulta.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         this.buscarPor = findViewById(R.id.id_item_de_pesquisa);
         this.buscarPor.setAdapter(parametrosParaConsulta);
@@ -93,7 +95,10 @@ public class ConsultarImoveis extends AppCompatActivity {
         this.logradouro.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
+                parametros = new String[1];
+                if (i > 0) {
+                    parametros[0] = logradouros.get(i);
+                }
             }
 
             @Override
@@ -106,6 +111,10 @@ public class ConsultarImoveis extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
+                if (i != 0) {
+                    System.out.println("no spinnerSetor "+ setores.get(i));
+                        parametros[0] = setores.get(i);
+                }
             }
 
             @Override
@@ -118,6 +127,16 @@ public class ConsultarImoveis extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
+                if (i != 0) {
+                    if (parametros[0] != null) {
+                        System.out.println("no spinnerQuadra "+quadras.get(i));
+                        parametros[1] = quadras.get(i);
+                    }
+                    if (parametros[0] == null) {
+                        parametros[0] = null;
+                        parametros[1] = quadras.get(i);
+                    }
+                }
             }
 
             @Override
@@ -131,65 +150,51 @@ public class ConsultarImoveis extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 iConsultaPor = i;
+                limparParametros();
                 switch (i){
                     case 1:
-                     inscricao.setVisibility(View.GONE);
-                     logradouro.setVisibility(View.GONE);
-                     layoutSetorQuadra.setVisibility(View.GONE);
+                     ocultarCampos();
                     break;
 
                     case 2:
-                        inscricao.setVisibility(View.GONE);
-                        logradouro.setVisibility(View.GONE);
-                        layoutSetorQuadra.setVisibility(View.GONE);
+                        ocultarCampos();
                     break;
 
                     case 3:
-                        inscricao.setVisibility(View.GONE);
-                        logradouro.setVisibility(View.GONE);
-                        layoutSetorQuadra.setVisibility(View.GONE);
+                        ocultarCampos();
                     break;
 
                     case 4:
-                        inscricao.setVisibility(View.GONE);
-                        logradouro.setVisibility(View.GONE);
-                        layoutSetorQuadra.setVisibility(View.GONE);
+                        ocultarCampos();
                     break;
 
                     case 5:
+                        ocultarCampos();
                         inscricao.setVisibility(View.VISIBLE);
-                        logradouro.setVisibility(View.GONE);
-                        layoutSetorQuadra.setVisibility(View.GONE);
                     break;
 
                     case 6:
-                        inscricao.setVisibility(View.GONE);
+                        ocultarCampos();
                         logradouro.setVisibility(View.VISIBLE);
-                        layoutSetorQuadra.setVisibility(View.GONE);
                     break;
 
                     case 7:
-                       // MATRICULA popularSpinnerSetorQuadra();
-                        inscricao.setVisibility(View.GONE);
-                        logradouro.setVisibility(View.GONE);
-                        layoutSetorQuadra.setVisibility(View.VISIBLE);
+                        ocultarCampos();
+                        matricula.setVisibility(View.VISIBLE);
                     break;
 
                     case 8:
-                        inscricao.setVisibility(View.GONE);
-                        logradouro.setVisibility(View.GONE);
-                        layoutSetorQuadra.setVisibility(View.GONE);
+                        ocultarCampos();
                     break;
                     case 9:
-                        inscricao.setVisibility(View.GONE);
-                        logradouro.setVisibility(View.GONE);
-                        layoutSetorQuadra.setVisibility(View.VISIBLE);
+                        ocultarCampos();
+                        parametros = new String[2];
+                        setor.setVisibility(View.VISIBLE);
+                        quadra.setVisibility(View.VISIBLE);
                         break;
 
                     default:
-                        inscricao.setVisibility(View.GONE);
-                        logradouro.setVisibility(View.GONE);
-                        layoutSetorQuadra.setVisibility(View.GONE);
+                        ocultarCampos();
                     break;
 
                 }
@@ -211,6 +216,18 @@ public class ConsultarImoveis extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void limparParametros() {
+        this.parametros = new String[2];
+    }
+
+    private void ocultarCampos() {
+        this.setor.setVisibility(View.GONE);
+        this.quadra.setVisibility(View.GONE);
+        this.logradouro.setVisibility(View.GONE);
+        this.inscricao.setVisibility(View.GONE);
+        this.matricula.setVisibility(View.GONE);
     }
 
     private void popularSpinnerSetorQuadra() {
@@ -324,7 +341,6 @@ public class ConsultarImoveis extends AppCompatActivity {
             case 6:
                 System.out.println("6º CASO");
                 try {
-                    this.parametros = new String[]{this.inscricao.getText().toString()};
                     listImoveis = imoveis.buscarTodosPorLogradouro(this.parametros);
                     this.parametros = new String[]{};
                 } catch (RepositorioException e) {
@@ -335,8 +351,8 @@ public class ConsultarImoveis extends AppCompatActivity {
             case 7:
                 System.out.println("7º CASO");
                 try {
-                    this.parametros = new String[1];
-                    listImoveis = imoveis.buscarTodosPorLogradouro(this.parametros);
+                    this.parametros = new String[]{this.matricula.getText().toString()};
+                    listImoveis = imoveis.buscarDaMatricula(this.parametros);
                     this.parametros = new String[]{};
                 } catch (RepositorioException e) {
                     e.printStackTrace();
@@ -351,7 +367,6 @@ public class ConsultarImoveis extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 break;
-
             case 9:
                 System.out.println("9º CASO");
                 try {
@@ -370,7 +385,7 @@ public class ConsultarImoveis extends AppCompatActivity {
                 }
                 break;
         }
-
+        parametros = null;
     }
 
     class ClickListiner implements OnItemClickListener {
