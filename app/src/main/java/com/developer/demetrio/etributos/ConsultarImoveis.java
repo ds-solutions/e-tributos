@@ -27,6 +27,8 @@ import com.developer.demetrio.repositorio.RepositorioCadastro;
 import com.developer.demetrio.repositorio.RepositorioEndereco;
 import com.developer.demetrio.repositorio.RepositorioImovel;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +41,8 @@ public class ConsultarImoveis extends AppCompatActivity {
     private String[] consultarPor = new String[]{"Consultar por", "Enviados por e-mail",
             "Enviados por WhatsApp", "Imóveis impressos", "Imóveis não impressos",
             "Inscrição", "Logradouro", "Matricula", "Não entregues", "Setor/Quadra"};
+
+    private String stringSetor, stringQuadra;
 
     private int iConsultaPor = 0, iSetor, iQuadra;
 
@@ -99,6 +103,9 @@ public class ConsultarImoveis extends AppCompatActivity {
                 if (i > 0) {
                     parametros[0] = logradouros.get(i);
                 }
+                if (i == 0) {
+                    parametros[0] = null;
+                }
             }
 
             @Override
@@ -111,9 +118,11 @@ public class ConsultarImoveis extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
-                if (i != 0) {
-                    System.out.println("no spinnerSetor "+ setores.get(i));
-                        parametros[0] = setores.get(i);
+                if (i > 0) {
+                        stringSetor = setores.get(i);
+                }
+                else if (i == 0) {
+                    stringSetor = "";
                 }
             }
 
@@ -127,15 +136,10 @@ public class ConsultarImoveis extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
-                if (i != 0) {
-                    if (parametros[0] != null) {
-                        System.out.println("no spinnerQuadra "+quadras.get(i));
-                        parametros[1] = quadras.get(i);
-                    }
-                    if (parametros[0] == null) {
-                        parametros[0] = null;
-                        parametros[1] = quadras.get(i);
-                    }
+                if (i > 0) {
+                         stringQuadra = quadras.get(i);
+                } else if (i == 0) {
+                    stringQuadra = "";
                 }
             }
 
@@ -188,7 +192,6 @@ public class ConsultarImoveis extends AppCompatActivity {
                     break;
                     case 9:
                         ocultarCampos();
-                        parametros = new String[2];
                         setor.setVisibility(View.VISIBLE);
                         quadra.setVisibility(View.VISIBLE);
                         break;
@@ -231,7 +234,6 @@ public class ConsultarImoveis extends AppCompatActivity {
     }
 
     private void popularSpinnerSetorQuadra() {
-        System.out.println("Entrou no método chamado pelo item ");
         RepositorioCadastro cadastros = new RepositorioCadastro(this.conexao);
         List<Cadastro> list = new ArrayList<>();
         try {
@@ -292,7 +294,6 @@ public class ConsultarImoveis extends AppCompatActivity {
         this.imoveis = new RepositorioImovel(this.conexao);
         switch (iConsultaPor) {
             case 1:
-                System.out.println("1º CASO");
                 try {
                     listImoveis = imoveis.buscarTodosEnviadosPorEmail();
                 } catch (RepositorioException e) {
@@ -301,16 +302,14 @@ public class ConsultarImoveis extends AppCompatActivity {
                 break;
 
             case 2:
-                System.out.println("2º CASO");
                 try {
                     listImoveis = imoveis.buscarTodosEnviadosPorWhatsApp();
                 } catch (RepositorioException e) {
                     e.printStackTrace();
-                }
+               }
                 break;
 
             case 3:
-                System.out.println("3º CASO");
                 try {
                     listImoveis = imoveis.buscarTodosImoveisImpressos();
                 } catch (RepositorioException e) {
@@ -319,7 +318,6 @@ public class ConsultarImoveis extends AppCompatActivity {
                 break;
 
             case 4:
-                System.out.println("4º CASO");
                 try {
                     listImoveis = imoveis.buscarTodosImoveisNaoImpressos();
                 } catch (RepositorioException e) {
@@ -329,7 +327,6 @@ public class ConsultarImoveis extends AppCompatActivity {
 
             case 5:
                 try {
-                    System.out.println("5º CASO");
                     this.parametros = new String[]{this.inscricao.getText().toString()};
                     listImoveis = imoveis.buscarTodosImoveisPorInscricao(this.parametros);
                     this.parametros = new String[]{};
@@ -339,8 +336,11 @@ public class ConsultarImoveis extends AppCompatActivity {
                 break;
 
             case 6:
-                System.out.println("6º CASO");
-                try {
+               try {
+                    if (StringUtils.isBlank(this.parametros[0])){
+                        listImoveis = null;
+                        return;
+                    }
                     listImoveis = imoveis.buscarTodosPorLogradouro(this.parametros);
                     this.parametros = new String[]{};
                 } catch (RepositorioException e) {
@@ -349,9 +349,13 @@ public class ConsultarImoveis extends AppCompatActivity {
                 break;
 
             case 7:
-                System.out.println("7º CASO");
-                try {
+
+               try {
                     this.parametros = new String[]{this.matricula.getText().toString()};
+                   if (StringUtils.isBlank(parametros[0])){
+                       this.listImoveis = null;
+                       return;
+                   }
                     listImoveis = imoveis.buscarDaMatricula(this.parametros);
                     this.parametros = new String[]{};
                 } catch (RepositorioException e) {
@@ -360,7 +364,6 @@ public class ConsultarImoveis extends AppCompatActivity {
                 break;
 
             case 8:
-                System.out.println("8º CASO");
                 try {
                     listImoveis = imoveis.buscarImoveisNaoEntregues();
                 } catch (RepositorioException e) {
@@ -368,16 +371,14 @@ public class ConsultarImoveis extends AppCompatActivity {
                 }
                 break;
             case 9:
-                System.out.println("9º CASO");
                 try {
-                    listImoveis = imoveis.buscarPorSetorQuadra(this.parametros);
+                    listImoveis = imoveis.buscarPorSetorQuadra(this.stringSetor, this.stringQuadra);
                 } catch (RepositorioException e) {
                     e.printStackTrace();
                 }
                 break;
 
             default:
-                System.out.println("DEFAULT");
                 try {
                     listImoveis = imoveis.getImoveis();
                 } catch (RepositorioException e) {

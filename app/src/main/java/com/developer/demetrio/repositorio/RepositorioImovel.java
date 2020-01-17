@@ -22,6 +22,8 @@ import com.developer.demetrio.model.Imovel;
 import com.developer.demetrio.model.Tributo;
 import com.developer.demetrio.model.ValoresVenais;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -207,11 +209,23 @@ public class RepositorioImovel implements IRepositorioImovel {
     }
 
     @Override
-    public List<Imovel> buscarPorSetorQuadra(String[] parametros) throws RepositorioException {
-       String setor = null, quadra = null;
-           setor = parametros[0];
-           quadra = parametros[1];
-System.out.println("Setor "+setor+" quadra "+quadra);
+    public List<Imovel> buscarPorSetorQuadra(String setor, String quadra) throws RepositorioException {
+       String[] parametros = null;
+       if (StringUtils.isNotBlank(setor) && StringUtils.isNotBlank(quadra)) {
+            parametros = new String[2];
+            parametros = new String[]{setor, quadra};
+        }
+        if ((StringUtils.isNotBlank(setor)) && (StringUtils.isBlank(quadra))) {
+            parametros = new String[1];
+            parametros = new String[]{setor};
+        }
+        if ((StringUtils.isBlank(setor)) && (StringUtils.isNotBlank(quadra))) {
+            parametros = new String[1];
+            parametros = new String[]{quadra};
+        }
+        if ((StringUtils.isBlank(setor)) && (StringUtils.isBlank(quadra))) {
+            return null;
+        }
         StringBuilder sql = new StringBuilder();
         sql.append("    SELECT * FROM ");
         sql.append(_Imovel.NOME_DA_TABELA);
@@ -224,18 +238,18 @@ System.out.println("Setor "+setor+" quadra "+quadra);
         sql.append(" = ");
         sql.append(_Imovel.ID_CADASTRO);
         sql.append(" WHERE ");
-        if (setor != null) {
+        if (StringUtils.isNotBlank(setor)) {
         sql.append(_Cadastro.NOME_DA_TABELA);
         sql.append(".");
             sql.append(_Cadastro.SETOR);
             sql.append(" =? ");
         }
 
-        if (setor != null && quadra != null) {
+        if ((StringUtils.isNotBlank(setor)) && (StringUtils.isNotBlank(quadra))) {
             sql.append(" AND ");
         }
 
-        if (quadra != null) {
+        if (StringUtils.isNotBlank(quadra)) {
             sql.append(_Cadastro.NOME_DA_TABELA);
             sql.append(".");
             sql.append(_Cadastro.QUADRA);
@@ -447,6 +461,36 @@ System.out.println("Setor "+setor+" quadra "+quadra);
             resultado.moveToFirst();
             return resultado.getLong(resultado.getColumnIndexOrThrow(_Imovel.ID));
         }
+        return 0;
+    }
+
+    @Override
+    public long totalDeImoveisVisitados() throws RepositorioException {
+        return 0;
+    }
+
+    @Override
+    public long totalEnviadosPorEmail() throws RepositorioException {
+        return 0;
+    }
+
+    @Override
+    public long totalEnviadosPorWhatsApp() throws RepositorioException {
+        return 0;
+    }
+
+    @Override
+    public long totalImpresso() throws RepositorioException {
+        return 0;
+    }
+
+    @Override
+    public long totalImoveisAVisitar() throws RepositorioException {
+        return 0;
+    }
+
+    @Override
+    public long totalDeCadastroAlterados() throws RepositorioException {
         return 0;
     }
 

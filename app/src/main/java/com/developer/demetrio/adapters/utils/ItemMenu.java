@@ -1,4 +1,4 @@
-package com.developer.demetrio.model;
+package com.developer.demetrio.adapters.utils;
 
 public class ItemMenu {
     private int img;

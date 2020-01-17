@@ -22,7 +22,7 @@ interface IRepositorioImovel {
 
     List<Imovel> buscarImoveisNaoEntregues() throws RepositorioException;
 
-    List<Imovel> buscarPorSetorQuadra(String[] parametros) throws RepositorioException;
+    List<Imovel> buscarPorSetorQuadra(String setor, String quadra) throws RepositorioException;
 
     long inserir(Imovel imovel) throws RepositorioException;
 
@@ -41,4 +41,19 @@ interface IRepositorioImovel {
     List<Imovel> buscarDaMatricula(String[] parametros) throws RepositorioException;
 
     long primeiraPosicao() throws RepositorioException;
+
+    long totalDeImoveisVisitados() throws RepositorioException;
+
+    long totalEnviadosPorEmail() throws RepositorioException;
+
+    long totalEnviadosPorWhatsApp() throws RepositorioException;
+
+    long totalImpresso() throws RepositorioException;
+
+    long totalImoveisAVisitar() throws RepositorioException;
+
+    long totalDeCadastroAlterados() throws RepositorioException;
+
+
+
 }

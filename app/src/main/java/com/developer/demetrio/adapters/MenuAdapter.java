@@ -1,4 +1,4 @@
-package com.developer.demetrio.model;
+package com.developer.demetrio.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,9 +8,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.developer.demetrio.adapters.utils.ItemMenu;
 import com.developer.demetrio.etributos.R;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 

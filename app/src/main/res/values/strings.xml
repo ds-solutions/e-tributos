@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">ℯ-TRIBUTOS</string>
 
+    <!-- TITLE DA TELA -->
+    <string name="title_relatorio">Relatórios</string>
+
     <!-- LABEL DOS CAMPOS -->
 
     <string name="login">Login</string>
@@ -81,7 +84,6 @@
     <string name="sucesso_conexao">Impressora configurada!</string>
 
 
-
     <string-array name="nao_entrega">
         <item>Motivo da não entrega</item>
         <item>Abandonado</item>
@@ -120,7 +122,6 @@
         <item>União Estável</item>
         <item>Viúvo(a)</item>
     </string-array>
-
 
 
     <string name="lista_imoveis">Lista de Imóveis</string>

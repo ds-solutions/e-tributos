@@ -10,12 +10,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.developer.demetrio.controladores.ControladorImovel;
 import com.developer.demetrio.databases.ConexaoDataBase;
-import com.developer.demetrio.execoes.ControladorException;
+import com.developer.demetrio.databases.constantes._DataBase;
 import com.developer.demetrio.execoes.RepositorioException;
-import com.developer.demetrio.model.ItemMenu;
-import com.developer.demetrio.model.MenuAdapter;
+import com.developer.demetrio.adapters.utils.ItemMenu;
+import com.developer.demetrio.adapters.MenuAdapter;
 import com.developer.demetrio.repositorio.RepositorioImovel;
 
 import java.util.ArrayList;
@@ -74,13 +73,20 @@ public class Menu extends AppCompatActivity {
                         break;
 
                     case "Relatório":
-                        activity = new Intent(getApplicationContext(), ConsultarImoveis.class);
+                        activity = new Intent(getApplicationContext(), Relatorio.class);
                         startActivity(activity);
                         break;
 
                     case "Finalizar":
-                        activity = new Intent(getApplicationContext(), Finalizar.class);
-                        startActivity(activity);
+                      /*  activity = new Intent(getApplicationContext(), Finalizar.class);
+                        startActivity(activity);*/
+                      getApplicationContext().deleteDatabase(_DataBase.NOME_DO_BANCO);
+                        try {
+                            Thread.sleep(5);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        onBackPressed();
                         break;
 
                     case "Sair":

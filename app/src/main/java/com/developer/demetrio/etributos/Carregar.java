@@ -80,7 +80,7 @@ public class Carregar extends AppCompatActivity {
 
                do {
                    try {
-                       Thread.sleep(l);
+                       Thread.sleep(10);
 
                       carregado = verificarCarregamento();
                    } catch (InterruptedException e) {
@@ -106,8 +106,8 @@ public class Carregar extends AppCompatActivity {
             int i = 0;
             RepositorioImovel imoveis =  new RepositorioImovel(this.conexao);
             try {
-                if (imoveis.getQtdImoveis() < 7) {
-                    while (i < 7){
+                if (imoveis.getQtdImoveis() < 15) {
+                    while (i < 15){
                         popularImovelParaImpressao();
                         i++;
                         Toast.makeText(this, i + "º Imovel cadastrado com cadastro "+this.imovel.getCadastro().getNumCadastro()+" com sucesso!", Toast.LENGTH_SHORT).show();
@@ -465,7 +465,9 @@ public class Carregar extends AppCompatActivity {
     }
 
     private String lote() {
-        return "00"+String.valueOf(lote+=10);
+        String l ="00"+String.valueOf(lote);
+        lote+=5;
+        return l;
     }
 
     private Long id() {
