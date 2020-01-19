@@ -55,5 +55,11 @@ interface IRepositorioImovel {
     long totalDeCadastroAlterados() throws RepositorioException;
 
 
+    long totalDeImoveisDemolidos() throws RepositorioException;
 
+    long totalDeImoveisNaoLocalizados() throws RepositorioException;
+
+    long totalNaoEntreguesPorSerTerreno() throws RepositorioException;
+
+    long naoEntreguesPorRecusarReceber() throws RepositorioException;
 }

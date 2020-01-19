@@ -494,6 +494,26 @@ public class RepositorioImovel implements IRepositorioImovel {
         return 0;
     }
 
+    @Override
+    public long totalDeImoveisDemolidos() throws RepositorioException {
+        return 0;
+    }
+
+    @Override
+    public long totalDeImoveisNaoLocalizados() throws RepositorioException {
+        return 0;
+    }
+
+    @Override
+    public long totalNaoEntreguesPorSerTerreno() throws RepositorioException {
+        return 0;
+    }
+
+    @Override
+    public long naoEntreguesPorRecusarReceber() throws RepositorioException {
+        return 0;
+    }
+
     public List<Imovel> getResultado(Cursor resultado) {
         List<Imovel> imoveis = new ArrayList<>();
 
