@@ -9,7 +9,7 @@ public class Imovel implements Serializable {
     private Integer indcEmissaoConta;
     private Integer indcEnvioZap;
     private Integer indcEnvioEmail;
-    private String motivoDaNãoEntrega;
+    private String motivoDaNaoEntrega;
     private Cadastro cadastro;
     private Endereco endereco;
     private Contribuinte contribuinte;
@@ -89,12 +89,12 @@ public class Imovel implements Serializable {
         return indcEnvioEmail;
     }
 
-    public String getMotivoDaNãoEntrega() {
-        return motivoDaNãoEntrega;
+    public String getMotivoDaNaoEntrega() {
+        return motivoDaNaoEntrega;
     }
 
-    public void setMotivoDaNãoEntrega(String motivoDaNãoEntrega) {
-        this.motivoDaNãoEntrega = motivoDaNãoEntrega;
+    public void setMotivoDaNaoEntrega(String motivoDaNaoEntrega) {
+        this.motivoDaNaoEntrega = motivoDaNaoEntrega;
     }
 
     public void setIndcEnvioEmail(Integer indcEnvioEmail) {

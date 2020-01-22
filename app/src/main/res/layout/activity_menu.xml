@@ -7,15 +7,16 @@
     android:orientation="vertical"
     tools:context=".Menu">
 
-
         <TextView
             android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal|center_vertical"
             android:text="@string/titulo_menu"
-            android:textSize="18sp"
-            android:textStyle="normal" />
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:background="?attr/colorPrimary"/>
 
         <ListView
             android:id="@+id/idListViewMenu"

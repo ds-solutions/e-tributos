@@ -129,6 +129,7 @@
     <string name="str_erro_impressora">%1$s Deseja tentar novamente ?</string>
     <string name="db_erro">Erro ao acessar o banco de dados</string>
     <string name="exemplo_01_01_001_0001_000">exemplo</string>
+    <string name="todo">TODO</string>
 
 
 </resources>

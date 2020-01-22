@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.net.Uri;
@@ -36,6 +37,8 @@ import com.developer.demetrio.model.Imovel;
 import com.developer.demetrio.repositorio.RepositorioImovel;
 import com.developer.demetrio.service.Mail;
 import com.developer.demetrio.service.Zap;
+
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -111,7 +114,7 @@ public class DadosDoImovel extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-      //  return super.onCreateView(inflater, container, savedInstanceState);
+        onCreate(savedInstanceState);
         ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.dados_do_imovel, container, false);
         this.matricula = (TextView) viewGroup.findViewById(R.id.id_matricula);
         this.inscricao = (TextView) viewGroup.findViewById(R.id.id_inscricao);
@@ -141,13 +144,14 @@ public class DadosDoImovel extends Fragment {
         this.motivoNaoEntrega.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                imovel.setMotivoDaNaoEntrega(motivos[i]);
             }
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
             }
         });
         this.btImprimir.setOnClickListener(new C_Imprimir(this.imovel));
-        onCreate(savedInstanceState);
+
         this.btImovelAnterior.setOnClickListener(new ImovelAnterior(this.context, id, totalImoveis));
         this.btProximoImovel.setOnClickListener(new ProximoImovel(this.context, id, totalImoveis));
 
@@ -169,14 +173,23 @@ public class DadosDoImovel extends Fragment {
         this.contribuinte.setText(getNome());
         this.statusQtdImoveis.setText(String.valueOf(this.id)+"/"+String.valueOf(this.totalImoveis));
         this.msgUsuario.setText(getmessage());
+        if (StringUtils.isNotBlank(this.imovel.getMotivoDaNaoEntrega())) {
+            int i = 0;
+           for (String motivo : motivos) {
+               if (motivo.equals(this.imovel.getMotivoDaNaoEntrega())) {
+                   motivoNaoEntrega.setSelection(i);
+               }
+               i++;
+           }
+
+        }
     }
 
     private int getmessage() {
         int mensagem = R.string.nulo;
-            int i = this.imovel.getContribuinte().getDadosCadastradosDoContribuinte().getCpf() == null ||
-                    this.imovel.getContribuinte().getDadosCadastradosDoContribuinte().getRg() == null  ||
-                    this.imovel.getContribuinte().getDadosCadastradosDoContribuinte().getEmail() == null ||
-                    this.imovel.getContribuinte().getDadosCadastradosDoContribuinte().getEmail() == null ? 1 : 0;
+            int i = !StringUtils.isNotBlank(this.imovel.getContribuinte().getDadosCadastradosDoContribuinte().getCpf()) ||
+                    !StringUtils.isNotBlank(this.imovel.getContribuinte().getDadosCadastradosDoContribuinte().getRg()) ||
+                    !StringUtils.isNotBlank(this.imovel.getContribuinte().getDadosCadastradosDoContribuinte().getEmail())  ? 1 : 0;
             i = this.concluiu ? 2 : 0;
             if (i > 0 && i == 1) {
 
@@ -184,7 +197,6 @@ public class DadosDoImovel extends Fragment {
             }
             if (i == 2) {
                 mensagem = R.string.rota_finalizada;
-                System.out.println(mensagem);
             }
             return mensagem;
     }
@@ -395,6 +407,7 @@ public class DadosDoImovel extends Fragment {
             try {
                 sendForImpressora();
             } catch (ControladorException e) {
+                Toast.makeText(this.context, "Erro de conexão com a impressora!", Toast.LENGTH_SHORT);
                 e.printStackTrace();
             }
         }
@@ -471,8 +484,6 @@ public class DadosDoImovel extends Fragment {
         } else if (this.id == this.totalImoveis) {
             this.id = 1;
         }
-
-       // new DadosDoImovel(this.context, this.activity, this.id);
         Bundle parametros = new Bundle();
         parametros.putLong("id", id);
         Intent activity = new Intent(this.context, ListaImoveis.class);
@@ -492,8 +503,15 @@ public class DadosDoImovel extends Fragment {
 
 
     private void sendForImpressora() throws ControladorException {
-        if (this.motivoNaoEntrega.getSelectedItem() != this.motivos[0]) {
-            this.imovel.setMotivoDaNãoEntrega(this.motivoNaoEntrega.getSelectedItem().toString());
+        if (this.motivoNaoEntrega.getSelectedItem() != motivos[0]) {
+            SQLiteDatabase conexao = new ConexaoDataBase().concectarComBanco(this.context);
+            RepositorioImovel imoveis = new RepositorioImovel(conexao);
+            try {
+                imoveis.atualizarMotivoDaNaoEntrega(this.imovel);
+            } catch (RepositorioException e) {
+                e.printStackTrace();
+            }
+            conexao.close();
             proximoImovel();
         }
 

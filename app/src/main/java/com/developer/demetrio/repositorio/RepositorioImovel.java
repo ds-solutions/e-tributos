@@ -271,7 +271,7 @@ public class RepositorioImovel implements IRepositorioImovel {
         values.put(_Imovel.INDIC_EMISSAO_CONTA, imovel.getIndcEmissaoConta());
         values.put(_Imovel.INDIC_ENVIO_EMAIL, imovel.getIndcEnvioEmail());
         values.put(_Imovel.INDIC_ENVIO_WHATSAAP, imovel.getIndcEnvioZap());
-        values.put(_Imovel.MOTIVO_NAO_ENTREGA, imovel.getMotivoDaNãoEntrega());
+        values.put(_Imovel.MOTIVO_NAO_ENTREGA, imovel.getMotivoDaNaoEntrega());
         values.put(_Imovel.ID_CADASTRO, imovel.getCadastro().getId());
         values.put(_Imovel.ID_CONTRIBUINTE, imovel.getContribuinte().getId());
         values.put(_Imovel.ID_ENDERECO, imovel.getEndereco().getId());
@@ -289,7 +289,7 @@ public class RepositorioImovel implements IRepositorioImovel {
         values.put(_Imovel.INDIC_EMISSAO_CONTA, i.getIndcEmissaoConta());
         values.put(_Imovel.INDIC_ENVIO_WHATSAAP, i.getIndcEnvioZap());
         values.put(_Imovel.INDIC_ENVIO_EMAIL, i.getIndcEnvioEmail());
-        values.put(_Imovel.MOTIVO_NAO_ENTREGA, i.getMotivoDaNãoEntrega());
+        values.put(_Imovel.MOTIVO_NAO_ENTREGA, i.getMotivoDaNaoEntrega());
         return this.conexao.update(_Imovel.NOME_DA_TABELA, values, _Imovel.ID+"="+id, null);
     }
 
@@ -313,7 +313,7 @@ public class RepositorioImovel implements IRepositorioImovel {
              imovel.setIndcEmissaoConta(resultado.getInt(resultado.getColumnIndexOrThrow(_Imovel.INDIC_EMISSAO_CONTA)));
              imovel.setIndcEnvioEmail(resultado.getInt(resultado.getColumnIndexOrThrow(_Imovel.INDIC_ENVIO_EMAIL)));
              imovel.setIndcEnvioZap(resultado.getInt(resultado.getColumnIndexOrThrow(_Imovel.INDIC_ENVIO_WHATSAAP)));
-             imovel.setMotivoDaNãoEntrega(resultado.getString(resultado.getColumnIndexOrThrow(_Imovel.MOTIVO_NAO_ENTREGA)));
+             imovel.setMotivoDaNaoEntrega(resultado.getString(resultado.getColumnIndexOrThrow(_Imovel.MOTIVO_NAO_ENTREGA)));
              imovel.setCadastro(new Cadastro());
              imovel.getCadastro().setId(resultado.getLong(resultado.getColumnIndexOrThrow(_Imovel.ID_CADASTRO)));
              imovel.setContribuinte(new Contribuinte());
@@ -392,10 +392,12 @@ public class RepositorioImovel implements IRepositorioImovel {
 
     @Override
     public boolean rotaFinalizada()  {
-        String[] parametros = new String[3];
+        String[] parametros = new String[5];
         parametros[0] = String.valueOf(1);
         parametros[1] = String.valueOf(1);
         parametros[2] = String.valueOf(1);
+        parametros[3] = "Motivo da não entrega";
+        parametros[4] = "null";
         Integer cont = 0;
         StringBuilder sql = new StringBuilder();
         sql.append(" SELECT ");
@@ -408,7 +410,11 @@ public class RepositorioImovel implements IRepositorioImovel {
         sql.append(_Imovel.INDIC_ENVIO_EMAIL);
         sql.append(" =? OR ");
         sql.append(_Imovel.INDIC_ENVIO_WHATSAAP);
-        sql.append(" =? ");
+        sql.append(" =? OR ");
+        sql.append(_Imovel.MOTIVO_NAO_ENTREGA);
+        sql.append(" =? OR ");
+        sql.append(_Imovel.MOTIVO_NAO_ENTREGA);
+        sql.append(" !=? ");
 
         try {
             cont = getQtdImoveis();
@@ -466,52 +472,238 @@ public class RepositorioImovel implements IRepositorioImovel {
 
     @Override
     public long totalDeImoveisVisitados() throws RepositorioException {
+        String[] parametros = new String[]{"1", "1", "1"};
+        StringBuilder sql = new StringBuilder();
+        sql.append("    SELECT * FROM ");
+        sql.append(_Imovel.NOME_DA_TABELA);
+        sql.append(" WHERE ");
+        sql.append(_Imovel.INDIC_ENVIO_EMAIL);
+        sql.append(" =? OR ");
+        sql.append(_Imovel.INDIC_ENVIO_WHATSAAP);
+        sql.append(" =? OR ");
+        sql.append(_Imovel.INDIC_EMISSAO_CONTA);
+        sql.append(" =? ");
+        Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
+        if (resultado.getCount() > 0) {
+            return resultado.getCount();
+        }
         return 0;
     }
 
     @Override
     public long totalEnviadosPorEmail() throws RepositorioException {
+        String[] parametros = new String[]{"1"};
+        StringBuilder sql = new StringBuilder();
+        sql.append("    SELECT ");
+        sql.append(_Imovel.ID);
+        sql.append(" FROM ");
+        sql.append(_Imovel.NOME_DA_TABELA);
+        sql.append(" WHERE ");
+        sql.append(_Imovel.INDIC_ENVIO_EMAIL);
+        sql.append(" =? ");
+
+        Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
+        if (resultado.getCount() > 0) {
+            return resultado.getCount();
+        }
         return 0;
     }
 
     @Override
     public long totalEnviadosPorWhatsApp() throws RepositorioException {
+        String[] parametros = new String[]{"1"};
+        StringBuilder sql = new StringBuilder();
+        sql.append("    SELECT ");
+        sql.append(_Imovel.ID);
+        sql.append(" FROM ");
+        sql.append(_Imovel.NOME_DA_TABELA);
+        sql.append(" WHERE ");
+        sql.append(_Imovel.INDIC_ENVIO_WHATSAAP);
+        sql.append(" =? ");
+
+        Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
+        if (resultado.getCount() > 0) {
+            return resultado.getCount();
+        }
         return 0;
     }
 
     @Override
     public long totalImpresso() throws RepositorioException {
+        String[] parametros = new String[]{"1"};
+        StringBuilder sql = new StringBuilder();
+        sql.append("    SELECT ");
+        sql.append(_Imovel.ID);
+        sql.append(" FROM ");
+        sql.append(_Imovel.NOME_DA_TABELA);
+        sql.append(" WHERE ");
+        sql.append(_Imovel.INDIC_EMISSAO_CONTA);
+        sql.append(" =? ");
+
+        Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
+        if (resultado.getCount() > 0) {
+            return resultado.getCount();
+        }
         return 0;
     }
 
     @Override
     public long totalImoveisAVisitar() throws RepositorioException {
+        String[] parametros = new String[]{"0", "0", "0", "", "null", "Motivo da não entrega"};
+        StringBuilder sql = new StringBuilder();
+        sql.append("    SELECT * FROM ");
+        sql.append(_Imovel.NOME_DA_TABELA);
+        sql.append(" WHERE ");
+        sql.append(_Imovel.INDIC_ENVIO_EMAIL);
+        sql.append(" =? AND ");
+        sql.append(_Imovel.INDIC_ENVIO_WHATSAAP);
+        sql.append(" =? AND ");
+        sql.append(_Imovel.INDIC_EMISSAO_CONTA);
+        sql.append(" =? AND ");
+        sql.append(_Imovel.MOTIVO_NAO_ENTREGA);
+        sql.append(" ==? OR ");
+        sql.append(_Imovel.MOTIVO_NAO_ENTREGA);
+        sql.append(" ==? OR ");
+        sql.append(_Imovel.MOTIVO_NAO_ENTREGA);
+        sql.append(" ==? ");
+        Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
+        if (resultado.getCount() > 0) {
+            return resultado.getCount();
+        }
         return 0;
     }
 
     @Override
     public long totalDeCadastroAlterados() throws RepositorioException {
+        StringBuilder sql = new StringBuilder();
+        sql.append("    SELECT COUNT(*)");
+        sql.append(" FROM ");
+        sql.append(_Imovel.NOME_DA_TABELA);
+        sql.append(" INNER JOIN ");
+        sql.append(_Contribuinte.NOME_DA_TABELA);
+        sql.append(" ON ");
+        sql.append(_Contribuinte.NOME_DA_TABELA);
+        sql.append(".");
+        sql.append(_Contribuinte.ID);
+        sql.append(" = ");
+        sql.append(_Imovel.ID_CONTRIBUINTE);
+        sql.append(" WHERE ");
+        sql.append(_Contribuinte.NOME_DA_TABELA);
+        sql.append(".");
+        sql.append(_Contribuinte.ID_AUTALIZACAO_DO_CONTRIBUINTE);
+        Cursor resultado = this.conexao.rawQuery(sql.toString() + " != null", null);
+        if (resultado.getCount() > 0) {
+            return resultado.getCount();
+        }
         return 0;
     }
 
     @Override
     public long totalDeImoveisDemolidos() throws RepositorioException {
+        String[] parametros = new String[]{"Demolido"};
+        StringBuilder sql = new StringBuilder();
+        sql.append("    SELECT ");
+        sql.append(_Imovel.ID);
+        sql.append(" FROM ");
+        sql.append(_Imovel.NOME_DA_TABELA);
+        sql.append(" WHERE ");
+        sql.append(_Imovel.MOTIVO_NAO_ENTREGA);
+        sql.append(" =? ");
+
+        Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
+        if (resultado.getCount() > 0) {
+            return resultado.getCount();
+        }
         return 0;
     }
 
     @Override
     public long totalDeImoveisNaoLocalizados() throws RepositorioException {
+        String[] parametros = new String[]{"Imóvel não localizado"};
+        StringBuilder sql = new StringBuilder();
+        sql.append("    SELECT ");
+        sql.append(_Imovel.ID);
+        sql.append(" FROM ");
+        sql.append(_Imovel.NOME_DA_TABELA);
+        sql.append(" WHERE ");
+        sql.append(_Imovel.MOTIVO_NAO_ENTREGA);
+        sql.append(" =? ");
+
+        Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
+        if (resultado.getCount() > 0) {
+            return resultado.getCount();
+        }
         return 0;
     }
 
     @Override
     public long totalNaoEntreguesPorSerTerreno() throws RepositorioException {
+        String[] parametros = new String[]{"Terreno"};
+        StringBuilder sql = new StringBuilder();
+        sql.append("    SELECT ");
+        sql.append(_Imovel.ID);
+        sql.append(" FROM ");
+        sql.append(_Imovel.NOME_DA_TABELA);
+        sql.append(" WHERE ");
+        sql.append(_Imovel.MOTIVO_NAO_ENTREGA);
+        sql.append(" =? ");
+
+        Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
+        if (resultado.getCount() > 0) {
+            return resultado.getCount();
+        }
         return 0;
     }
 
     @Override
     public long naoEntreguesPorRecusarReceber() throws RepositorioException {
+        String[] parametros = new String[]{"Recusou receber"};
+        StringBuilder sql = new StringBuilder();
+        sql.append("    SELECT ");
+        sql.append(_Imovel.ID);
+        sql.append(" FROM ");
+        sql.append(_Imovel.NOME_DA_TABELA);
+        sql.append(" WHERE ");
+        sql.append(_Imovel.MOTIVO_NAO_ENTREGA);
+        sql.append(" =? ");
+
+        Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
+        if (resultado.getCount() > 0) {
+            return resultado.getCount();
+        }
         return 0;
+    }
+
+    @Override
+    public long totalDeTributosNaoEntregues() throws RepositorioException {
+        String[] parametros = new String[]{"Motivo da não entrega", "NULL"};
+        StringBuilder sql = new StringBuilder();
+        sql.append("    SELECT ");
+        sql.append(_Imovel.ID);
+        sql.append(" FROM ");
+        sql.append(_Imovel.NOME_DA_TABELA);
+        sql.append(" WHERE ");
+        sql.append(_Imovel.MOTIVO_NAO_ENTREGA);
+        sql.append(" != ? OR  ");
+        sql.append(_Imovel.MOTIVO_NAO_ENTREGA);
+        sql.append(" != ?");
+
+        Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
+        if (resultado.getCount() > 0) {
+            return resultado.getCount();
+        }
+        return 0;
+    }
+
+    @Override
+    public void atualizarMotivoDaNaoEntrega(Imovel imovel) throws RepositorioException {
+        String[] parametros = new String[1];
+        parametros[0] = String.valueOf(imovel.getId());
+        ContentValues values = new ContentValues();
+
+        values.put(_Imovel.MOTIVO_NAO_ENTREGA, imovel.getMotivoDaNaoEntrega());
+        this.conexao.update(_Imovel.NOME_DA_TABELA, values, _Imovel.ID+"="+imovel.getId(), null);
+
     }
 
     public List<Imovel> getResultado(Cursor resultado) {
@@ -525,7 +717,7 @@ public class RepositorioImovel implements IRepositorioImovel {
                 imovel.setIndcEmissaoConta(resultado.getInt(resultado.getColumnIndexOrThrow(_Imovel.INDIC_EMISSAO_CONTA)));
                 imovel.setIndcEnvioEmail(resultado.getInt(resultado.getColumnIndexOrThrow(_Imovel.INDIC_ENVIO_EMAIL)));
                 imovel.setIndcEnvioZap(resultado.getInt(resultado.getColumnIndexOrThrow(_Imovel.INDIC_ENVIO_WHATSAAP)));
-                imovel.setMotivoDaNãoEntrega(resultado.getString(resultado.getColumnIndexOrThrow(_Imovel.MOTIVO_NAO_ENTREGA)));
+                imovel.setMotivoDaNaoEntrega(resultado.getString(resultado.getColumnIndexOrThrow(_Imovel.MOTIVO_NAO_ENTREGA)));
 
                 imovel.setCadastro(getCadastro(resultado.getLong(resultado.getColumnIndexOrThrow(_Imovel.ID_CADASTRO))));
 
@@ -581,7 +773,6 @@ public class RepositorioImovel implements IRepositorioImovel {
         sql.append(" WHERE ");
         sql.append(_Contribuinte.ID);
         sql.append(" =? ");
-        System.out.println("id do contribuinte "+id);
         Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
 
         if (resultado.getCount() > 0) {
@@ -594,7 +785,6 @@ public class RepositorioImovel implements IRepositorioImovel {
 
             contribuinte.setDadosCadastradosDoContribuinte(getDadosDoContribuinte(resultado.getLong(resultado.getColumnIndexOrThrow(_Contribuinte.ID_DADOS_DO_CONTRIBUINTE))));
 
-            System.out.println("id do contribuinte cadastrado " +contribuinte.getDadosCadastradosDoContribuinte().getId());
             return contribuinte;
         }
 

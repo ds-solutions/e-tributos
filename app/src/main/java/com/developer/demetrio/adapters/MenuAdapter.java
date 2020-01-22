@@ -27,9 +27,8 @@ public class MenuAdapter extends ArrayAdapter<ItemMenu> {
 
     @Override
     public View getView(int posicao, View convertView, ViewGroup parent) {
-
-        LayoutInflater inflater = (LayoutInflater) context
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater)
+                context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         View linha = inflater.inflate(R.layout.item_menu, parent, false);
 

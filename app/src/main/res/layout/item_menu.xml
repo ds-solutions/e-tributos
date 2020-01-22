@@ -4,20 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
     <ImageView
         android:id="@+id/id_image_menu"
         android:layout_width="112dp"
-        android:layout_height="103dp"
-        app:srcCompat="@drawable/imovel"
-        android:contentDescription="TODO" />
+        android:layout_height="103dp" />
 
     <TextView
         android:id="@+id/id_opcao_menu"
         android:layout_width="match_parent"
         android:layout_height="103dp"
         android:gravity="center"
-        android:text="Lista de Imóveis"
         android:textSize="24sp"
         android:textStyle="bold" />
 </LinearLayout>

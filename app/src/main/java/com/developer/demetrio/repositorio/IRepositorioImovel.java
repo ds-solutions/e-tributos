@@ -62,4 +62,8 @@ interface IRepositorioImovel {
     long totalNaoEntreguesPorSerTerreno() throws RepositorioException;
 
     long naoEntreguesPorRecusarReceber() throws RepositorioException;
+
+    long totalDeTributosNaoEntregues() throws RepositorioException;
+
+    void atualizarMotivoDaNaoEntrega(Imovel imovel) throws RepositorioException;
 }
