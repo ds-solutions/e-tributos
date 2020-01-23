@@ -3,8 +3,8 @@ package com.developer.demetrio.repositorio;
 
 import com.developer.demetrio.execoes.RepositorioException;
 import com.developer.demetrio.model.Imovel;
+import com.developer.demetrio.model.utils.QuadrasNaoVisitadas;
 
-import java.util.ArrayList;
 import java.util.List;
 
 interface IRepositorioImovel {
@@ -66,4 +66,6 @@ interface IRepositorioImovel {
     long totalDeTributosNaoEntregues() throws RepositorioException;
 
     void atualizarMotivoDaNaoEntrega(Imovel imovel) throws RepositorioException;
+
+    List<QuadrasNaoVisitadas> setoresEQuadrasNaoEntregues() throws RepositorioException;
 }

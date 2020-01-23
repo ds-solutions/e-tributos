@@ -21,6 +21,7 @@ import com.developer.demetrio.model.Endereco;
 import com.developer.demetrio.model.Imovel;
 import com.developer.demetrio.model.Tributo;
 import com.developer.demetrio.model.ValoresVenais;
+import com.developer.demetrio.model.utils.QuadrasNaoVisitadas;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -704,6 +705,60 @@ public class RepositorioImovel implements IRepositorioImovel {
         values.put(_Imovel.MOTIVO_NAO_ENTREGA, imovel.getMotivoDaNaoEntrega());
         this.conexao.update(_Imovel.NOME_DA_TABELA, values, _Imovel.ID+"="+imovel.getId(), null);
 
+    }
+
+    @Override
+    public List<QuadrasNaoVisitadas> setoresEQuadrasNaoEntregues() throws RepositorioException {
+       String[] parametros = new String[]{"0", "0", "0", "", "Motivo da não entrega"};
+        StringBuilder sql = new StringBuilder();
+        sql.append(" SELECT COUNT(");
+        sql.append(_Cadastro.QUADRA);
+        sql.append("), ");
+        sql.append(_Cadastro.SETOR);
+        sql.append(", ");
+        sql.append(_Cadastro.QUADRA);
+        sql.append(" FROM ");
+        sql.append(_Cadastro.NOME_DA_TABELA);
+        sql.append(" INNER JOIN ");
+        sql.append(_Imovel.NOME_DA_TABELA);
+        sql.append(" ON ");
+        sql.append(_Cadastro.NOME_DA_TABELA);
+        sql.append(".");
+        sql.append(_Cadastro.ID);
+        sql.append(" = ");
+        sql.append(_Imovel.NOME_DA_TABELA);
+        sql.append(".");
+        sql.append(_Imovel.ID_CADASTRO);
+        sql.append(" WHERE ");
+        sql.append(_Imovel.INDIC_EMISSAO_CONTA);
+        sql.append(" =? AND ");
+        sql.append(_Imovel.INDIC_ENVIO_WHATSAAP);
+        sql.append(" =? AND ");
+        sql.append(_Imovel.INDIC_ENVIO_EMAIL);
+        sql.append(" =? AND ");
+        sql.append(_Imovel.MOTIVO_NAO_ENTREGA);
+        sql.append(" =? OR ");
+        sql.append(_Imovel.MOTIVO_NAO_ENTREGA);
+        sql.append(" =? ");
+        Cursor resultado = conexao.rawQuery(sql.toString(), parametros);
+        if (resultado.getCount() > 0) {
+            resultado.moveToFirst();
+            return resultadoDaConsulta(resultado);
+        }
+
+        return null;
+    }
+
+    private List<QuadrasNaoVisitadas> resultadoDaConsulta(Cursor resultado) {
+        List<QuadrasNaoVisitadas> respostas = new ArrayList<>();
+        do{
+            QuadrasNaoVisitadas naoEntregue = new QuadrasNaoVisitadas();
+            naoEntregue.setTotalQuadra(resultado.getLong(resultado.getCount()));
+            naoEntregue.setSetor(resultado.getString(resultado.getColumnIndexOrThrow(_Cadastro.SETOR)));
+            naoEntregue.setQuadra(resultado.getString(resultado.getColumnIndexOrThrow(_Cadastro.QUADRA)));
+            respostas.add(naoEntregue);
+        }while (resultado.moveToNext());
+       return respostas;
     }
 
     public List<Imovel> getResultado(Cursor resultado) {

@@ -26,4 +26,39 @@
 
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/id_text_dados"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:maxLines="4"
+        android:minLines="1"
+        android:textSize="16sp" />
+
+    <LinearLayout
+        android:id="@+id/id_layout_resumo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/id_resumo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:gravity="center"
+            android:text="@string/resumo"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/id_text_resumo_dados"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5sp"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
 </LinearLayout>

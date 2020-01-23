@@ -130,6 +130,7 @@
     <string name="db_erro">Erro ao acessar o banco de dados</string>
     <string name="exemplo_01_01_001_0001_000">exemplo</string>
     <string name="todo">TODO</string>
+    <string name="resumo">Resumo</string>
 
 
 </resources>
