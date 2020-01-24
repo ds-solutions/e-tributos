@@ -21,7 +21,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MotivosDaNaoEntrega"></activity>
+        <activity android:name=".EnviarDados"></activity>
+        <activity android:name=".MotivosDaNaoEntrega" />
         <activity android:name=".Relatorio" />
         <activity android:name=".AtualizarCadastro" />
         <activity android:name=".Finalizar" />

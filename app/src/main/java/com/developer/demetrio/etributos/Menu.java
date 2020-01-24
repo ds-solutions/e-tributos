@@ -96,24 +96,25 @@ public class Menu extends AppCompatActivity {
                         startActivity(activity);
                         break;
 
-                    case "Finalizar":
+                    case "Exportar Banco":
 
-                    /*  getApplicationContext().deleteDatabase(_DataBase.NOME_DO_BANCO);*/
                         try {
                             Thread.sleep(5);
                             exportarDb();
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
-                    //    onBackPressed();
-                        break;
+
+                    break;
+
+                    case "Finalizar":
+                     startActivity(new Intent(getApplicationContext(), EnviarDados.class));
+                    break;
 
                     case "Sair":
                         onBackPressed();
-                      //  onDestroy();
-                            break;
-
-                }
+                    break;
+                    }
             }
         });
 
@@ -123,9 +124,9 @@ public class Menu extends AppCompatActivity {
         File dir = new File(ConstantesSistemas.CAMINHO_SDCARD);
         DataBasesUtil utils = new DataBasesUtil();
         System.out.println("ANTES DE CHAMAR O MÉTODO "+ConstantesSistemas.PATH_DB);
-       utils.exportDataBase(this, this  ,_DataBase.NOME_DO_BANCO, ".db", true);
-
-
+       if (utils.exportDataBase(this, this  ,_DataBase.NOME_DO_BANCO, ".db")) {
+           Toast.makeText(this, "Banco exportado com sucesso!", Toast.LENGTH_LONG).show();
+       }
     }
 
     private ArrayList<ItemMenu> preencherMenu(){
