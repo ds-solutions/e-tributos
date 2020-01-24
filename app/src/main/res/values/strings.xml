@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">ℯ-TRIBUTOS</string>
 
+    <string name="provider_authority">com.developer.demetrio.etributos</string>
+
     <!-- TITLE DA TELA -->
     <string name="title_relatorio">Relatórios</string>
 

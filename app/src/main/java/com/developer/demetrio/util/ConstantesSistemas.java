@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 
 public class ConstantesSistemas implements Serializable {
     public static final String CAMINHO_ARQUIVO_IPTU_GERADO = Environment.getExternalStorageDirectory()+"/IPTU_gerado";
+    public static String PATH_DB = "";
     private static final long serialVersionUID = 1L;
     public static final int ALERTA_MENSAGEM = 1;
     public static final int ALERTA_PERGUNTA = 2;
@@ -18,10 +19,10 @@ public class ConstantesSistemas implements Serializable {
 
     public static final int VALOR_LIMITE_CONTA = 1000;
 
-    public static final String CAMINHO_OFFLINE = (Environment.getExternalStorageDirectory() + "/tributos/carregamento");
+    public static final String CAMINHO_OFFLINE = (Environment.getExternalStorageDirectory() + "/e_tributos/carregamento");
 
-   // public static final String CAMINHO_SDCARD = (Environment.getExternalStorageDirectory()+"/e_tributos");
-    public static final String CAMINHO_SDCARD = (Environment.getExternalStorageState()+"/e_tributos");
+    public static final String CAMINHO_SDCARD = (Environment.getExternalStorageDirectory()+"/e_tributos/");
+   // public static final String CAMINHO_SDCARD = (Environment.getExternalStorageState()+"/e_tributos");
 
 
     public static final String CAMINHO_VERSAO = (Environment.getExternalStorageDirectory() + "/tributos/versao");

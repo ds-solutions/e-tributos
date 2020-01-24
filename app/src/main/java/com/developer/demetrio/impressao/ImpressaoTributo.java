@@ -16,7 +16,7 @@ public class ImpressaoTributo extends Impressao{
    // protected StringBuilder buffer;
     private Context context;
 
-   // private FormatarIPTU formatarIPTU;
+ //   private FormatarIPTU formatarIPTU;
 
     public StringBuilder coletarIptuFormatado(Imovel imovel) {
         this.buffer = new StringBuilder();

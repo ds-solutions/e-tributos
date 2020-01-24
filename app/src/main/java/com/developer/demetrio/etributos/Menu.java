@@ -13,6 +13,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.developer.demetrio.databases.ConexaoDataBase;
+import com.developer.demetrio.databases.DataBasesUtil;
 import com.developer.demetrio.databases.constantes._DataBase;
 import com.developer.demetrio.execoes.RepositorioException;
 import com.developer.demetrio.adapters.utils.ItemMenu;
@@ -120,43 +121,10 @@ public class Menu extends AppCompatActivity {
 
     private void exportarDb() {
         File dir = new File(ConstantesSistemas.CAMINHO_SDCARD);
-        String banco = null;
-        if (!dir.exists()) {
-            System.out.println("O diretório "+dir.toString()+" não existe");
+        DataBasesUtil utils = new DataBasesUtil();
+        System.out.println("ANTES DE CHAMAR O MÉTODO "+ConstantesSistemas.PATH_DB);
+       utils.exportDataBase(this, this  ,_DataBase.NOME_DO_BANCO, ".db", true);
 
-            if (dir.mkdir()) {
-               System.out.println("O diretório "+dir.toString()+" foi criado");
-            }
-            }
-
-            try {
-                File sd = new File(ConstantesSistemas.CAMINHO_SDCARD+"/");
-                if (!sd.exists()) {
-                    sd.mkdirs();
-                }
-                File data = Environment.getDataDirectory();
-                if (sd.canWrite()) {
-                    String currentDBPath = "/"+_DataBase.CAMINHO_DA_BASE_DE_DADOS+"/"+getPackageName()+
-                            "/"+_DataBase.NOME_DO_BANCO;
-                    String backupDBPath = "/BackupFolder/"+_DataBase.NOME_DO_BANCO;
-                    File currentDB = new File(data, currentDBPath);
-                    File backupDB = new File(sd, backupDBPath);
-
-                    FileChannel src = new FileInputStream(currentDB).getChannel();
-                    FileChannel dst = new FileInputStream(backupDB).getChannel();
-
-                    dst.transferFrom(src, 0, src.size());
-                    src.close();
-                    dst.close();
-
-                    Toast.makeText(getBaseContext(), backupDB.toString(), Toast.LENGTH_LONG).show();
-                    System.out.println(backupDBPath.toString());
-                }
-            }catch (Exception e) {
-                System.out.println(e.getMessage());
-                Toast.makeText(getBaseContext(), "Erro ao tentar exportar o banco!", Toast.LENGTH_LONG).show();
-                e.printStackTrace();
-            }
 
     }
 
