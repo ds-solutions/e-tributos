@@ -22,9 +22,6 @@ import com.developer.demetrio.repositorio.RepositorioImovel;
 import com.developer.demetrio.util.ConstantesSistemas;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 
 public class Menu extends AppCompatActivity {
@@ -112,7 +109,7 @@ public class Menu extends AppCompatActivity {
                     break;
 
                     case "Sair":
-                        onBackPressed();
+                        finishAffinity();
                     break;
                     }
             }
@@ -123,7 +120,6 @@ public class Menu extends AppCompatActivity {
     private void exportarDb() {
         File dir = new File(ConstantesSistemas.CAMINHO_SDCARD);
         DataBasesUtil utils = new DataBasesUtil();
-        System.out.println("ANTES DE CHAMAR O MÉTODO "+ConstantesSistemas.PATH_DB);
        if (utils.exportDataBase(this, this  ,_DataBase.NOME_DO_BANCO, ".db")) {
            Toast.makeText(this, "Banco exportado com sucesso!", Toast.LENGTH_LONG).show();
        }
@@ -142,6 +138,9 @@ public class Menu extends AppCompatActivity {
         itens.add(item);
 
         item = new ItemMenu(R.drawable.relatorio, "Relatório");
+        itens.add(item);
+
+        item = new ItemMenu(R.drawable.export_database, "Exportar Banco");
         itens.add(item);
 
         item = new ItemMenu(R.drawable.finalizar, "Finalizar");

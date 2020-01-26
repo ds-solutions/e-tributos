@@ -86,6 +86,7 @@ public class Carregar extends AppCompatActivity {
                    } catch (InterruptedException e) {
                        Toast toast = new Toast(getApplicationContext());
                        toast.setText(e.getMessage().toString());
+                       toast.show();
                        e.printStackTrace();
                    }
 

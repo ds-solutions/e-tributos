@@ -1,12 +1,15 @@
 package com.developer.demetrio.util;
 
 import android.os.Environment;
+import android.text.Editable;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 
 public class ConstantesSistemas implements Serializable {
     public static final String CAMINHO_ARQUIVO_IPTU_GERADO = Environment.getExternalStorageDirectory()+"/IPTU_gerado";
+    public static final String SENHA = "@tributos";
+    public static final String LOGIN = "etributos";
     public static String PATH_DB = "";
     private static final long serialVersionUID = 1L;
     public static final int ALERTA_MENSAGEM = 1;

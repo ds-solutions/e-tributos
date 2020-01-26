@@ -398,7 +398,7 @@ public class DadosDoImovel extends Fragment {
                 };
                 new AlertDialog.Builder(this.context)
                         .setMessage("Enviar o IPTU " +this.imovel.getTributo().getIptu().getExercicio()
-                                +" via?").setNeutralButton("cancelar", dialog)
+                                +" via?").setNeutralButton("(Imprimir)", dialog)
                         .setPositiveButton("e-mail", dialog)
                         .setNegativeButton("WhatsApp", dialog).show();
             }
