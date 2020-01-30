@@ -1,15 +1,17 @@
 package com.developer.demetrio.fragments;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,16 +25,18 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
-import com.developer.demetrio.controladores.ControladorImovel;
+
 import com.developer.demetrio.databases.ConexaoDataBase;
 import com.developer.demetrio.etributos.ListaImoveis;
 import com.developer.demetrio.etributos.R;
 import com.developer.demetrio.execoes.ControladorException;
 import com.developer.demetrio.execoes.RepositorioException;
 import com.developer.demetrio.fachada.Fachada;
-import com.developer.demetrio.model.AtualizacaoDoContribuinte;
+
+import com.developer.demetrio.model.Contribuinte;
 import com.developer.demetrio.model.Imovel;
 import com.developer.demetrio.repositorio.RepositorioImovel;
 import com.developer.demetrio.service.Mail;
@@ -51,7 +55,7 @@ public class DadosDoImovel extends Fragment {
     private SQLiteDatabase conexao;
     private ConexaoDataBase conexaoDataBase;
     private Spinner motivoNaoEntrega;
-    private String[] motivos = new String[] {"Motivo da não entrega", "Demolido", "Imóvel não localizado", "Recusou receber",  "Terreno"};
+    private String[] motivos = new String[]{"Motivo da não entrega", "Demolido", "Imóvel não localizado", "Recusou receber", "Terreno"};
 
     private Integer totalImoveis;
 
@@ -66,7 +70,7 @@ public class DadosDoImovel extends Fragment {
     private Mail mail;
     private Zap zap;
     private TextView matricula, inscricao, cidade, bairro, logradouro, num, complemento,
-    zoneamento, valorTributo, contribuinte, msgUsuario, statusQtdImoveis;
+            zoneamento, valorTributo, contribuinte, msgUsuario, statusQtdImoveis;
 
     private ImageView printer, email, whatsApp;
     private boolean concluiu = false;
@@ -94,21 +98,22 @@ public class DadosDoImovel extends Fragment {
         this.context = context;
         this.activity = activity;
         if (imovel != null) {
-           this.imovel = imovel;
-           this.id = imovel.getId();
+            this.imovel = imovel;
+            this.id = imovel.getId();
         }
         Fachada.setContext(this.context);
         conexaoDataBase = new ConexaoDataBase();
         this.conexao = conexaoDataBase.concectarComBanco(this.context);
         RepositorioImovel imoveis = new RepositorioImovel(this.conexao);
         try {
-         //   this.imovel = imoveis.buscarImovelPorId(id);
+            //   this.imovel = imoveis.buscarImovelPorId(id);
             this.totalImoveis = imoveis.getQtdImoveis();
             this.concluiu = imoveis.rotaFinalizada();
-        }  catch (RepositorioException e) {
+        } catch (RepositorioException e) {
             e.printStackTrace();
         }
     }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -146,6 +151,7 @@ public class DadosDoImovel extends Fragment {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 imovel.setMotivoDaNaoEntrega(motivos[i]);
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
             }
@@ -171,38 +177,38 @@ public class DadosDoImovel extends Fragment {
         this.zoneamento.setText(this.imovel.getCadastro().getAliquota().getZoneamento());
         this.valorTributo.setText(this.imovel.getTributo().getIptu().getValorTotal());
         this.contribuinte.setText(getNome());
-        this.statusQtdImoveis.setText(String.valueOf(this.id)+"/"+String.valueOf(this.totalImoveis));
+        this.statusQtdImoveis.setText(String.valueOf(this.id) + "/" + String.valueOf(this.totalImoveis));
         this.msgUsuario.setText(getmessage());
         if (StringUtils.isNotBlank(this.imovel.getMotivoDaNaoEntrega())) {
             int i = 0;
-           for (String motivo : motivos) {
-               if (motivo.equals(this.imovel.getMotivoDaNaoEntrega())) {
-                   motivoNaoEntrega.setSelection(i);
-               }
-               i++;
-           }
+            for (String motivo : motivos) {
+                if (motivo.equals(this.imovel.getMotivoDaNaoEntrega())) {
+                    motivoNaoEntrega.setSelection(i);
+                }
+                i++;
+            }
 
         }
     }
 
     private int getmessage() {
         int mensagem = R.string.nulo;
-            int i = !StringUtils.isNotBlank(this.imovel.getContribuinte().getDadosCadastradosDoContribuinte().getCpf()) ||
-                    !StringUtils.isNotBlank(this.imovel.getContribuinte().getDadosCadastradosDoContribuinte().getRg()) ||
-                    !StringUtils.isNotBlank(this.imovel.getContribuinte().getDadosCadastradosDoContribuinte().getEmail())  ? 1 : 0;
-            i = this.concluiu ? 2 : 0;
-            if (i > 0 && i == 1) {
+        int i = !StringUtils.isNotBlank(this.imovel.getContribuinte().getDadosCadastradosDoContribuinte().getCpf()) ||
+                !StringUtils.isNotBlank(this.imovel.getContribuinte().getDadosCadastradosDoContribuinte().getRg()) ||
+                !StringUtils.isNotBlank(this.imovel.getContribuinte().getDadosCadastradosDoContribuinte().getEmail()) ? 1 : 0;
+        i = this.concluiu ? 2 : 0;
+        if (i > 0 && i == 1) {
 
-                mensagem = R.string.atualizar_dados;
-            }
-            if (i == 2) {
-                mensagem = R.string.rota_finalizada;
-            }
-            return mensagem;
+            mensagem = R.string.atualizar_dados;
+        }
+        if (i == 2) {
+            mensagem = R.string.rota_finalizada;
+        }
+        return mensagem;
     }
 
     private String getNome() {
-        String nome = this.imovel.getContribuinte().getAtualizacaoDoContribuinte() != null && this.imovel.getContribuinte().getAtualizacaoDoContribuinte().getId() != 0?
+        String nome = this.imovel.getContribuinte().getAtualizacaoDoContribuinte() != null && this.imovel.getContribuinte().getAtualizacaoDoContribuinte().getId() != 0 ?
                 this.imovel.getContribuinte().getAtualizacaoDoContribuinte().getNome() : this.imovel.getContribuinte().getDadosCadastradosDoContribuinte().getNome();
 
         return nome;
@@ -217,6 +223,7 @@ public class DadosDoImovel extends Fragment {
     class ImovelAnterior implements View.OnClickListener {
         private long index, lastIndex;
         private Context context;
+
         public ImovelAnterior(Context context, long index, long lastIndex) {
             this.context = context;
             this.index = index;
@@ -266,7 +273,8 @@ public class DadosDoImovel extends Fragment {
 
     class C_Imprimir implements View.OnClickListener {
         private Imovel imovel;
-        public C_Imprimir(Imovel imovel){
+
+        public C_Imprimir(Imovel imovel) {
             this.imovel = imovel;
         }
 
@@ -281,9 +289,9 @@ public class DadosDoImovel extends Fragment {
         }
     }
 
-    public void imprimirTributo(){
-        if (isHasCellPhone() || isHasEmail()) {
-            if (!isHasEmail() && isHasCellPhone()) {
+    public void imprimirTributo() {
+        if (isHasCellPhone(this.imovel.getContribuinte()) || isHasEmail(this.imovel.getContribuinte())) {
+            if (!isHasEmail(this.imovel.getContribuinte()) && isHasCellPhone(this.imovel.getContribuinte())) {
                 AlertDialog.OnClickListener dialogZap = new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -315,12 +323,12 @@ public class DadosDoImovel extends Fragment {
                     }
                 };
                 new AlertDialog.Builder(this.context)
-                        .setMessage("Enviar o IPTU " +this.imovel.getTributo().getIptu().getExercicio()
-                                +" via whatsapp?").setPositiveButton("Sim", dialogZap)
+                        .setMessage("Enviar o IPTU " + this.imovel.getTributo().getIptu().getExercicio()
+                                + " via whatsapp?").setPositiveButton("Sim", dialogZap)
                         .setNegativeButton("Não", dialogZap).show();
             }
 
-            if (!isHasCellPhone() && isHasEmail()) {
+            if (!isHasCellPhone(this.imovel.getContribuinte()) && isHasEmail(this.imovel.getContribuinte())) {
                 AlertDialog.OnClickListener dialogEmail = new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -351,16 +359,16 @@ public class DadosDoImovel extends Fragment {
                     }
                 };
                 new AlertDialog.Builder(this.context)
-                        .setMessage("Enviar o IPTU " +this.imovel.getTributo().getIptu().getExercicio()
-                                +" via e-mail?").setPositiveButton("Sim", dialogEmail)
+                        .setMessage("Enviar o IPTU " + this.imovel.getTributo().getIptu().getExercicio()
+                                + " via e-mail?").setPositiveButton("Sim", dialogEmail)
                         .setNegativeButton("Não", dialogEmail).show();
             }
 
-            if (isHasCellPhone() && isHasEmail()) {
+            if (isHasCellPhone(this.imovel.getContribuinte()) && isHasEmail(this.imovel.getContribuinte())) {
                 AlertDialog.OnClickListener dialog = new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                       switch (i) {
+                        switch (i) {
                             case -1:
                                 sendForEmail();
                                 try {
@@ -397,8 +405,8 @@ public class DadosDoImovel extends Fragment {
                     }
                 };
                 new AlertDialog.Builder(this.context)
-                        .setMessage("Enviar o IPTU " +this.imovel.getTributo().getIptu().getExercicio()
-                                +" via?").setNeutralButton("(Imprimir)", dialog)
+                        .setMessage("Enviar o IPTU " + this.imovel.getTributo().getIptu().getExercicio()
+                                + " via?").setNeutralButton("(Imprimir)", dialog)
                         .setPositiveButton("e-mail", dialog)
                         .setNegativeButton("WhatsApp", dialog).show();
             }
@@ -420,15 +428,14 @@ public class DadosDoImovel extends Fragment {
             public void onClick(DialogInterface dialogInterface, int i) {
                 switch (i) {
                     case -1:
-                        if (s == SEND_FOR[0]){
+                        if (s == SEND_FOR[0]) {
                             enviadoPeloEmail();
-                        } else
-                            if (s == SEND_FOR[1]) {
-                                enviadoPeloZap();
-                            }
-                    break;
+                        } else if (s == SEND_FOR[1]) {
+                            enviadoPeloZap();
+                        }
+                        break;
                     default:
-                    break;
+                        break;
                 }
                 isImprimir();
             }
@@ -492,9 +499,9 @@ public class DadosDoImovel extends Fragment {
     }
 
     private void autalizarStatusDeEnvio() {
-        RepositorioImovel imoveis =  new RepositorioImovel(this.conexao);
+        RepositorioImovel imoveis = new RepositorioImovel(this.conexao);
         try {
-                imoveis.atualizarIndicadorDeEnvio(this.imovel.getId(), this.imovel);
+            imoveis.atualizarIndicadorDeEnvio(this.imovel.getId(), this.imovel);
         } catch (RepositorioException e) {
             e.printStackTrace();
         }
@@ -527,80 +534,68 @@ public class DadosDoImovel extends Fragment {
     }
 
 
-    /*
-        private void nextImovel(String mensagem) {
-            if (ListaImoveis.this.imovel != null) {
-                AlertDialog.OnClickListener alertaDialog = new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        switch (i) {
-                            case -1:
-                                Intent activity = new Intent(getApplicationContext(), ConsultarImoveis.class);
-                                startActivity(activity);
-                                break;
-                            default:
-                            break;
-                        }
-                    }
-                };s
-                new AlertDialog.Builder(this).setMessage(mensagem)
-                        .setPositiveButton("Ok", alertaDialog).show();
-            }
-        }
-    */
     public void mensagemToast(String text) {
         Toast.makeText(this.context, text, LENGTH_LONG).show();
     }
 
-    private boolean isHasCellPhone() {
-        if (this.imovel.getContribuinte().getAtualizacaoDoContribuinte() != null &&
-                this.imovel.getContribuinte().getAtualizacaoDoContribuinte().getCelular() != null
-        && this.imovel.getContribuinte().getAtualizacaoDoContribuinte().getCelular() != ""){
-            return true;
+    private boolean isHasCellPhone(Contribuinte contribuinte) {
+        boolean retorno = false;
+
+        if (StringUtils.isNotBlank(contribuinte.getDadosCadastradosDoContribuinte().getNumeroCelular())) {
+            retorno = true;
         }
-        if (this.imovel.getContribuinte().getAtualizacaoDoContribuinte() == null) {
-            if (this.imovel.getContribuinte().getDadosCadastradosDoContribuinte().getNumeroCelular() != null
-            && this.imovel.getContribuinte().getDadosCadastradosDoContribuinte().getNumeroCelular() != "") {
-                return true;
+
+        if (contribuinte.getAtualizacaoDoContribuinte() != null) {
+            if (StringUtils.isNotBlank(contribuinte.getAtualizacaoDoContribuinte().getCelular())) {
+                retorno = true;
+            } else {
+                retorno = false;
             }
         }
-        return false;
+        return retorno;
     }
 
 
+    private boolean isHasEmail(Contribuinte contribuinte) {
+        boolean retorno = false;
 
-    private boolean isHasEmail() {
-        if (this.imovel.getContribuinte().getAtualizacaoDoContribuinte() != null &&
-                this.imovel.getContribuinte().getAtualizacaoDoContribuinte().getEmail() != null &&
-        this.imovel.getContribuinte().getAtualizacaoDoContribuinte().getEmail() != ""){
-            return true;
+        if (StringUtils.isNotBlank(contribuinte.getDadosCadastradosDoContribuinte().getEmail())) {
+            retorno = true;
         }
-        if (this.imovel.getContribuinte().getAtualizacaoDoContribuinte() == null) {
-            if (this.imovel.getContribuinte().getDadosCadastradosDoContribuinte().getEmail() != null
-                    &&
-                    this.imovel.getContribuinte().getAtualizacaoDoContribuinte().getEmail() != "") {
-                return true;
+
+        if (contribuinte.getAtualizacaoDoContribuinte() != null) {
+            if (StringUtils.isNotBlank(contribuinte.getAtualizacaoDoContribuinte().getEmail())) {
+                retorno = true;
+            } else {
+                retorno = false;
             }
         }
-        return false;
+        return retorno;
     }
 
 
     private void sendForEmail() {
         //TODO: ESSA FUNCINALIDADE DEU CERTO, IUPIIIIII!
         this.mail = new Mail();
-        this.mail.prepararEmail(this.imovel, 0);
+        this.mail.prepararEmail(this.imovel, 0, getImei());
 
         Intent intentSend = new Intent(Intent.ACTION_SEND);
         intentSend.putExtra(Intent.EXTRA_EMAIL, mail.getEmails());
         intentSend.putExtra(Intent.EXTRA_SUBJECT, mail.getTituloDoEmail());
         intentSend.putExtra(Intent.EXTRA_TEXT, mail.getMensagem());
         intentSend.setType("message/rfc822");
-        startActivity(Intent.createChooser(intentSend,"Escolha um app para enviar o email!"));
+        startActivity(Intent.createChooser(intentSend, "Escolha um app para enviar o email!"));
 
         this.mail.rejetar();
         addImagemNosStatusDoImovel();
 
+    }
+
+    private String getImei() {
+        final TelephonyManager manager = (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);
+        @SuppressLint("MissingPermission")
+        final String imei = manager.getDeviceId();
+        return imei;
     }
 
     private void sendForWhatsApp() {

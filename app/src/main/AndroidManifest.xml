@@ -2,15 +2,22 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.developer.demetrio.etributos">
     <!-- Adicionar parmissões -->
+    <!-- Adicionar permissões para ler e escrever arquivos -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <!-- Adicionar permissões ativar e administrar o bluetooth -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" /> <!-- Adicionar permissões para o location -->
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <!-- Adicionar permissões para o location -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
     <uses-permission-sdk-23 android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!-- Adicionar permissões para a internet -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- Adicionar permissões para pegar informações do aparelho -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
+
 
     <uses-permission android:name="android.permission.READ_SYNC_STATS" />
 
@@ -21,7 +28,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MenuAutoDeInfracao"></activity>
+        <activity android:name=".AutoDeInfracao"></activity>
+        <activity android:name=".MenuAutoDeInfracao" />
         <activity android:name=".EnviarDados" />
         <activity android:name=".MotivosDaNaoEntrega" />
         <activity android:name=".Relatorio" />

@@ -135,6 +135,16 @@
     <string name="todo">TODO</string>
     <string name="resumo">Resumo</string>
     <string name="enviando">Enviando...</string>
+    <string name="titulo_auto_de_infracao">Auto de Infração</string>
+    <string name="nome_do_autoado">Nome/Razão Social do autoado</string>
+    <string name="endereco_do_autuado">Endereço do autuado</string>
+    <string name="cidade_do_autuado">Cidade</string>
+    <string name="bairro_do_autuado">Bairro</string>
+    <string name="cep">CEP</string>
+    <string name="uf">UF</string>
+    <string name="telefone_do_autuado">Ex:. (XX) XXXX-XXXX</string>
+    <string name="celular_autuado">Ex:. (XX) XXXXX-XXXX</string>
+    <string name="carregar_arquivo">Carregar arquivo</string>
 
 
 </resources>

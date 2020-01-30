@@ -144,16 +144,12 @@ public class ZebraUtils {
                 }
                 return true;
             } else if (printerStatus.isPaused) {
-                System.out.println("Impressora está em pausa! "+ printerStatus.isPaused);
                 throw new StatusImpressoraException("Impressora em pausa.");
             } else if (printerStatus.isHeadOpen) {
-                System.out.println("Impressora está com a tampa aberta! "+ printerStatus.isHeadOpen);
                 throw new StatusImpressoraException("A impressora está com a tampa aberta.");
             } else if (printerStatus.isPaperOut) {
-                System.out.println("Impressora está sem papel! "+ printerStatus.isPaperOut);
                 throw new StatusImpressoraException("A Impressora está sem papel.");
             } else {
-                System.out.println("Excessão na conexão com a impressora! "+ ConexaoImpressoraException.class.toString());
                 throw new ConexaoImpressoraException();
             }
         } catch (ConnectionException e) {

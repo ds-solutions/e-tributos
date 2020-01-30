@@ -1,6 +1,9 @@
 package com.developer.demetrio.service;
 
+import com.developer.demetrio.model.Contribuinte;
 import com.developer.demetrio.model.Imovel;
+
+import org.apache.commons.lang3.StringUtils;
 
 public class Zap {
     private String para;
@@ -30,18 +33,27 @@ public class Zap {
     public Zap prepararZap(Imovel imovel, int index) {
         this.imovel = imovel;
         this.exercicio = this.imovel.getTributo().getIptu().getExercicio();
-        this.destino = this.imovel.getContribuinte().getDadosCadastradosDoContribuinte().getNumeroCelular();
-        if (this.imovel.getContribuinte().getAtualizacaoDoContribuinte() != null) {
-            if (this.imovel.getContribuinte().getAtualizacaoDoContribuinte().getCelular() != null){
-                destino = this.imovel.getContribuinte().getAtualizacaoDoContribuinte().getCelular();
-            }
-        }
+        this.destino = destinoCadastrado(this.imovel.getContribuinte());
         this.tituloDoZap = "*"+TITULO_TRIBUTOS[index]+" "+this.exercicio+"*";
-        this.mensagem = INICIO + formatarNome(this.imovel.getContribuinte().getAtualizacaoDoContribuinte() != null ?
-                this.imovel.getContribuinte().getAtualizacaoDoContribuinte().getNome() : this.imovel.getContribuinte().getDadosCadastradosDoContribuinte().getNome()) +EXCLAMACAO+
+        this.mensagem = INICIO + formatarNome(this.imovel.getContribuinte()) +EXCLAMACAO+
      QUEBRA_LINHA +QUEBRA_LINHA+ corpoDaMensagemDoZap(index, this.imovel.getCadastro().getNumCadastro())
                 + contato();
         return this;
+    }
+
+    private String destinoCadastrado(Contribuinte contribuinte) {
+        String contato = null;
+
+        if (StringUtils.isNotBlank(contribuinte.getDadosCadastradosDoContribuinte().getNumeroCelular())) {
+            contato = contribuinte.getDadosCadastradosDoContribuinte().getNumeroCelular();
+        }
+
+        if (contribuinte.getAtualizacaoDoContribuinte() != null ) {
+            if (StringUtils.isNotBlank(contribuinte.getAtualizacaoDoContribuinte().getCelular())) {
+                contato = contribuinte.getAtualizacaoDoContribuinte().getCelular();
+            }
+        }
+        return contato;
     }
 
     private String corpoDaMensagemDoZap(int index, String cadastro) {
@@ -64,7 +76,8 @@ public class Zap {
                 "*Fone/WhatsApp:* +55 81 99256-0214";
     }
 
-    private String formatarNome(String nome) {
+    private String formatarNome(Contribuinte contribuinte) {
+        String nome = doContribuinte(contribuinte);
         int totalCaractere = nome.length();
         char[] caracateres = nome.toCharArray();
         String fistName = "";
@@ -85,6 +98,16 @@ public class Zap {
         }
         lastName += nome.subSequence(startLastName, totalCaractere);
         return fistName += lastName;
+    }
+
+    private String doContribuinte(Contribuinte contribuinte) {
+        String nome = contribuinte.getDadosCadastradosDoContribuinte().getNome();
+        if (contribuinte.getAtualizacaoDoContribuinte() != null) {
+            if (StringUtils.isNotBlank(contribuinte.getAtualizacaoDoContribuinte().getNome())) {
+                nome = contribuinte.getAtualizacaoDoContribuinte().getNome();
+            }
+        }
+        return nome;
     }
 
     private int contSpace(char[] chars) {

@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.developer.demetrio.fachada.Fachada;
 import com.developer.demetrio.iptu.DescricaoDaDivida;
+import com.developer.demetrio.model.Contribuinte;
 import com.developer.demetrio.model.Imovel;
 //import com.developer.demetrio.impressao.ImpressaoTributo;
 import com.developer.demetrio.util.ConstantesSistemas;
@@ -13,6 +14,8 @@ import com.developer.demetrio.util.Util;
 import com.zebra.sdk.printer.FontUtil;
 import com.zebra.sdk.printer.PrinterStatus;
 import com.zebra.sdk.util.internal.StringUtilities;
+
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
@@ -70,8 +73,7 @@ public class ImpressaoTributoNovoIPTU extends ImpressaoTributo{
         linha+=45;
 
             //TODO: nessa condicional, irei verificar se o atributo contribuinte alterado está vazio, se sim colocar o nome do contribuinte, se não colocar o nome do novo contribuinte
-            iptuBuilder.append(formarLinha(7, 0, 187, linha, this.imovel.getContribuinte().getAtualizacaoDoContribuinte() != null ?
-                    this.imovel.getContribuinte().getAtualizacaoDoContribuinte().getNome() : this.imovel.getContribuinte().getDadosCadastradosDoContribuinte().getNome(), 0, 0));
+            iptuBuilder.append(formarLinha(7, 0, 187, linha, getNomeDoContribuinte(this.imovel.getContribuinte()), 0, 0));
 
 
         //inserir logradouro, número e complemento
@@ -310,8 +312,7 @@ public class ImpressaoTributoNovoIPTU extends ImpressaoTributo{
 
 
             //TODO: nessa condicional, irei verificar se o atributo contribuinte alterado está vazio, se sim colocar o nome do contribuinte, se não colocar o nome do novo contribuinte
-            iptuBuilder.append(formarLinha(7, 0, 187, linha, this.imovel.getContribuinte().getAtualizacaoDoContribuinte() != null ?
-                    this.imovel.getContribuinte().getAtualizacaoDoContribuinte().getNome() : this.imovel.getContribuinte().getDadosCadastradosDoContribuinte().getNome(), 0, 0));
+            iptuBuilder.append(formarLinha(7, 0, 187, linha, getNomeDoContribuinte(this.imovel.getContribuinte()), 0, 0));
 
 
         //inserir vencimento e valor total
@@ -322,7 +323,7 @@ public class ImpressaoTributoNovoIPTU extends ImpressaoTributo{
 
         linha += 55;
 
-        iptuBuilder.append(formarLinha(7,0,87, linha, this.imovel.getTributo().getIptu().getCampo1CodigoDeBarras()+
+        iptuBuilder.append(formarLinha(7,0,80, linha, this.imovel.getTributo().getIptu().getCampo1CodigoDeBarras()+
                 " " + this.imovel.getTributo().getIptu().getCampo2CodigoDeBarras()+" "+
                 this.imovel.getTributo().getIptu().getCampo3CodigoDeBarras()+" "+
                 this.imovel.getTributo().getIptu().getCampo4CodigoDeBarras(),0,0));
@@ -348,6 +349,16 @@ public class ImpressaoTributoNovoIPTU extends ImpressaoTributo{
    iptuBuilder.append(comandoImpressao());
 
          return iptuBuilder;
+    }
+
+    private String getNomeDoContribuinte(Contribuinte contribuinte) {
+        String nome = contribuinte.getDadosCadastradosDoContribuinte().getNome();
+        if (contribuinte.getAtualizacaoDoContribuinte() != null) {
+            if (StringUtils.isNotBlank(contribuinte.getAtualizacaoDoContribuinte().getNome())) {
+               nome = contribuinte.getAtualizacaoDoContribuinte().getNome();
+            }
+        }
+         return nome;
     }
 
     private String formatarMensagem(String mensagem) {

@@ -3,9 +3,10 @@ package com.developer.demetrio.service;
 import com.developer.demetrio.model.Contribuinte;
 import com.developer.demetrio.model.Imovel;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class Mail {
-    private String para;
-    private static final String[] TITULO_TRIBUTOS =  {"IPTU", "ALVARÁ", "TAXA DE BOMBEIROS"};
+    private static final String[] TITULO_TRIBUTOS = {"IPTU", "ALVARÁ", "TAXA DE BOMBEIROS", "AUTO DE INFRAÇÃO"};
     private String tituloDoEmail;
     private String exercicio;
     private String[] emails;
@@ -17,35 +18,48 @@ public class Mail {
     private static final String MENSAGEM_ANTES_DO_LINK = "Baixe o seu ";
     private static final String INDICACAO_DO_LINK = " no link abaixo ";
 
-    private static final String CONSIDERACOES_FINAIS = "        Para maiores informações acesse no site oficial da sua cidade ou visite o nosso site:"+
+    private static final String CONSIDERACOES_FINAIS = "        Para maiores informações acesse no site oficial da sua cidade ou visite o nosso site:" +
             "https://200.98.162.49/CadCity/";
     private String mensagem;
-    private Contribuinte contribuinte;
     private Imovel imovel;
-    private String nome;
     private StringBuilder mensageBuilder;
+    private String imei;
 
     public Mail() {
     }
 
-    public Mail prepararEmail(Imovel imovel, int index) {
-       this.imovel = imovel;
+    public Mail prepararEmail(Imovel imovel, int index, String imei) {
+        this.imovel = imovel;
+        this.imei = imei;
         this.exercicio = this.imovel.getTributo().getIptu().getExercicio();
-        this.emails = new String[]{"e.tributos01@gmail.com"}; //  this.para = this.contribuinte.getEmail();
-        this.tituloDoEmail = this.imovel.getEndereco().getCidade() +" - "+TITULO_TRIBUTOS[index]+" "+this.exercicio;
-        this.mensagem = INICIO + pegarPrimeiroNome(this.imovel.getContribuinte().getAtualizacaoDoContribuinte() != null ?
-                this.imovel.getContribuinte().getAtualizacaoDoContribuinte().getNome() : this.imovel.getContribuinte().getDadosCadastradosDoContribuinte().getNome()) +EXCLAMACAO+
-            corpoDoEmail(index, this.imovel.getCadastro().getNumCadastro()) +
-                "       "+CONSIDERACOES_FINAIS+
+        this.emails = contatos(this.imovel.getContribuinte());
+        this.tituloDoEmail = this.imovel.getEndereco().getCidade() + " - " + TITULO_TRIBUTOS[index] + " " + this.exercicio;
+        this.mensagem = INICIO + pegarPrimeiroNome(this.imovel.getContribuinte()) + EXCLAMACAO +
+                corpoDoEmail(index, this.imovel.getCadastro().getNumCadastro()) +
+                "       " + CONSIDERACOES_FINAIS +
                 rodaPe();
         return this;
     }
 
-    private String  rodaPe() {
-       return  QUEBRA_LINHA + QUEBRA_LINHA + QUEBRA_LINHA+
-               "CONTATOS:" + QUEBRA_LINHA +
-               "e-mail: e.tributos01@gmail.com" + QUEBRA_LINHA+
-               "Fone/WhatsApp: +55 81 99256-0214";
+    private String[] contatos(Contribuinte contribuinte) {
+        String[] emails = new String[1];
+        emails[0] = contribuinte.getDadosCadastradosDoContribuinte().getEmail();
+        if (contribuinte.getAtualizacaoDoContribuinte() != null) {
+            if (StringUtils.isNotBlank(contribuinte.getAtualizacaoDoContribuinte().getEmail())) {
+                emails[0] = contribuinte.getAtualizacaoDoContribuinte().getEmail();
+            }
+        }
+        return emails;
+    }
+
+    private String rodaPe() {
+        return QUEBRA_LINHA + QUEBRA_LINHA + QUEBRA_LINHA +
+                "CONTATOS:" + QUEBRA_LINHA +
+                "e-mail: e.tributos01@gmail.com" + QUEBRA_LINHA +
+                "Fone/WhatsApp: +55 81 99256-0214"
+
+        +QUEBRA_LINHA +
+        "Indentificador do agente: " + imei;
     }
 
     private String corpoDoEmail(int index, String codigo) {
@@ -106,7 +120,8 @@ public class Mail {
         return builder;
     }
 
-    private String pegarPrimeiroNome(String nome) {
+    private String pegarPrimeiroNome(Contribuinte contribuinte) {
+        String nome = doContribuinte(contribuinte);
         int totalCaractere = nome.length();
         char[] caracateres = nome.toCharArray();
         String fistName = "";
@@ -128,32 +143,22 @@ public class Mail {
        return fistName += lastName;
     }
 
+    private String doContribuinte(Contribuinte contribuinte) {
+        String nome = contribuinte.getDadosCadastradosDoContribuinte().getNome();
+        if (contribuinte.getAtualizacaoDoContribuinte() != null) {
+            if (StringUtils.isNotBlank(contribuinte.getAtualizacaoDoContribuinte().getNome())) {
+                nome = contribuinte.getAtualizacaoDoContribuinte().getNome();
+            }
+        }
+        return nome;
+    }
+
     public void rejetar() {
         new Mail();
     }
 
-    public String getPara() {
-        return para;
-    }
-
-    public void setPara(String para) {
-        this.para = para;
-    }
-
     public String getTituloDoEmail() {
         return tituloDoEmail;
-    }
-
-    public void setTituloDoEmail(String tituloDoEmail) {
-        this.tituloDoEmail = tituloDoEmail;
-    }
-
-    public String getExercicio() {
-        return exercicio;
-    }
-
-    public void setExercicio(String exercicio) {
-        this.exercicio = exercicio;
     }
 
     public String getMensagem() {
@@ -168,15 +173,5 @@ public class Mail {
         return emails;
     }
 
-    public void setEmails(String[] emails) {
-        this.emails = emails;
-    }
 
-    public StringBuilder getMensageBuilder() {
-        return mensageBuilder;
-    }
-
-    public void setMensageBuilder(StringBuilder mensageBuilder) {
-        this.mensageBuilder = mensageBuilder;
-    }
 }

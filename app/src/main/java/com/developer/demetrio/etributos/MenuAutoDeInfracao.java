@@ -45,7 +45,7 @@ public class MenuAutoDeInfracao extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent activity;
                 switch (itens.get(i).getDescricao()) {
-                    case "Lista de Imóveis":
+                    case "Auto de infração":
                         try {
                             conexao = new ConexaoDataBase().concectarComBanco(getApplicationContext());
                             RepositorioImovel imoveis = new RepositorioImovel(conexao);
@@ -66,7 +66,7 @@ public class MenuAutoDeInfracao extends AppCompatActivity {
                         startActivity(activity);
                         break;
 
-                    case "Auto de infração":
+                    case "Consultar autos":
                         activity = new Intent(getApplicationContext(), ConsultarImoveis.class);
                         startActivity(activity);
                         break;
@@ -102,10 +102,6 @@ public class MenuAutoDeInfracao extends AppCompatActivity {
                             e.printStackTrace();
                         }
 
-                        break;
-
-                    case "Finalizar":
-                        startActivity(new Intent(getApplicationContext(), EnviarDados.class));
                         break;
 
                     case "Sair":

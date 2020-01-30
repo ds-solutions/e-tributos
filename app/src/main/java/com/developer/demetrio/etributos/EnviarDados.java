@@ -15,6 +15,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.developer.demetrio.databases.constantes._DataBase;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -86,6 +88,7 @@ public class EnviarDados extends AppCompatActivity {
                 public void onClick(DialogInterface dialogInterface, int i) {
                     switch (i) {
                         case -1:
+                            getApplication().deleteDatabase(_DataBase.NOME_DO_BANCO);
                             finishAffinity();
                             break;
                         default:

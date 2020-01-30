@@ -2,6 +2,7 @@ package com.developer.demetrio.etributos;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -43,19 +44,22 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Carregar extends AppCompatActivity {
-    Boolean carregado = false;
-    ProgressBar looping;
-    long time = 0;
-    Thread thread;
-    TextView status;
-    private List<Imovel> imoveis = new ArrayList<>();
-    private Handler handler;
+    private Boolean carregado = false;
+    private ProgressBar progressBarAnimation;
+    private ObjectAnimator progressBarAnimador;
+    private long time = 0;
+    private Thread thread;
+    private TextView status;
+    private List<Imovel> listImoveis = new ArrayList<>();
 
     private String campo1, campo2, campo3, campo4, codigoDeBarras;
 
     private SQLiteDatabase conexao;
+    private RepositorioImovel imoveis;
 
     private Imovel imovel;
     private Long id = 0L;
@@ -64,59 +68,59 @@ public class Carregar extends AppCompatActivity {
     private Integer midleCpf = 750;
     private Integer lastCpf = 114;
     private Integer digitCpf = 77;
+    private Handler handler;
+    private long qtd = 0L;
+    private int salvo = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_carregar);
-        looping = (ProgressBar) findViewById(R.id.idProgressBar);
         status = (TextView) findViewById(R.id.id_status);
         final long l = 2;
         handler = new Handler();
         conectarAoBanco();
-       new Thread(new Runnable() {
-           @Override
-           public void run() {
 
-               do {
-                   try {
-                       Thread.sleep(10);
+        init();
+    }
 
-                      carregado = verificarCarregamento();
-                   } catch (InterruptedException e) {
-                       Toast toast = new Toast(getApplicationContext());
-                       toast.setText(e.getMessage().toString());
-                       toast.show();
-                       e.printStackTrace();
-                   }
+    private void init() {
+        progressBarAnimation = (ProgressBar) findViewById(R.id.id_progress_carregar);
+        progressBarAnimador = ObjectAnimator.ofInt(progressBarAnimation, "progress", 0,15);
+        progressBarAnimation.setMax(15);
 
-               } while (!carregado);
+        final Timer timer = new Timer();
+        final int cont = 0;
+        final TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                 if (salvo < 15) {
+                      popularImovelParaImpressao();
+                      salvo++;
+                 }
+               progressBarAnimation.setProgress(salvo);
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        status.setText("Carregando....");
+                    }
+                });
+                if (salvo == 15) {
+                    timer.cancel();
+                    Intent menu = new Intent(getApplicationContext(), Menu.class);
+                    startActivity(menu);
+                }
 
-               Intent menu = new Intent(getApplicationContext(), Menu.class);
-               startActivity(menu);
-           }
-
-       }).start();
+            }
+        };
+        timer.schedule(task, 800, 15);
     }
 
     private void conectarAoBanco() {
         ConexaoDataBase conexaoDataBase;
-        conexaoDataBase = new ConexaoDataBase(getApplicationContext());
-
-           this.conexao = conexaoDataBase.concectarComBanco(this);
-            int i = 0;
-            RepositorioImovel imoveis =  new RepositorioImovel(this.conexao);
-            try {
-                if (imoveis.getQtdImoveis() < 15) {
-                    while (i < 15){
-                        popularImovelParaImpressao();
-                        i++;
-                        Toast.makeText(this, i + "º Imovel cadastrado com cadastro "+this.imovel.getCadastro().getNumCadastro()+" com sucesso!", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            } catch (RepositorioException e) {
-                e.printStackTrace();
-            }
+        conexaoDataBase = new ConexaoDataBase();
+        this.conexao = conexaoDataBase.concectarComBanco(this);
+        imoveis =  new RepositorioImovel(this.conexao);
 
     }
 
@@ -230,10 +234,10 @@ public class Carregar extends AppCompatActivity {
         String c3 = String.valueOf(new Random().nextLong());
         String c4 = String.valueOf(new Random().nextLong());
 
-        campo1 = c1.substring(1, 11)+"-"+c1.substring(6, 6);
-        campo2 = c2.substring(1, 11)+"-"+c1.substring(6, 6);
-        campo3 = c3.substring(1, 11)+"-"+c1.substring(6, 6);
-        campo4 = c3.substring(1, 11)+"-"+c1.substring(6, 6);
+        campo1 = c1.substring(1, 11)+"-"+c1.substring(6, 7);
+        campo2 = c2.substring(1, 11)+"-"+c2.substring(6, 7);
+        campo3 = c3.substring(1, 11)+"-"+c3.substring(6, 7);
+        campo4 = c4.substring(1, 11)+"-"+c4.substring(6, 7);
         codigoDeBarras = c1.substring(1, 11) +
                 c2.substring(1, 11) +
                 c3.substring(1, 11) +
