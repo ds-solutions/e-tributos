@@ -145,6 +145,7 @@
     <string name="telefone_do_autuado">Ex:. (XX) XXXX-XXXX</string>
     <string name="celular_autuado">Ex:. (XX) XXXXX-XXXX</string>
     <string name="carregar_arquivo">Carregar arquivo</string>
+    <string name="cnpj">CNPJ</string>
 
 
 </resources>

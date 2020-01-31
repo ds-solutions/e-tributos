@@ -2,9 +2,9 @@ package com.developer.demetrio.fragments;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,16 +24,17 @@ import com.developer.demetrio.etributos.ListaImoveis;
 import com.developer.demetrio.execoes.RepositorioException;
 import com.developer.demetrio.model.AtualizacaoDoContribuinte;
 import com.developer.demetrio.etributos.R;
-import com.developer.demetrio.model.Cadastro;
 import com.developer.demetrio.model.Contribuinte;
 import com.developer.demetrio.model.Imovel;
+import com.developer.demetrio.model.utils.MaskEditUtil;
 import com.developer.demetrio.repositorio.RepositorioContribuinte;
 import com.developer.demetrio.repositorio.RepositorioDadosAtualizadosDoContribuinte;
-import com.developer.demetrio.repositorio.RepositorioImovel;
+
+import org.apache.commons.lang3.StringUtils;
 
 
 public class DadosDeAtualizacaoProprietario extends Fragment {
-    private EditText nome, cpfCnpj, rg, orgaoEmissor, dataNac, nacionalidade,
+    private EditText nome, cpf, cnpj, rg, orgaoEmissor, dataNac, nacionalidade,
     naturalidade, escolaridade, telefone, celular, email;
     private Spinner sexo, cor, tipoPessoa, estadoCivil;
     private String[] arraySexo = new String[] {"Sexo", "F", "M"};
@@ -54,26 +55,10 @@ public class DadosDeAtualizacaoProprietario extends Fragment {
 
     private Imovel imovel;
 
-  /*  public DadosDeAtualizacaoProprietario(Context context, long index) {
-        if (index != 0) {
-            this.index = index;
-        }
-        this.context = context;
-       conexaoDataBase = new ConexaoDataBase();
-        this.conexao = conexaoDataBase.concectarComBanco(this.context);
-        RepositorioImovel imoveis = new RepositorioImovel(this.conexao);
+   private Button btSwitchDocument;
+   private TextView labelCpfOrCnpj;
 
-        if (this.index != 0) {
-            this.imovel = new Imovel();
-            try {
-                this.imovel = imoveis.buscarImovelPorId(this.index);
-            }catch (RepositorioException e) {
-                e.printStackTrace();
-            }
-            getDadosDoContribuinteAtualizado();
-        }
-    }
-*/
+   private boolean isCnpj;
 
     public DadosDeAtualizacaoProprietario(Context context, Imovel imovel) {
         if (imovel != null) {
@@ -83,46 +68,12 @@ public class DadosDeAtualizacaoProprietario extends Fragment {
                 this.dados = this.imovel.getContribuinte().getAtualizacaoDoContribuinte();
             }
         }
+        this.isCnpj = false;
         this.context = context;
         conexaoDataBase = new ConexaoDataBase();
         this.conexao = conexaoDataBase.concectarComBanco(this.context);
-       // RepositorioImovel imoveis = new RepositorioImovel(this.conexao);
-
-      /*  if (this.index != 0) {
-            this.imovel = new Imovel();
-            try {
-                this.imovel = imoveis.buscarImovelPorId(this.index);
-            }catch (RepositorioException e) {
-                e.printStackTrace();
-            }
-        }*/
-
-
     }
-/*
-    public void getDadosDoContribuinteAtualizado() {
-        RepositorioContribuinte repositorioContribuinte = new RepositorioContribuinte(this.conexao);
-        Contribuinte contribuinte = new Contribuinte();
-        if (this.imovel.getContribuinte() == null) {
-            try {
-                contribuinte = repositorioContribuinte.buscar(this.imovel.getContribuinte().getId());
-            } catch (RepositorioException e) {
-                e.printStackTrace();
-            }
-        }
-        RepositorioDadosAtualizadosDoContribuinte contribuintes
-                = new RepositorioDadosAtualizadosDoContribuinte(this.conexao);
-        if (contribuinte != null && contribuinte.getAtualizacaoDoContribuinte() != null) {
-            try {
-                this.dados = new AtualizacaoDoContribuinte();
-                this.dados = contribuintes.buscar(contribuinte.getAtualizacaoDoContribuinte().getId());
-            } catch (RepositorioException e) {
-                e.printStackTrace();
-            }
-        }
 
-    }
-*/
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -130,7 +81,8 @@ public class DadosDeAtualizacaoProprietario extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.dados_proprietario, container, false);
         this.nome = (EditText) viewGroup.findViewById(R.id.novo_propr);
-        this.cpfCnpj = (EditText) viewGroup.findViewById(R.id.cpf_cnpj_novo_prop);
+        this.cpf = (EditText) viewGroup.findViewById(R.id.id_cpf_atualizado);
+        this.cnpj = (EditText) viewGroup.findViewById(R.id.id_cnpj_atualizado);
         this.rg = (EditText) viewGroup.findViewById(R.id.rg);
         this.orgaoEmissor = (EditText) viewGroup.findViewById(R.id.orgao_emissor);
         this.dataNac = (EditText) viewGroup.findViewById(R.id.date_nascimento);
@@ -145,6 +97,10 @@ public class DadosDeAtualizacaoProprietario extends Fragment {
         ArrayAdapter<String> listCoresAdapter = new ArrayAdapter<String>(this.context, android.R.layout.simple_spinner_dropdown_item, arrayCor);
         listCoresAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         this.cor = (Spinner) viewGroup.findViewById(R.id.cor);
+        this.btSwitchDocument = (Button) viewGroup.findViewById(R.id.id_bt_switch_document);
+        this.labelCpfOrCnpj = (TextView) viewGroup.findViewById(R.id.textView8);
+
+        this.cnpj.setVisibility(View.GONE);
         this.cor.setAdapter(listCoresAdapter);
         this.cor.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -213,13 +169,59 @@ public class DadosDeAtualizacaoProprietario extends Fragment {
         }
 
        this.salvar.setOnClickListener(new C_Salvar());
+        cpfOrCnpj();
+        this.btSwitchDocument.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isCnpj = !isCnpj;
+                cpfOrCnpj();
+                cpf.setText("");
+                cnpj.setText("");
+            }
+        });
+
+        this.cpf.addTextChangedListener(MaskEditUtil.mask(this.cpf, MaskEditUtil.FORMAT_CPF));
+        this.cnpj.addTextChangedListener(MaskEditUtil.mask(this.cnpj, MaskEditUtil.FORMAT_CNPJ));
+        this.dataNac.addTextChangedListener(MaskEditUtil.mask(this.dataNac, MaskEditUtil.FORMAT_DATE));
+        this.telefone.addTextChangedListener(MaskEditUtil.mask(this.telefone, MaskEditUtil.FORMAT_PHOONE));
+        this.celular.addTextChangedListener(MaskEditUtil.mask(this.celular, MaskEditUtil.FORMAT_CELLPHOONE));
 
         return viewGroup;
     }
 
+
+    public void cpfOrCnpj() {
+        if (isCnpj) {
+            labelCpfOrCnpj.setText(R.string.cnpj);
+            this.cnpj.setVisibility(View.VISIBLE);
+            this.cpf.setVisibility(View.GONE);
+            this.btSwitchDocument.setText(R.string.cpf);
+        }
+        if (!isCnpj) {
+            labelCpfOrCnpj.setText(R.string.cpf);
+            this.cnpj.setVisibility(View.GONE);
+            this.cpf.setVisibility(View.VISIBLE);
+            this.btSwitchDocument.setText(R.string.cnpj);
+         }
+    }
+
     public void preencherView() {
         this.nome.setText(this.dados.getNome().toUpperCase());
-        this.cpfCnpj.setText(this.dados.getCpfCnpj());
+        if (StringUtils.isNotBlank(dados.getCpfCnpj()) && dados.getCpfCnpj().length() > 14) {
+            this.cnpj.setText(dados.getCpfCnpj());
+            this.cnpj.setVisibility(View.VISIBLE);
+            this.cpf.setVisibility(View.GONE);
+            this.isCnpj = true;
+            this.btSwitchDocument.setText(R.string.cpf);
+        }
+        if (StringUtils.isNotBlank(dados.getCpfCnpj()) && dados.getCpfCnpj().length() > 14) {
+            this.cpf.setText(this.dados.getCpfCnpj());
+            this.cnpj.setVisibility(View.GONE);
+            this.cpf.setVisibility(View.VISIBLE);
+            this.isCnpj = false;
+            this.btSwitchDocument.setText(R.string.cnpj);
+        }
+
         this.rg.setText(this.dados.getRg());
         this.orgaoEmissor.setText(this.dados.getOrgaoEmissor().toUpperCase());
         this.dataNac.setText(this.dados.getDataNascimento());
@@ -263,6 +265,8 @@ public class DadosDeAtualizacaoProprietario extends Fragment {
 
     }
 
+
+
     public AtualizacaoDoContribuinte novoCadastro() {
 
         AtualizacaoDoContribuinte contribuinte = new AtualizacaoDoContribuinte();
@@ -270,7 +274,12 @@ public class DadosDeAtualizacaoProprietario extends Fragment {
             contribuinte.setId(this.dados.getId());
         }
         contribuinte.setNome(this.nome.getText().toString().toUpperCase());
-        contribuinte.setCpfCnpj(this.cpfCnpj.getText().toString());
+        if (StringUtils.isNotBlank(this.cpf.getText().toString())) {
+            contribuinte.setCpfCnpj(this.cpf.getText().toString());
+        }
+        if (StringUtils.isNotBlank(this.cnpj.getText().toString())) {
+            contribuinte.setCpfCnpj(this.cnpj.getText().toString());
+        }
         contribuinte.setRg(this.rg.getText().toString());
         contribuinte.setOrgaoEmissor(this.orgaoEmissor.getText().toString().toUpperCase());
         contribuinte.setNacionalidade(this.nacionalidade.getText().toString().toUpperCase());
@@ -300,9 +309,7 @@ public class DadosDeAtualizacaoProprietario extends Fragment {
     }
 
     public void abrirTelaDadosDoImovel() {
-       /* new DadosDoImovel(this.context, this.getActivity(), this.imovel.getId());
-        this.index = this.imovel.getId();*/
-        Bundle bundle = new Bundle();
+       Bundle bundle = new Bundle();
         bundle.putLong("id",this.index);
         Intent activity = new Intent(this.context, new ListaImoveis().getClass());
         activity.putExtras(bundle);
