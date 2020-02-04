@@ -23,7 +23,6 @@ public class RepositorioAliquota implements IRepositorioAliquota {
     @Override
     public long inserir(Aliquota aliquota) throws RepositorioException {
         ContentValues values = new ContentValues();
-        System.out.println("DENTRO DO MÉTODO INSERIR NA CLASSE REPOSITÓRIO: "+ aliquota.getTerreno());
         values.put(_Aliquota.TERRENO, aliquota.getTerreno());
         values.put(_Aliquota.EDIFICADO, aliquota.getEdificado());
         values.put(_Aliquota.ZONEAMENTO, aliquota.getZoneamento());

@@ -90,6 +90,10 @@ public class Imovel implements Serializable {
     }
 
     public String getMotivoDaNaoEntrega() {
+        if (motivoDaNaoEntrega == null) {
+            motivoDaNaoEntrega = "Motivo da não entrega";
+        }
+
         return motivoDaNaoEntrega;
     }
 

@@ -1,13 +1,11 @@
 package com.developer.demetrio.fragments;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
@@ -25,7 +23,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 
@@ -53,7 +50,7 @@ public class DadosDoImovel extends Fragment {
     private static final String[] SEND_FOR = new String[]{"EMAIL", "WHATSAPP"};
     private long id;
     private SQLiteDatabase conexao;
-    private ConexaoDataBase conexaoDataBase;
+    RepositorioImovel imoveis = null;
     private Spinner motivoNaoEntrega;
     private String[] motivos = new String[]{"Motivo da não entrega", "Demolido", "Imóvel não localizado", "Recusou receber", "Terreno"};
 
@@ -74,25 +71,8 @@ public class DadosDoImovel extends Fragment {
 
     private ImageView printer, email, whatsApp;
     private boolean concluiu = false;
- /*   public DadosDoImovel(Context context, Activity activity, long id) {
-        this.context = context;
-        this.activity = activity;
-        if (id != 0) {
-            this.id = id;
-        }
-        Fachada.setContext(this.context);
-        conexaoDataBase = new ConexaoDataBase();
-        this.conexao = conexaoDataBase.concectarComBanco(this.context);
-        RepositorioImovel imoveis = new RepositorioImovel(this.conexao);
-        try {
-            this.imovel = imoveis.buscarImovelPorId(id);
-            this.totalImoveis = imoveis.getQtdImoveis();
-            this.concluiu = imoveis.rotaFinalizada();
-        }  catch (RepositorioException e) {
-            e.printStackTrace();
-        }
-    }
-*/
+    private boolean cadastroAtualizado = false;
+
 
     public DadosDoImovel(Context context, Activity activity, Imovel imovel) {
         this.context = context;
@@ -102,16 +82,28 @@ public class DadosDoImovel extends Fragment {
             this.id = imovel.getId();
         }
         Fachada.setContext(this.context);
-        conexaoDataBase = new ConexaoDataBase();
-        this.conexao = conexaoDataBase.concectarComBanco(this.context);
-        RepositorioImovel imoveis = new RepositorioImovel(this.conexao);
+        conectarBanco();
         try {
-            //   this.imovel = imoveis.buscarImovelPorId(id);
             this.totalImoveis = imoveis.getQtdImoveis();
-            this.concluiu = imoveis.rotaFinalizada();
         } catch (RepositorioException e) {
             e.printStackTrace();
         }
+        desconectarBanco();
+        conectarBanco();
+        try {
+            this.concluiu = imoveis.rotaFinalizada(this.totalImoveis);
+        } catch (RepositorioException e) {
+            e.printStackTrace();
+        }
+        desconectarBanco();
+    }
+
+    private void conectarBanco() {
+        this.conexao = new ConexaoDataBase().concectarComBanco(this.context);
+        this.imoveis = new RepositorioImovel(this.conexao);
+    }
+    private void desconectarBanco() {
+        this.conexao.close();
     }
 
     @Nullable
@@ -174,6 +166,7 @@ public class DadosDoImovel extends Fragment {
         this.logradouro.setText(this.imovel.getEndereco().getLogradouro());
         this.num.setText(this.imovel.getEndereco().getNumero());
         this.complemento.setText(this.imovel.getEndereco().getComplemento());
+
         this.zoneamento.setText(this.imovel.getCadastro().getAliquota().getZoneamento());
         this.valorTributo.setText(this.imovel.getTributo().getIptu().getValorTotal());
         this.contribuinte.setText(getNome());
@@ -187,30 +180,35 @@ public class DadosDoImovel extends Fragment {
                 }
                 i++;
             }
-
         }
     }
 
     private int getmessage() {
         int mensagem = R.string.nulo;
-        int i = !StringUtils.isNotBlank(this.imovel.getContribuinte().getDadosCadastradosDoContribuinte().getCpf()) ||
+        int i = (!StringUtils.isNotBlank(this.imovel.getContribuinte().getDadosCadastradosDoContribuinte().getCpf()) ||
                 !StringUtils.isNotBlank(this.imovel.getContribuinte().getDadosCadastradosDoContribuinte().getRg()) ||
-                !StringUtils.isNotBlank(this.imovel.getContribuinte().getDadosCadastradosDoContribuinte().getEmail()) ? 1 : 0;
-        i = this.concluiu ? 2 : 0;
-        if (i > 0 && i == 1) {
-
+                !StringUtils.isNotBlank(this.imovel.getContribuinte().getDadosCadastradosDoContribuinte().getNumeroCelular()) ||
+                !StringUtils.isNotBlank(this.imovel.getContribuinte().getDadosCadastradosDoContribuinte().getEmail())) ? 1 : 0;
+        if (i == 1 && !cadastroAtualizado()) {
+          //  if (cadastroAtualizado())
+            this.msgUsuario.setBackgroundResource(android.R.color.holo_red_dark);
             mensagem = R.string.atualizar_dados;
         }
-        if (i == 2) {
+        if (this.concluiu) {
             mensagem = R.string.rota_finalizada;
         }
         return mensagem;
     }
 
+    private boolean cadastroAtualizado() {
+        return this.imovel.getContribuinte().getAtualizacaoDoContribuinte() != null &&
+                StringUtils.isNotBlank(this.imovel.getContribuinte().getAtualizacaoDoContribuinte().getCpfCnpj());
+    }
+
     private String getNome() {
         String nome = this.imovel.getContribuinte().getAtualizacaoDoContribuinte() != null && this.imovel.getContribuinte().getAtualizacaoDoContribuinte().getId() != 0 ?
                 this.imovel.getContribuinte().getAtualizacaoDoContribuinte().getNome() : this.imovel.getContribuinte().getDadosCadastradosDoContribuinte().getNome();
-
+        this.cadastroAtualizado = this.imovel.getContribuinte().getAtualizacaoDoContribuinte() != null ? true : false;
         return nome;
     }
 
@@ -442,17 +440,14 @@ public class DadosDoImovel extends Fragment {
         };
         new AlertDialog.Builder(this.context).setMessage("A mensagem foi enviada com êxito?")
                 .setPositiveButton("Sim", dialog).setNegativeButton("Não", dialog).show();
-//
     }
 
     private void enviadoPeloZap() {
-        System.out.println("Enviado pelo zap, dialog funcionou!!!");
         this.imovel.setIndcEnvioZap(1);
     }
 
     private void enviadoPeloEmail() {
-        System.out.println("Enviado pelo email, dialog funcionou!!!");
-        this.imovel.setIndcEnvioEmail(1);
+         this.imovel.setIndcEnvioEmail(1);
     }
 
     private void isImprimir() {
@@ -499,26 +494,26 @@ public class DadosDoImovel extends Fragment {
     }
 
     private void autalizarStatusDeEnvio() {
+        this.conexao = new ConexaoDataBase().concectarComBanco(this.context);
         RepositorioImovel imoveis = new RepositorioImovel(this.conexao);
         try {
             imoveis.atualizarIndicadorDeEnvio(this.imovel.getId(), this.imovel);
         } catch (RepositorioException e) {
             e.printStackTrace();
         }
-
+        this.conexao.close();
     }
-
 
     private void sendForImpressora() throws ControladorException {
         if (this.motivoNaoEntrega.getSelectedItem() != motivos[0]) {
-            SQLiteDatabase conexao = new ConexaoDataBase().concectarComBanco(this.context);
+            this.conexao = new ConexaoDataBase().concectarComBanco(this.context);
             RepositorioImovel imoveis = new RepositorioImovel(conexao);
             try {
                 imoveis.atualizarMotivoDaNaoEntrega(this.imovel);
             } catch (RepositorioException e) {
                 e.printStackTrace();
             }
-            conexao.close();
+            this.conexao.close();
             proximoImovel();
         }
 
@@ -532,7 +527,6 @@ public class DadosDoImovel extends Fragment {
             }
         }
     }
-
 
     public void mensagemToast(String text) {
         Toast.makeText(this.context, text, LENGTH_LONG).show();
@@ -575,7 +569,6 @@ public class DadosDoImovel extends Fragment {
 
 
     private void sendForEmail() {
-        //TODO: ESSA FUNCINALIDADE DEU CERTO, IUPIIIIII!
         this.mail = new Mail();
         this.mail.prepararEmail(this.imovel, 0, getImei());
 
@@ -621,9 +614,6 @@ public class DadosDoImovel extends Fragment {
         this.zap.rejetar();
         addImagemNosStatusDoImovel();
     }
-
-
-
 
     @Override
     public void onResume() {

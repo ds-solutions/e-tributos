@@ -44,8 +44,6 @@ public class DataBasesUtil {
             } else {
                 Toast.makeText(context, "Não foi possível criar o caminho para exportar o banco!", Toast.LENGTH_LONG).show();
             }
-       } else {
-       Toast.makeText(context, "Você não tem permissão para criar arquivos!", Toast.LENGTH_LONG).show();
        }
 
        if (dir.exists()) {

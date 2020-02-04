@@ -108,4 +108,19 @@ public class RepositorioDadosAtualizadosDoContribuinte implements IRepositorioDa
         this.conexao.delete(_AtualizacaoDoContribuinte.NOME_DA_TABELA, _AtualizacaoDoContribuinte.ID, parametros);
 
     }
+
+    @Override
+    public long totalDeCadastroAlterados() throws RepositorioException {
+        StringBuilder sql = new StringBuilder();
+        sql.append(" SELECT ID ");
+        sql.append(" FROM ");
+        sql.append(_AtualizacaoDoContribuinte.NOME_DA_TABELA);
+
+        Cursor resultado = this.conexao.rawQuery(sql.toString(), null);
+
+        if (resultado.getCount() > 0) {
+            return resultado.getCount();
+        }
+        return 0;
+    }
 }

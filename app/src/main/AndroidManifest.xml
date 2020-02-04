@@ -4,22 +4,21 @@
     <!-- Adicionar parmissões -->
     <!-- Adicionar permissões para ler e escrever arquivos -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <!-- Adicionar permissões ativar e administrar o bluetooth -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- Adicionar permissões ativar e administrar o bluetooth -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <!-- Adicionar permissões para o location -->
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" /> <!-- Adicionar permissões para o location -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission-sdk-23 android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <!-- Adicionar permissões para a internet -->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <!-- Adicionar permissões para pegar informações do aparelho -->
+
+    <uses-permission-sdk-23 android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- Adicionar permissões para a internet -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- Adicionar permissões para pegar informações do aparelho -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-
-
-
     <uses-permission android:name="android.permission.READ_SYNC_STATS" />
+
+    <uses-permission android:name="android.permission.CAMERA"/>
+
+    <uses-feature android:name="android.hardware.camera"
+        android:required="false"/>
 
     <application
         android:allowBackup="true"
@@ -28,7 +27,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".AutoDeInfracao"></activity>
+        <activity android:name=".Fotos"></activity>
+        <activity android:name=".AutoDeInfracao" />
         <activity android:name=".MenuAutoDeInfracao" />
         <activity android:name=".EnviarDados" />
         <activity android:name=".MotivosDaNaoEntrega" />
@@ -47,6 +47,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:authorities="${applicationId}.provider"
+            android:name="androidx.core.content.FileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"></meta-data>
+        </provider>
+
+
     </application>
 
 </manifest>

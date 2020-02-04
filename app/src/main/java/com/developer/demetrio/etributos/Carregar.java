@@ -69,9 +69,10 @@ public class Carregar extends AppCompatActivity {
     private Integer lastCpf = 114;
     private Integer digitCpf = 77;
     private Handler handler;
-    private long qtd = 0L;
+    private long qtd = 100;
     private int salvo = 0;
-
+    private int contImoveis = 0;
+    private int quadra = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,15 +87,15 @@ public class Carregar extends AppCompatActivity {
 
     private void init() {
         progressBarAnimation = (ProgressBar) findViewById(R.id.id_progress_carregar);
-        progressBarAnimador = ObjectAnimator.ofInt(progressBarAnimation, "progress", 0,15);
-        progressBarAnimation.setMax(15);
+        progressBarAnimador = ObjectAnimator.ofInt(progressBarAnimation, "progress", 0,(int)qtd);
+        progressBarAnimation.setMax((int)qtd);
 
         final Timer timer = new Timer();
         final int cont = 0;
         final TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                 if (salvo < 15) {
+                 if (salvo < qtd) {
                       popularImovelParaImpressao();
                       salvo++;
                  }
@@ -105,7 +106,7 @@ public class Carregar extends AppCompatActivity {
                         status.setText("Carregando....");
                     }
                 });
-                if (salvo == 15) {
+                if (salvo == qtd) {
                     timer.cancel();
                     Intent menu = new Intent(getApplicationContext(), Menu.class);
                     startActivity(menu);
@@ -113,16 +114,17 @@ public class Carregar extends AppCompatActivity {
 
             }
         };
-        timer.schedule(task, 800, 15);
+        timer.schedule(task, 300, qtd);
     }
 
     private void conectarAoBanco() {
-        ConexaoDataBase conexaoDataBase;
-        conexaoDataBase = new ConexaoDataBase();
-        this.conexao = conexaoDataBase.concectarComBanco(this);
-        imoveis =  new RepositorioImovel(this.conexao);
-
+        this.conexao = new ConexaoDataBase().concectarComBanco(this);
     }
+
+    private void desconectarBanco() {
+        this.conexao.close();
+    }
+
 
     public Imovel popularImovelParaImpressao() {
 
@@ -137,25 +139,28 @@ public class Carregar extends AppCompatActivity {
 
         this.imovel.setTributo(popularTributo());
         this.imovel.setCadastro(popularCadastro());
-
-        RepositorioImovel imoveis = new RepositorioImovel(this.conexao);
+        conectarAoBanco();
+        this.imoveis = new RepositorioImovel(this.conexao);
         try {
-            this.imovel.setId(imoveis.inserir(this.imovel));
+            this.imovel.setId(this.imoveis.inserir(this.imovel));
         } catch (RepositorioException e) {
             e.printStackTrace();
         }
+        desconectarBanco();
         return this.imovel;
     }
 
     private Tributo popularTributo() {
         Tributo tributo = new Tributo();
         tributo.setIptu(pupularIPTU());
+        conectarAoBanco();
         RepositorioTributo tributos = new RepositorioTributo(this.conexao);
         try {
             tributo.setId(tributos.inserir(tributo));
         } catch (RepositorioException e) {
             e.printStackTrace();
         }
+        desconectarBanco();
         return tributo;
     }
 
@@ -176,12 +181,14 @@ public class Carregar extends AppCompatActivity {
         iptu.setSomaDoDesconto("20,11");
         iptu.setValorTotal("80,46");
         iptu.setMensagem("Cota Única com desconto, após o vencimento procure o setor tributário do município ou acesse o nosso portal: http://portal.itaenga.pe.gov.br:8070/servicosweb");
+        conectarAoBanco();
         RepositorioIPTU iptus = new RepositorioIPTU(this.conexao);
         try {
             iptu.setId(iptus.inserir(iptu));
         } catch (RepositorioException e) {
             e.printStackTrace();
         }
+        desconectarBanco();
         iptu.setListDescricao(gerarDescricao(iptu.getId()));
         return iptu;
     }
@@ -217,6 +224,7 @@ public class Carregar extends AppCompatActivity {
             }
             c++;
             i++;
+            conectarAoBanco();
             RepositorioDescricaoDaDivida dividas = new RepositorioDescricaoDaDivida(this.conexao);
             try {
                 divida.setId_IPTU(dividas.inserir(divida));
@@ -224,6 +232,7 @@ public class Carregar extends AppCompatActivity {
                 e.printStackTrace();
             }
             descricoes.add(divida);
+            desconectarBanco();
         }
         return descricoes;
     }
@@ -253,12 +262,14 @@ public class Carregar extends AppCompatActivity {
         endereco.setLogradouro("JOSÉ TAVARES DO REGO");
         endereco.setCidade("LAGOA DE ITAENGA");
         endereco.setUf("PE");
+        conectarAoBanco();
         RepositorioEndereco enderecos = new RepositorioEndereco(this.conexao);
         try {
             endereco.setId(enderecos.inserir(endereco));
         } catch (RepositorioException e) {
             e.printStackTrace();
         }
+        desconectarBanco();
         return endereco;
     }
 
@@ -267,13 +278,14 @@ public class Carregar extends AppCompatActivity {
 
         contribuinte.setDadosCadastradosDoContribuinte(new DadosCadastradosDoContribuinte());
         contribuinte.setDadosCadastradosDoContribuinte(popularDadosDoContribuinte());
-
+        conectarAoBanco();
         RepositorioContribuinte contribuintes = new RepositorioContribuinte(this.conexao);
         try {
             contribuinte.setId(contribuintes.inserir(contribuinte));
         } catch (RepositorioException e) {
             e.printStackTrace();
         }
+        desconectarBanco();
         return contribuinte;
     }
 
@@ -291,12 +303,14 @@ public class Carregar extends AppCompatActivity {
         contribuinte.setRg(getRg());
         contribuinte.setCpf(getCpf());
         contribuinte.setNome(getNome());
+        conectarAoBanco();
         RepositorioDadosDoContribuinte dados = new RepositorioDadosDoContribuinte(this.conexao);
         try {
             contribuinte.setId(dados.inserir(contribuinte));
         } catch (RepositorioException e) {
             e.printStackTrace();
         }
+        desconectarBanco();
         return contribuinte;
     }
 
@@ -317,6 +331,9 @@ public class Carregar extends AppCompatActivity {
     }
 
     private String getRg() {
+        if (contImoveis > 16 && contImoveis < 25 ) {
+            return "";
+        }
         return String.valueOf(new Random().nextInt(9999999));
     }
 
@@ -334,6 +351,9 @@ public class Carregar extends AppCompatActivity {
     }
 
     private String getCpf() {
+        if (contImoveis > 8 && contImoveis < 11 ) {
+            return "";
+        }
         return String.valueOf(new Random().nextInt(9)) +
                 String.valueOf(new Random().nextInt(9)) +
                 String.valueOf(new Random().nextInt(9))+"."+
@@ -346,9 +366,6 @@ public class Carregar extends AppCompatActivity {
                 String.valueOf(new Random().nextInt(9))+
                 String.valueOf(new Random().nextInt(9));
     }
-
-
-
 
     private String getEmail() {
         Random c = new Random();
@@ -366,6 +383,9 @@ public class Carregar extends AppCompatActivity {
     }
 
     private String getCelfone() {
+        if (contImoveis < 3) {
+            return "";
+        }
         return "81 9"+ String.valueOf(new Random().nextInt(9999))+"-"+String.valueOf(new Random().nextInt(9999));
     }
 
@@ -373,8 +393,8 @@ public class Carregar extends AppCompatActivity {
         Cadastro cadastro = new Cadastro();
         cadastro.setDistrito("01");
         cadastro.setSetor("02");
-        cadastro.setQuadra("015");
         cadastro.setLote(lote());
+        cadastro.setQuadra(quadra());
         cadastro.setUnidade("000");
         cadastro.setInscricao(cadastro.getDistrito() + "." + cadastro.getSetor() +"."+
                 cadastro.getQuadra() +"."+ cadastro.getLote()+"."+ cadastro.getUnidade());
@@ -382,15 +402,23 @@ public class Carregar extends AppCompatActivity {
         cadastro.setAliquota(popularAliquota());
         cadastro.setAreasDoImovel(pupularAreasDoImovel());
         cadastro.setValoresVenais(popularValoresVenais());
-
+        conectarAoBanco();
         RepositorioCadastro cadastros = new RepositorioCadastro(this.conexao);
         try {
             cadastro.setId(cadastros.inserir(cadastro));
         } catch (RepositorioException e) {
             e.printStackTrace();
         }
-
+        desconectarBanco();
         return cadastro;
+    }
+
+    private String quadra() {
+        String q = "00" + quadra;
+        if (q.length() > 3) {
+            q = q.substring(1, 4);
+        }
+        return q;
     }
 
     private ValoresVenais popularValoresVenais() {
@@ -399,14 +427,14 @@ public class Carregar extends AppCompatActivity {
         valoresVenais.setExcedente("0,00");
         valoresVenais.setEdificada("3.257,00");
         valoresVenais.setTerreno("2.800,00");
-
+        conectarAoBanco();
         RepositorioValoresVenais valores = new RepositorioValoresVenais(this.conexao);
         try {
             valoresVenais.setId(valores.inserir(valoresVenais));
         } catch (RepositorioException e) {
             e.printStackTrace();
         }
-
+        desconectarBanco();
         return valoresVenais;
     }
 
@@ -418,13 +446,14 @@ public class Carregar extends AppCompatActivity {
         area.setAreaTotalEdificado("135,00");
         area.setEdificado("125,00");
         area.setAreaDoTerreno("100,00");
-
+        conectarAoBanco();
         RepositorioAreasDoImovel areas = new RepositorioAreasDoImovel(this.conexao);
         try {
             area.setId(areas.inserir(area));
         } catch (RepositorioException e) {
             e.printStackTrace();
         }
+        desconectarBanco();
         return area;
     }
 
@@ -435,14 +464,14 @@ public class Carregar extends AppCompatActivity {
         aliquota.setEdificado("1,00");
         aliquota.setTerreno("1,00");
         aliquota.setCodigoDeCobranca(popularCodigo());
-
+        conectarAoBanco();
         RepositorioAliquota aliquotas = new RepositorioAliquota(this.conexao);
         try {
             aliquota.setId(aliquotas.inserir(aliquota));
         } catch (RepositorioException e) {
             e.printStackTrace();
         }
-
+        desconectarBanco();
         return aliquota;
     }
 
@@ -450,13 +479,14 @@ public class Carregar extends AppCompatActivity {
         CodigoDeCobranca codigo =  new CodigoDeCobranca();
         codigo.setTipo("1-NORMAL");
         codigo.setTaxaTestada("5,00");
-
+        conectarAoBanco();
         RepositorioCodigoDeCobranca codigos = new RepositorioCodigoDeCobranca(this.conexao);
         try {
             codigo.setId(codigos.inserir(codigo));
         } catch (RepositorioException e) {
             e.printStackTrace();
         }
+        desconectarBanco();
         return codigo;
     }
 
@@ -471,7 +501,21 @@ public class Carregar extends AppCompatActivity {
 
     private String lote() {
         String l ="00"+String.valueOf(lote);
-        lote+=5;
+        if (lote < 999) {
+            if (l.length() > 4) {
+                l = l.substring(1, 5);
+            }
+        } else {
+            l = l.substring(2, 6);
+        }
+
+        lote+=10;
+        contImoveis ++;
+        if (contImoveis == 30) {
+            quadra++;
+            lote = 10;
+            contImoveis = 0;
+        }
         return l;
     }
 

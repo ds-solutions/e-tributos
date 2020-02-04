@@ -25,7 +25,7 @@ public class ConstantesSistemas implements Serializable {
     public static final String CAMINHO_OFFLINE = (Environment.getExternalStorageDirectory() + "/e_tributos/carregamento");
 
     public static final String CAMINHO_SDCARD = (Environment.getExternalStorageDirectory()+"/e_tributos/");
-   // public static final String CAMINHO_SDCARD = (Environment.getExternalStorageState()+"/e_tributos");
+    public static final String CAMINHO_FOTOS = CAMINHO_SDCARD+"fotos/";
 
 
     public static final String CAMINHO_VERSAO = (Environment.getExternalStorageDirectory() + "/tributos/versao");

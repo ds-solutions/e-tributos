@@ -36,7 +36,7 @@ interface IRepositorioImovel {
 
     long primeiraPosicaoNaoEmitida() throws RepositorioException;
 
-    boolean rotaFinalizada();
+    boolean rotaFinalizada(long totalRegistro) throws RepositorioException;
 
     List<Imovel> buscarDaMatricula(String[] parametros) throws RepositorioException;
 

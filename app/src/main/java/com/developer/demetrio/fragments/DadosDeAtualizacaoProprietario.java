@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -20,6 +21,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.developer.demetrio.databases.ConexaoDataBase;
+import com.developer.demetrio.etributos.Fotos;
 import com.developer.demetrio.etributos.ListaImoveis;
 import com.developer.demetrio.execoes.RepositorioException;
 import com.developer.demetrio.model.AtualizacaoDoContribuinte;
@@ -45,7 +47,6 @@ public class DadosDeAtualizacaoProprietario extends Fragment {
     private long index;
     private String genero, raca, pessoaTipo, condicaoCivil;
     private SQLiteDatabase conexao;
-    private ConexaoDataBase conexaoDataBase;
 
     private AtualizacaoDoContribuinte dados;
 
@@ -57,6 +58,8 @@ public class DadosDeAtualizacaoProprietario extends Fragment {
 
    private Button btSwitchDocument;
    private TextView labelCpfOrCnpj;
+
+   private ImageView imageView;
 
    private boolean isCnpj;
 
@@ -70,8 +73,7 @@ public class DadosDeAtualizacaoProprietario extends Fragment {
         }
         this.isCnpj = false;
         this.context = context;
-        conexaoDataBase = new ConexaoDataBase();
-        this.conexao = conexaoDataBase.concectarComBanco(this.context);
+
     }
 
     @Nullable
@@ -92,15 +94,15 @@ public class DadosDeAtualizacaoProprietario extends Fragment {
         this.telefone = (EditText) viewGroup.findViewById(R.id.telefone);
         this.celular = (EditText) viewGroup.findViewById(R.id.celular);
         this.email = (EditText) viewGroup.findViewById(R.id.email);
+        this.imageView = (ImageView) viewGroup.findViewById(R.id.id_bt_tirar_foto);
         this.salvar = (Button) viewGroup.findViewById(R.id.bt_salvar_atualizacao);
-        this.cancelar = (Button) viewGroup.findViewById(R.id.bt_cancelar_atualizacao);
+     //   this.cancelar = (Button) viewGroup.findViewById(R.id.bt_cancelar_atualizacao);
         ArrayAdapter<String> listCoresAdapter = new ArrayAdapter<String>(this.context, android.R.layout.simple_spinner_dropdown_item, arrayCor);
         listCoresAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         this.cor = (Spinner) viewGroup.findViewById(R.id.cor);
         this.btSwitchDocument = (Button) viewGroup.findViewById(R.id.id_bt_switch_document);
         this.labelCpfOrCnpj = (TextView) viewGroup.findViewById(R.id.textView8);
 
-        this.cnpj.setVisibility(View.GONE);
         this.cor.setAdapter(listCoresAdapter);
         this.cor.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -166,9 +168,14 @@ public class DadosDeAtualizacaoProprietario extends Fragment {
 
         if (this.dados != null && this.dados.getId() != 0)  {
             preencherView();
+        } else {
+            this.cnpj.setVisibility(View.GONE);
         }
 
        this.salvar.setOnClickListener(new C_Salvar());
+
+        this.imageView.setOnClickListener(new TirarFotos());
+
         cpfOrCnpj();
         this.btSwitchDocument.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -187,6 +194,24 @@ public class DadosDeAtualizacaoProprietario extends Fragment {
         this.celular.addTextChangedListener(MaskEditUtil.mask(this.celular, MaskEditUtil.FORMAT_CELLPHOONE));
 
         return viewGroup;
+    }
+
+    class TirarFotos implements View.OnClickListener {
+
+        public TirarFotos(){}
+
+
+        @Override
+        public void onClick(View view) {
+
+            inserir(novoCadastro());
+
+            Bundle parametros = new Bundle();
+            parametros.putLong("imovel", imovel.getId());
+            Intent intent = new Intent(context, Fotos.class);
+            intent.putExtras(parametros);
+            startActivity(intent, parametros);
+        }
     }
 
 
@@ -214,7 +239,7 @@ public class DadosDeAtualizacaoProprietario extends Fragment {
             this.isCnpj = true;
             this.btSwitchDocument.setText(R.string.cpf);
         }
-        if (StringUtils.isNotBlank(dados.getCpfCnpj()) && dados.getCpfCnpj().length() > 14) {
+        if (StringUtils.isNotBlank(dados.getCpfCnpj()) && dados.getCpfCnpj().length() < 18) {
             this.cpf.setText(this.dados.getCpfCnpj());
             this.cnpj.setVisibility(View.GONE);
             this.cpf.setVisibility(View.VISIBLE);
@@ -263,6 +288,14 @@ public class DadosDeAtualizacaoProprietario extends Fragment {
         }
 
 
+    }
+
+    private void conectarBanco() {
+        this.conexao = new ConexaoDataBase().concectarComBanco(this.context);
+    }
+
+    private void desconectarBanco() {
+        this.conexao.close();
     }
 
 
@@ -317,31 +350,31 @@ public class DadosDeAtualizacaoProprietario extends Fragment {
     }
 
     public void inserir(AtualizacaoDoContribuinte contribuinte) {
-        RepositorioDadosAtualizadosDoContribuinte contribuintes =
-                new RepositorioDadosAtualizadosDoContribuinte(this.conexao);
-        try {
+        conectarBanco();
+         try {
             if (contribuinte.getId() != null && contribuinte.getId() != 0) {
-               contribuintes.atualizar(contribuinte);
+                new RepositorioDadosAtualizadosDoContribuinte(this.conexao).atualizar(contribuinte);
             }
             if (contribuinte.getId() == null) {
-                contribuinte.setId(contribuintes.inserir(contribuinte));
+                contribuinte.setId(new RepositorioDadosAtualizadosDoContribuinte(this.conexao).inserir(contribuinte));
             }
         }catch (RepositorioException ex) {
             ex.printStackTrace();
         }
+         desconectarBanco();
         atualizarContribuinte(contribuinte);
-
     }
 
     public void atualizarContribuinte(AtualizacaoDoContribuinte dados) {
-        RepositorioContribuinte contribuintes = new RepositorioContribuinte(this.conexao);
         Contribuinte contribuinte = this.imovel.getContribuinte();
         contribuinte.setAtualizacaoDoContribuinte(dados);
+        conectarBanco();
         try {
-            contribuintes.atualizar(contribuinte);
+            new RepositorioContribuinte(this.conexao).atualizar(contribuinte);
         }catch (RepositorioException ex) {
             ex.printStackTrace();
         }
+        desconectarBanco();
     }
 
 }

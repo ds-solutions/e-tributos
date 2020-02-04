@@ -21,9 +21,6 @@ public class MainActivity extends AppCompatActivity {
     private Button btEntrar;
     private EditText login;
     private EditText senha;
-    long tentativa = 0;
-
-
 
     private SQLiteDatabase conexao;
     @Override
@@ -33,8 +30,7 @@ public class MainActivity extends AppCompatActivity {
         login = (EditText) findViewById(R.id.idLogin);
         senha = (EditText) findViewById(R.id.idSenha);
         btEntrar = (Button) findViewById(R.id.id_button_logar);
-        ConexaoDataBase conexaoDataBase = new ConexaoDataBase();
-        this.conexao = conexaoDataBase.concectarComBanco(this);
+        this.conexao = new ConexaoDataBase().concectarComBanco(this);
         btEntrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -47,8 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
       /*  if (this.login.getText().toString().equals(ConstantesSistemas.LOGIN)
                 && this.senha.getText().toString().equals(ConstantesSistemas.SENHA)) {
-          */  ConexaoDataBase conexaoDataBase = new ConexaoDataBase();
-
+          */
             RepositorioImovel imoveis = new RepositorioImovel(this.conexao);
 
             try {
@@ -73,5 +68,7 @@ public class MainActivity extends AppCompatActivity {
             this.login.setText("");
         }
 */
+
+  this.conexao.close();
     }
 }

@@ -13,4 +13,6 @@ public interface IRepositorioDadosAtualizadosDoContribuinte {
     void atualizar(AtualizacaoDoContribuinte dados) throws RepositorioException;
 
     void excluir(long id) throws RepositorioException;
+
+    long totalDeCadastroAlterados() throws RepositorioException;
 }

@@ -17,6 +17,7 @@ import com.developer.demetrio.adapters.utils.ItemRelatorio;
 import com.developer.demetrio.databases.ConexaoDataBase;
 import com.developer.demetrio.execoes.RepositorioException;
 import com.developer.demetrio.model.utils.QuadrasNaoVisitadas;
+import com.developer.demetrio.repositorio.RepositorioDadosAtualizadosDoContribuinte;
 import com.developer.demetrio.repositorio.RepositorioImovel;;
 
 import org.apache.commons.lang3.StringUtils;
@@ -58,19 +59,10 @@ public class Relatorio extends AppCompatActivity {
                 imoveis = new RepositorioImovel(conexao);
                 switch (i) {
                     case 5:
-                            if (view.findViewById(R.id.id_layout_resumo).getVisibility() == View.GONE) {
-                                (view.findViewById(R.id.id_layout_resumo)).setVisibility(View.VISIBLE);
-                            } else if ((view.findViewById(R.id.id_layout_resumo)).getVisibility() == View.VISIBLE) {
-                                (view.findViewById(R.id.id_layout_resumo)).setVisibility(View.GONE);
-                            }
-
-                        break;
+                        exibirResumo(view);
+                    break;
                     case 6:
-                        if (view.findViewById(R.id.id_layout_resumo).getVisibility() == View.GONE) {
-                            (view.findViewById(R.id.id_layout_resumo)).setVisibility(View.VISIBLE);
-                        } else if ((view.findViewById(R.id.id_layout_resumo)).getVisibility() == View.VISIBLE) {
-                            (view.findViewById(R.id.id_layout_resumo)).setVisibility(View.GONE);
-                        }
+                        exibirResumo(view);
                     break;
                     default:
                     break;
@@ -78,6 +70,14 @@ public class Relatorio extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void exibirResumo(View view) {
+        if (view.findViewById(R.id.id_layout_resumo).getVisibility() == View.GONE) {
+            (view.findViewById(R.id.id_layout_resumo)).setVisibility(View.VISIBLE);
+        } else if ((view.findViewById(R.id.id_layout_resumo)).getVisibility() == View.VISIBLE) {
+            (view.findViewById(R.id.id_layout_resumo)).setVisibility(View.GONE);
+        }
     }
 
 
@@ -91,7 +91,7 @@ public class Relatorio extends AppCompatActivity {
         relatorios.add(item);
         item = new ItemRelatorio(R.drawable.atualizado, "Total atualizados", dados(3));
         relatorios.add(item);
-        item = new ItemRelatorio(R.drawable.positivo, "Total de imóveis visitados", dados(4));
+        item = new ItemRelatorio(R.drawable.positivo, "Total de tributos impressos ou enviados", dados(4));
         relatorios.add(item);
         item = new ItemRelatorio(R.drawable.casas, "Total de imóveis a visitar", dados(5));
         relatorios.add(item);
@@ -141,9 +141,10 @@ public class Relatorio extends AppCompatActivity {
         if (i == 3) {
             DecimalFormat format = new DecimalFormat("0.#");
             SQLiteDatabase conexao = new ConexaoDataBase().concectarComBanco(this);
-            imoveis = new RepositorioImovel(conexao);
+            RepositorioDadosAtualizadosDoContribuinte atualizados = new RepositorioDadosAtualizadosDoContribuinte(conexao);
             try {
-                dados = format.format((imoveis.totalDeCadastroAlterados() * 100) / totalDeRegistro) + "% dos cadastros foram atualizados";
+                dados = format.format((atualizados.totalDeCadastroAlterados() * 100) / totalDeRegistro) + "% dos cadastros foram atualizados";
+
             } catch (RepositorioException e) {
                 e.printStackTrace();
             }
@@ -155,7 +156,7 @@ public class Relatorio extends AppCompatActivity {
             SQLiteDatabase conexao = new ConexaoDataBase().concectarComBanco(this);
             imoveis = new RepositorioImovel(conexao);
             try {
-                dados = format.format((imoveis.totalDeImoveisVisitados() * 100) / totalDeRegistro) + "% dos imóveis foram visitados";
+                dados = format.format((imoveis.totalDeImoveisVisitados() * 100) / totalDeRegistro) + "% dos tributos foram entregues";
             } catch (RepositorioException e) {
                 e.printStackTrace();
             }
@@ -173,6 +174,7 @@ public class Relatorio extends AppCompatActivity {
                 e.printStackTrace();
             }
             conexao.close();
+
         }
 
         if (i == 6) {
@@ -194,7 +196,5 @@ public class Relatorio extends AppCompatActivity {
         startActivity(new Intent(getApplicationContext(), MotivosDaNaoEntrega.class));
     }
 
-    /***
-     * format.format((imoveis.totalDeImoveisDemolidos() * 100) / totalDeRegistro) + "% dos tributos não foram entregues;" + "\n" + format.format((imoveis.totalDeImoveisNaoLocalizados() * 100) / totalDeRegistro) + "% dos imóveis não foram localizados;" + "\n" + format.format((imoveis.naoEntreguesPorRecusarReceber() * 100) / totalDeRegistro) + "% dos contribuintes recusaram receber;" + "\n" + format.format((imoveis.naoEntreguesPorRecusarReceber() * 100) / totalDeRegistro) + "% do cadastro são terrenos";
-     */
+
 }

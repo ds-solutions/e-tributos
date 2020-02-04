@@ -392,14 +392,12 @@ public class RepositorioImovel implements IRepositorioImovel {
     }
 
     @Override
-    public boolean rotaFinalizada()  {
-        String[] parametros = new String[5];
+    public boolean rotaFinalizada(long totalRegistro)throws RepositorioException  {
+        String[] parametros = new String[4];
         parametros[0] = String.valueOf(1);
         parametros[1] = String.valueOf(1);
         parametros[2] = String.valueOf(1);
         parametros[3] = "Motivo da não entrega";
-        parametros[4] = "null";
-        Integer cont = 0;
         StringBuilder sql = new StringBuilder();
         sql.append(" SELECT ");
         sql.append(_Imovel.ID);
@@ -413,18 +411,11 @@ public class RepositorioImovel implements IRepositorioImovel {
         sql.append(_Imovel.INDIC_ENVIO_WHATSAAP);
         sql.append(" =? OR ");
         sql.append(_Imovel.MOTIVO_NAO_ENTREGA);
-        sql.append(" =? OR ");
-        sql.append(_Imovel.MOTIVO_NAO_ENTREGA);
         sql.append(" !=? ");
 
-        try {
-            cont = getQtdImoveis();
-        } catch (RepositorioException e) {
-            e.printStackTrace();
-        }
         Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
         if (resultado.getCount() > 0
-                && resultado.getCount() == cont) {
+                && resultado.getCount() == totalRegistro) {
             return true;
         }
         return false;
@@ -514,7 +505,7 @@ public class RepositorioImovel implements IRepositorioImovel {
     public long totalEnviadosPorWhatsApp() throws RepositorioException {
         String[] parametros = new String[]{"1"};
         StringBuilder sql = new StringBuilder();
-        sql.append("    SELECT ");
+        sql.append("SELECT ");
         sql.append(_Imovel.ID);
         sql.append(" FROM ");
         sql.append(_Imovel.NOME_DA_TABELA);
@@ -533,7 +524,7 @@ public class RepositorioImovel implements IRepositorioImovel {
     public long totalImpresso() throws RepositorioException {
         String[] parametros = new String[]{"1"};
         StringBuilder sql = new StringBuilder();
-        sql.append("    SELECT ");
+        sql.append("SELECT ");
         sql.append(_Imovel.ID);
         sql.append(" FROM ");
         sql.append(_Imovel.NOME_DA_TABELA);
@@ -550,9 +541,9 @@ public class RepositorioImovel implements IRepositorioImovel {
 
     @Override
     public long totalImoveisAVisitar() throws RepositorioException {
-        String[] parametros = new String[]{"0", "0", "0", "", "null", "Motivo da não entrega"};
+        String[] parametros = new String[]{"0", "0", "0", "Motivo da não entrega"};
         StringBuilder sql = new StringBuilder();
-        sql.append("    SELECT * FROM ");
+        sql.append("SELECT ID FROM ");
         sql.append(_Imovel.NOME_DA_TABELA);
         sql.append(" WHERE ");
         sql.append(_Imovel.INDIC_ENVIO_EMAIL);
@@ -562,11 +553,7 @@ public class RepositorioImovel implements IRepositorioImovel {
         sql.append(_Imovel.INDIC_EMISSAO_CONTA);
         sql.append(" =? AND ");
         sql.append(_Imovel.MOTIVO_NAO_ENTREGA);
-        sql.append(" ==? OR ");
-        sql.append(_Imovel.MOTIVO_NAO_ENTREGA);
-        sql.append(" ==? OR ");
-        sql.append(_Imovel.MOTIVO_NAO_ENTREGA);
-        sql.append(" ==? ");
+        sql.append(" =? ");
         Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
         if (resultado.getCount() > 0) {
             return resultado.getCount();
@@ -577,7 +564,9 @@ public class RepositorioImovel implements IRepositorioImovel {
     @Override
     public long totalDeCadastroAlterados() throws RepositorioException {
         StringBuilder sql = new StringBuilder();
-        sql.append("    SELECT COUNT(*)");
+        sql.append("    SELECT COUNT(");
+        sql.append(_Imovel.ID_CONTRIBUINTE);
+        sql.append(")");
         sql.append(" FROM ");
         sql.append(_Imovel.NOME_DA_TABELA);
         sql.append(" INNER JOIN ");
@@ -592,7 +581,7 @@ public class RepositorioImovel implements IRepositorioImovel {
         sql.append(_Contribuinte.NOME_DA_TABELA);
         sql.append(".");
         sql.append(_Contribuinte.ID_AUTALIZACAO_DO_CONTRIBUINTE);
-        Cursor resultado = this.conexao.rawQuery(sql.toString() + " != null", null);
+        Cursor resultado = this.conexao.rawQuery(sql.toString() + " != "+null, null);
         if (resultado.getCount() > 0) {
             return resultado.getCount();
         }
@@ -677,15 +666,19 @@ public class RepositorioImovel implements IRepositorioImovel {
 
     @Override
     public long totalDeTributosNaoEntregues() throws RepositorioException {
-        String[] parametros = new String[]{"Motivo da não entrega", "NULL"};
+        String[] parametros = new String[]{"1","1","1","Motivo da não entrega"};
         StringBuilder sql = new StringBuilder();
-        sql.append("    SELECT ");
+        sql.append("SELECT ");
         sql.append(_Imovel.ID);
         sql.append(" FROM ");
         sql.append(_Imovel.NOME_DA_TABELA);
         sql.append(" WHERE ");
-        sql.append(_Imovel.MOTIVO_NAO_ENTREGA);
-        sql.append(" != ? OR  ");
+        sql.append(_Imovel.INDIC_ENVIO_EMAIL);
+        sql.append(" =? OR ");
+        sql.append(_Imovel.INDIC_ENVIO_WHATSAAP);
+        sql.append(" =? OR ");
+        sql.append(_Imovel.INDIC_EMISSAO_CONTA);
+        sql.append(" =? AND ");
         sql.append(_Imovel.MOTIVO_NAO_ENTREGA);
         sql.append(" != ?");
 

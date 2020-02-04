@@ -146,6 +146,10 @@
     <string name="celular_autuado">Ex:. (XX) XXXXX-XXXX</string>
     <string name="carregar_arquivo">Carregar arquivo</string>
     <string name="cnpj">CNPJ</string>
+    <string name="rg_frente">RG (Frente)</string>
+    <string name="rg_verso">RG (VERSO)</string>
+    <string name="cpf_frente">CPF</string>
+    <string name="escritura">Escritura</string>
 
 
 </resources>
