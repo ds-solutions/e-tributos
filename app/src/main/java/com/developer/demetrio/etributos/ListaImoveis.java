@@ -94,9 +94,6 @@ public class ListaImoveis extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_imoveis);
 
-        conexaoDataBase = new ConexaoDataBase();
-        conexao = conexaoDataBase.concectarComBanco(getApplicationContext());
-
         List<Fragment> fragments = new ArrayList<>();
         Intent intent = getIntent();
 
@@ -111,9 +108,6 @@ public class ListaImoveis extends AppCompatActivity {
         fragments.add(new DadosDoImovel(this, this, this.imovel));
         fragments.add(new DadosDeAtualizacaoProprietario(this, this.imovel));
 
-      /*  fragments.add(new DadosDoImovel(this, this, this.idImovel));
-        fragments.add(new DadosDeAtualizacaoProprietario(this, this.idImovel));*/
-
         this.viewPager = (ViewPager) findViewById(R.id.view_page);
         this.pagerAdapter = new PageViewAdapter(getSupportFragmentManager(), fragments);
         this.viewPager.setAdapter(this.pagerAdapter);
@@ -121,14 +115,21 @@ public class ListaImoveis extends AppCompatActivity {
         Fachada.setContext(this);
     }
 
+    private void conectarBanco() {
+        this.conexao = new ConexaoDataBase().concectarComBanco(getApplicationContext());
+    }
+    private void desconectarBanco(){
+        this.conexao.close();
+    }
+
     private void carregarImovel(long idImovel) {
-        RepositorioImovel imoveis = new RepositorioImovel(this.conexao);
+        conectarBanco();
         try {
-            this.imovel = imoveis.buscarImovelPorId(idImovel);
+            this.imovel = new RepositorioImovel(this.conexao).buscarImovelPorId(idImovel);
         } catch (RepositorioException e) {
             e.printStackTrace();
         }
-
+        desconectarBanco();
         this.imovel.setCadastro(buscarCadastroDoImovel(this.imovel.getCadastro().getId()));
 
         this.imovel.setEndereco(buscarEndereco(this.imovel.getEndereco().getId()));
@@ -139,51 +140,54 @@ public class ListaImoveis extends AppCompatActivity {
     }
 
     private Tributo buscarTributos(Long id) {
+        conectarBanco();
         Tributo tributo = new Tributo();
         tributo.setIptu(new IPTU());
-        RepositorioTributo tributos = new RepositorioTributo(this.conexao);
         try {
-            tributo = tributos.buscar(id);
+            tributo = new RepositorioTributo(this.conexao).buscar(id);
         } catch (RepositorioException e) {
             e.printStackTrace();
         }
+        desconectarBanco();
         tributo.setIptu(buscarIptu(tributo.getIptu().getId()));
 
         return tributo;
     }
 
     private IPTU buscarIptu(Long id) {
+        conectarBanco();
         IPTU iptu = new IPTU();
-        RepositorioIPTU iptus = new RepositorioIPTU(this.conexao);
-        try {
-            iptu = iptus.buscar(id);
+         try {
+            iptu = new RepositorioIPTU(this.conexao).buscar(id);
         } catch (RepositorioException e) {
             e.printStackTrace();
         }
+         desconectarBanco();
         iptu.setListDescricao(buscarListasDaDescricao(iptu.getId()));
         return iptu;
     }
 
     private List<DescricaoDaDivida> buscarListasDaDescricao(Long id) {
+        conectarBanco();
         List<DescricaoDaDivida> descricaoDaDividas = new ArrayList<>();
-        RepositorioDescricaoDaDivida descricoes = new RepositorioDescricaoDaDivida(this.conexao);
-        try {
-            descricaoDaDividas = descricoes.descricoesDaDividaDe(id);
+         try {
+            descricaoDaDividas = new RepositorioDescricaoDaDivida(this.conexao).descricoesDaDividaDe(id);
         } catch (RepositorioException e) {
             e.printStackTrace();
         }
+         desconectarBanco();
         return descricaoDaDividas;
     }
 
     private Contribuinte buscarContribuinte(Long id) {
+        conectarBanco();
         Contribuinte contribuinte = new Contribuinte();
-        RepositorioContribuinte contribuintes = new RepositorioContribuinte(this.conexao);
-        try {
-            contribuinte = contribuintes.buscar(id);
+         try {
+            contribuinte = new RepositorioContribuinte(this.conexao).buscar(id);
         } catch (RepositorioException e) {
             e.printStackTrace();
         }
-
+        desconectarBanco();
         contribuinte.setDadosCadastradosDoContribuinte(buscarDadosDoContribuinte(contribuinte.getId()));
 
         if (contribuinte.getAtualizacaoDoContribuinte() != null) {
@@ -199,48 +203,51 @@ public class ListaImoveis extends AppCompatActivity {
 
 
     private AtualizacaoDoContribuinte buscarAtualizacaoDoContribuinte(Long id) {
+        conectarBanco();
         AtualizacaoDoContribuinte contribuinte = null;
-        RepositorioDadosAtualizadosDoContribuinte dados
-                = new RepositorioDadosAtualizadosDoContribuinte(this.conexao);
-        try {
-            contribuinte = dados.buscar(id);
+         try {
+            contribuinte = new RepositorioDadosAtualizadosDoContribuinte(this.conexao).buscar(id);
         } catch (RepositorioException e) {
             e.printStackTrace();
         }
+         desconectarBanco();
         return contribuinte;
     }
 
     private DadosCadastradosDoContribuinte buscarDadosDoContribuinte(Long id)
     {
+        conectarBanco();
         DadosCadastradosDoContribuinte contribuinte = new DadosCadastradosDoContribuinte();
-        RepositorioDadosDoContribuinte dados = new RepositorioDadosDoContribuinte(this.conexao);
         try {
-            contribuinte = dados.buscar(id);
+            contribuinte = new RepositorioDadosDoContribuinte(this.conexao).buscar(id);
         } catch (RepositorioException e) {
             e.printStackTrace();
         }
+        desconectarBanco();
         return contribuinte;
     }
 
     private Endereco buscarEndereco(Long id) {
+        conectarBanco();
         Endereco endereco = new Endereco();
-        RepositorioEndereco enderecos = new RepositorioEndereco(this.conexao);
         try {
-            endereco = enderecos.buscar(id);
+            endereco = new RepositorioEndereco(this.conexao).buscar(id);
         } catch (RepositorioException e) {
             e.printStackTrace();
         }
+        desconectarBanco();
         return endereco;
     }
 
     private Cadastro buscarCadastroDoImovel(long id) {
+        conectarBanco();
         Cadastro cadastro = new Cadastro();
-        RepositorioCadastro cadastros = new RepositorioCadastro(this.conexao);
         try {
-            cadastro = cadastros.buscar(id);
+            cadastro = new RepositorioCadastro(this.conexao).buscar(id);
         } catch (RepositorioException e) {
             e.printStackTrace();
         }
+        desconectarBanco();
         cadastro.setValoresVenais(buscarValoresVenais(cadastro.getValoresVenais().getId()));
         cadastro.setAreasDoImovel(buscarAreas(cadastro.getAreasDoImovel().getId()));
         cadastro.setAliquota(buscarAliquotas(cadastro.getAliquota().getId()));
@@ -248,50 +255,53 @@ public class ListaImoveis extends AppCompatActivity {
     }
 
     private Aliquota buscarAliquotas(Long id) {
+        conectarBanco();
         Aliquota aliquota = new Aliquota();
-        RepositorioAliquota aliquotas = new RepositorioAliquota(this.conexao);
         try {
             aliquota.setCodigoDeCobranca(new CodigoDeCobranca());
 
-            aliquota = aliquotas.buscar(id);
+            aliquota = new RepositorioAliquota(this.conexao).buscar(id);
         } catch (RepositorioException e) {
             e.printStackTrace();
         }
+        desconectarBanco();
         aliquota.setCodigoDeCobranca(buscarCodigoDeCobranca(aliquota.getCodigoDeCobranca().getId()));
         return aliquota;
     }
 
     private CodigoDeCobranca buscarCodigoDeCobranca(Long id) {
+        conectarBanco();
         CodigoDeCobranca codigo = new CodigoDeCobranca();
-        RepositorioCodigoDeCobranca codigos = new RepositorioCodigoDeCobranca(this.conexao);
-        try {
-            codigo = codigos.buscar(id);
+         try {
+            codigo = new RepositorioCodigoDeCobranca(this.conexao).buscar(id);
         } catch (RepositorioException e) {
             e.printStackTrace();
         }
+        desconectarBanco();
         return codigo;
     }
 
     private AreasDoImovel buscarAreas(Long id) {
+        conectarBanco();
         AreasDoImovel areasDoImovel = new AreasDoImovel();
-        RepositorioAreasDoImovel areas = new RepositorioAreasDoImovel(this.conexao);
         try {
-            areasDoImovel = areas.buscar(id);
+            areasDoImovel = new RepositorioAreasDoImovel(this.conexao).buscar(id);
         } catch (RepositorioException e) {
             e.printStackTrace();
         }
-
+        desconectarBanco();
         return areasDoImovel;
     }
 
     private ValoresVenais buscarValoresVenais(Long id) {
+        conectarBanco();
         ValoresVenais valoresVenais = new ValoresVenais();
-        RepositorioValoresVenais valores = new RepositorioValoresVenais(this.conexao);
         try {
-            valoresVenais = valores.buscar(id);
+            valoresVenais = new RepositorioValoresVenais(this.conexao).buscar(id);
         } catch (RepositorioException e) {
             e.printStackTrace();
         }
+        desconectarBanco();
         return valoresVenais;
     }
 

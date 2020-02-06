@@ -20,8 +20,8 @@ public class ConexaoDataBase {
     }
 
     public ConexaoDataBase(Context context) {
-        this.context = context;
-     //   this.context.deleteDatabase(_DataBase.NOME_DO_BANCO);
+       this.context = context;
+     //  this.context.deleteDatabase(_DataBase.NOME_DO_BANCO);
        getInstance = new ETributosDadaBaseOpenHelper(this.context);
     }
 

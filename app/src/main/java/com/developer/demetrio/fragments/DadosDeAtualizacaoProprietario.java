@@ -207,7 +207,7 @@ public class DadosDeAtualizacaoProprietario extends Fragment {
             inserir(novoCadastro());
 
             Bundle parametros = new Bundle();
-            parametros.putLong("imovel", imovel.getId());
+            parametros.putLong("id", imovel.getId());
             Intent intent = new Intent(context, Fotos.class);
             intent.putExtras(parametros);
             startActivity(intent, parametros);
@@ -342,7 +342,7 @@ public class DadosDeAtualizacaoProprietario extends Fragment {
     }
 
     public void abrirTelaDadosDoImovel() {
-       Bundle bundle = new Bundle();
+        Bundle bundle = new Bundle();
         bundle.putLong("id",this.index);
         Intent activity = new Intent(this.context, new ListaImoveis().getClass());
         activity.putExtras(bundle);
@@ -352,7 +352,7 @@ public class DadosDeAtualizacaoProprietario extends Fragment {
     public void inserir(AtualizacaoDoContribuinte contribuinte) {
         conectarBanco();
          try {
-            if (contribuinte.getId() != null && contribuinte.getId() != 0) {
+            if (contribuinte.getId() != null) {
                 new RepositorioDadosAtualizadosDoContribuinte(this.conexao).atualizar(contribuinte);
             }
             if (contribuinte.getId() == null) {

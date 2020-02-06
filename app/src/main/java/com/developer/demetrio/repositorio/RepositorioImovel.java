@@ -277,7 +277,6 @@ public class RepositorioImovel implements IRepositorioImovel {
         values.put(_Imovel.ID_CONTRIBUINTE, imovel.getContribuinte().getId());
         values.put(_Imovel.ID_ENDERECO, imovel.getEndereco().getId());
         values.put(_Imovel.ID_TRIBUTO, imovel.getTributo().getId());
-        values.put(_Imovel.ID_LATLNG, imovel.getLatLng().getId());
 
        return this.conexao.insertOrThrow(_Imovel.NOME_DA_TABELA, null, values);
     }
@@ -323,6 +322,7 @@ public class RepositorioImovel implements IRepositorioImovel {
              imovel.getEndereco().setId(resultado.getLong(resultado.getColumnIndexOrThrow(_Imovel.ID_ENDERECO)));
              imovel.setTributo(new Tributo());
              imovel.getTributo().setId(resultado.getLong(resultado.getColumnIndexOrThrow(_Imovel.ID_TRIBUTO)));
+             imovel.getComprovante().setId(resultado.getInt(resultado.getColumnIndexOrThrow(_Imovel.ID_COMPROVANTE)));
              return imovel;
         }
         return null;
@@ -740,6 +740,13 @@ public class RepositorioImovel implements IRepositorioImovel {
         }
 
         return null;
+    }
+
+    @Override
+    public void atualizarComprovante(Imovel imovel) throws RepositorioException {
+        ContentValues values = new ContentValues();
+        values.put(_Imovel.ID_COMPROVANTE, imovel.getComprovante().getId());
+        this.conexao.update(_Imovel.NOME_DA_TABELA, values,_Imovel.ID + " = " + imovel.getId(), null);
     }
 
     private List<QuadrasNaoVisitadas> resultadoDaConsulta(Cursor resultado) {

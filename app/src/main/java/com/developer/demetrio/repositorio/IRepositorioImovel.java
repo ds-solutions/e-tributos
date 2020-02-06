@@ -68,4 +68,6 @@ interface IRepositorioImovel {
     void atualizarMotivoDaNaoEntrega(Imovel imovel) throws RepositorioException;
 
     List<QuadrasNaoVisitadas> setoresEQuadrasNaoEntregues() throws RepositorioException;
+
+    void atualizarComprovante(Imovel imovel)throws RepositorioException;
 }

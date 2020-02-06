@@ -3,6 +3,19 @@ package com.developer.demetrio.databases;
 public class ScriptDLL {
 
 
+    //SQL PARA CRIAÇÃO DA TABELA DE COMPROVANTE
+    public static String getCreateComprovante() {
+        StringBuilder sql = new StringBuilder();
+        sql.append("    CREATE TABLE IF NOT EXISTS COMPROVANTE( ");
+        sql.append("ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, ");
+        sql.append("RG_FRENTE TEXT, ");
+        sql.append("RG_VERSO TEXT, ");
+        sql.append("CPF TEXT, ");
+        sql.append("ESCRITURA TEXT) ");
+        return sql.toString();
+    }
+
+
     //SQL PARA CRIAÇÃO DA TABELA LATLNG
     public static String getCreateLatLng() {
         StringBuilder sql = new StringBuilder();
@@ -219,12 +232,14 @@ public class ScriptDLL {
         sql.append("ID_ENDERECO INTEGER, ");
         sql.append("ID_CONTRIBUINTE INTEGER, ");
         sql.append("ID_TRIBUTO INTEGER, ");
-        sql.append("ID_LATLNG, INTEGER, ");
+        sql.append("ID_LATLNG INTEGER, ");
+        sql.append("ID_COMPROVANTE INTEGER, ");
         sql.append("FOREIGN KEY(ID_CADASTRO) REFERENCES CADASTRO(ID), ");
         sql.append("FOREIGN KEY(ID_ENDERECO) REFERENCES ENDERECO(ID), ");
         sql.append("FOREIGN KEY(ID_CONTRIBUINTE) REFERENCES CONTRIBUINTE(ID), ");
         sql.append("FOREIGN KEY(ID_TRIBUTO) REFERENCES TRIBUTOS(ID), ");
-        sql.append("FOREIGN KEY(ID_LATLNG) REFERENCES LATLNG(ID)) ");
+        sql.append("FOREIGN KEY(ID_LATLNG) REFERENCES LATLNG(ID), ");
+        sql.append("FOREIGN KEY(ID_COMPROVANTE) REFERENCES COMPROVANTE(ID)) ");
       return sql.toString();
     }
 }

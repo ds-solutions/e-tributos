@@ -11,6 +11,7 @@ public class _Imovel {
     public static final String ID_CONTRIBUINTE = "ID_CONTRIBUINTE";
     public static final String ID_TRIBUTO = "ID_TRIBUTO";
     public static final String ID_LATLNG = "ID_LATLNG";
+    public static final String ID_COMPROVANTE = "ID_COMPROVANTE";
 
     public static final String NOME_DA_TABELA = "IMOVEL";
 }

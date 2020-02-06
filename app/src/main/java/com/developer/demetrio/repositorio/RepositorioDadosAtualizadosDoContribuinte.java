@@ -81,7 +81,6 @@ public class RepositorioDadosAtualizadosDoContribuinte implements IRepositorioDa
     @Override
     public void atualizar(AtualizacaoDoContribuinte atualizado) throws RepositorioException {
         ContentValues values = new ContentValues();
-        values.put(_AtualizacaoDoContribuinte.ID, atualizado.getId());
         values.put(_AtualizacaoDoContribuinte.NOME, atualizado.getNome());
         values.put(_AtualizacaoDoContribuinte.CPF_CNPJ, atualizado.getCpfCnpj());
         values.put(_AtualizacaoDoContribuinte.RG, atualizado.getRg());

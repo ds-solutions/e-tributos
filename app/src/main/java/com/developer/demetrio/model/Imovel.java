@@ -13,8 +13,9 @@ public class Imovel implements Serializable {
     private Cadastro cadastro;
     private Endereco endereco;
     private Contribuinte contribuinte;
-    private Tributo tributo = new Tributo();
-    private LatLng latLng = new LatLng();
+    private Tributo tributo;
+    private LatLng latLng = new LatLng() ;
+    private Comprovante comprovante = new Comprovante();
 
 
 
@@ -49,8 +50,6 @@ public class Imovel implements Serializable {
     public void setContribuinte(Contribuinte contribuinte) {
         this.contribuinte = contribuinte;
     }
-
-
 
     public Tributo getTributo() {
         return tributo;
@@ -113,7 +112,13 @@ public class Imovel implements Serializable {
         this.latLng = latLng;
     }
 
+    public Comprovante getComprovante() {
+        return comprovante;
+    }
 
+    public void setComprovante(Comprovante comprovante) {
+        this.comprovante = comprovante;
+    }
 
     @Override
     public boolean equals(Object o) {

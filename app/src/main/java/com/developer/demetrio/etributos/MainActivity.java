@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
         login = (EditText) findViewById(R.id.idLogin);
         senha = (EditText) findViewById(R.id.idSenha);
         btEntrar = (Button) findViewById(R.id.id_button_logar);
+      //  new ConexaoDataBase(this);
         this.conexao = new ConexaoDataBase().concectarComBanco(this);
         btEntrar.setOnClickListener(new View.OnClickListener() {
             @Override

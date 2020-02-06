@@ -21,7 +21,6 @@ public class ETributosDadaBaseOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-
         db.execSQL(ScriptDLL.getCreateLatLng());
         db.execSQL(ScriptDLL.getCreateTableIPTU());
         db.execSQL(ScriptDLL.getCreateTableDescricaoDaDivida());
@@ -35,11 +34,11 @@ public class ETributosDadaBaseOpenHelper extends SQLiteOpenHelper {
         db.execSQL(ScriptDLL.getCreateTableValoresVenais());
         db.execSQL(ScriptDLL.getCreateTableAreasDoImovel());
         db.execSQL(ScriptDLL.getCreateTableCadastro());
+        db.execSQL(ScriptDLL.getCreateComprovante());
         db.execSQL(ScriptDLL.getCreateTableImovel());
 
+
     }
-
-
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
