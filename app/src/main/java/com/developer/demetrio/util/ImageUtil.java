@@ -22,9 +22,6 @@ public abstract class ImageUtil {
         BitmapFactory.decodeFile(foto.getAbsolutePath(), bmOptions);
         int fotoW = bmOptions.outWidth;
         int fotoH = bmOptions.outHeight;
-        System.out.println("Caminho: "+foto.toString());
-        System.out.println("largura: "+largura+" altura: "+altura + " fotoW: "+ fotoW+" fotoH: "+fotoH);
-
         int scala = Math.min(fotoW/largura, fotoH/altura);
         bmOptions.inJustDecodeBounds = false;
         bmOptions.inSampleSize = scala;

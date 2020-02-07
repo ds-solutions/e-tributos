@@ -118,7 +118,9 @@ public class RepositorioDadosAtualizadosDoContribuinte implements IRepositorioDa
         Cursor resultado = this.conexao.rawQuery(sql.toString(), null);
 
         if (resultado.getCount() > 0) {
-            return resultado.getCount();
+            long total = resultado.getCount();
+            resultado.close();
+            return total;
         }
         return 0;
     }

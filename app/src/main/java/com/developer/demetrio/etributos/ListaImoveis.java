@@ -86,7 +86,6 @@ public class ListaImoveis extends AppCompatActivity {
     private long idImovel;
     private Imovel imovel;
 
-    private ConexaoDataBase conexaoDataBase;
     private SQLiteDatabase conexao;
 
     @Override

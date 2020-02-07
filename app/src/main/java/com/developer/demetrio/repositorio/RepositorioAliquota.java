@@ -17,7 +17,6 @@ public class RepositorioAliquota implements IRepositorioAliquota {
 
     public RepositorioAliquota(SQLiteDatabase conexao) {
         this.conexao = conexao;
-
     }
 
     @Override
@@ -30,7 +29,6 @@ public class RepositorioAliquota implements IRepositorioAliquota {
         values.put(_Aliquota.ID_CODIGO_DE_COBRANCA, aliquota.getCodigoDeCobranca().getId());
 
        return this.conexao.insertOrThrow(_Aliquota.NOME_DA_TABELA, null, values);
-
     }
 
     @Override
@@ -38,18 +36,7 @@ public class RepositorioAliquota implements IRepositorioAliquota {
         String[] parametros = new String[1];
         parametros[0] = String.valueOf(id);
         StringBuilder sql = new StringBuilder();
-       sql.append("   SELECT * ");
-      /*  sql.append(_Aliquota.ID);
-        sql.append(", ");
-        sql.append(_Aliquota.TERRENO);
-        sql.append(", ");
-        sql.append(_Aliquota.EDIFICADO);
-        sql.append(", ");
-        sql.append(_Aliquota.ZONEAMENTO);
-        sql.append(", ");
-        sql.append(_Aliquota.TIPO_CONSTRUCAO);
-        sql.append(", ");
-        sql.append(_Aliquota.ID_CODIGO_DE_COBRANCA); */
+        sql.append("   SELECT * ");
         sql.append(" FROM ");
         sql.append(_Aliquota.NOME_DA_TABELA);
         sql.append(" WHERE ");
@@ -67,7 +54,7 @@ public class RepositorioAliquota implements IRepositorioAliquota {
             aliquota.setZoneamento(resultado.getString(resultado.getColumnIndexOrThrow(_Aliquota.ZONEAMENTO)));
             aliquota.setTipoConstrucao(resultado.getString(resultado.getColumnIndexOrThrow(_Aliquota.TIPO_CONSTRUCAO)));
             aliquota.getCodigoDeCobranca().setId(resultado.getLong(resultado.getColumnIndexOrThrow(_Aliquota.ID_CODIGO_DE_COBRANCA)));
-
+            resultado.close();
             return aliquota;
         }
         return null;

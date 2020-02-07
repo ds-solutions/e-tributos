@@ -375,7 +375,7 @@ public class ImpressaoTributoNovoIPTU extends ImpressaoTributo{
                  message += "\n";
                  cont = 0;
             }
-            System.out.println(message);
+
         }
        return message;
     }

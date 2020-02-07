@@ -31,7 +31,7 @@ public class Relatorio extends AppCompatActivity {
     private RepositorioImovel imoveis;
     private LinearLayout layoutResumo;
     private TextView resumo, tituloResumo;
-
+    private SQLiteDatabase conexao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +55,6 @@ public class Relatorio extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                SQLiteDatabase conexao = new ConexaoDataBase().concectarComBanco(getApplicationContext());
-                imoveis = new RepositorioImovel(conexao);
                 switch (i) {
                     case 5:
                         exibirResumo(view);
@@ -70,6 +68,10 @@ public class Relatorio extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void conectarAoBanco() {
+        this.conexao = new ConexaoDataBase().concectarComBanco(this);
     }
 
     private void exibirResumo(View view) {
@@ -104,92 +106,88 @@ public class Relatorio extends AppCompatActivity {
         String dados = "";
         if (i == 0) {
             DecimalFormat format = new DecimalFormat("0.#");
-            SQLiteDatabase conexao = new ConexaoDataBase().concectarComBanco(this);
-            imoveis = new RepositorioImovel(conexao);
-            try {
-                dados = format.format((imoveis.totalEnviadosPorEmail() * 100) / totalDeRegistro) + "% dos tributos foram enviados por e-mail";
+            conectarAoBanco();
+             try {
+                dados = format.format((new RepositorioImovel(conexao).totalEnviadosPorEmail() * 100) / totalDeRegistro) + "% dos tributos foram enviados por e-mail";
             } catch (RepositorioException e) {
                 e.printStackTrace();
             }
-            conexao.close();
+            desconectarBanco();
         }
 
         if (i == 1) {
             DecimalFormat format = new DecimalFormat("0.#");
-            SQLiteDatabase conexao = new ConexaoDataBase().concectarComBanco(this);
-            imoveis = new RepositorioImovel(conexao);
+            conectarAoBanco();
             try {
-                dados = format.format((imoveis.totalEnviadosPorWhatsApp() * 100) / totalDeRegistro) + "% dos tributos foram enviados por whatsApp";
+                dados = format.format((new RepositorioImovel(conexao).totalEnviadosPorWhatsApp() * 100) / totalDeRegistro) + "% dos tributos foram enviados por whatsApp";
             } catch (RepositorioException e) {
                 e.printStackTrace();
             }
-            conexao.close();
+            desconectarBanco();
         }
 
         if (i == 2) {
             DecimalFormat format = new DecimalFormat("0.#");
-            SQLiteDatabase conexao = new ConexaoDataBase().concectarComBanco(this);
-            imoveis = new RepositorioImovel(conexao);
+           conectarAoBanco();
             try {
-                dados = format.format((imoveis.totalImpresso() * 100) / totalDeRegistro) + "% dos tributos foram impressos";
+                dados = format.format((new RepositorioImovel(conexao).totalImpresso() * 100) / totalDeRegistro) + "% dos tributos foram impressos";
             } catch (RepositorioException e) {
                 e.printStackTrace();
             }
-            conexao.close();
+            desconectarBanco();
         }
 
         if (i == 3) {
             DecimalFormat format = new DecimalFormat("0.#");
-            SQLiteDatabase conexao = new ConexaoDataBase().concectarComBanco(this);
-            RepositorioDadosAtualizadosDoContribuinte atualizados = new RepositorioDadosAtualizadosDoContribuinte(conexao);
+           conectarAoBanco();
             try {
-                dados = format.format((atualizados.totalDeCadastroAlterados() * 100) / totalDeRegistro) + "% dos cadastros foram atualizados";
+                dados = format.format((new RepositorioDadosAtualizadosDoContribuinte(conexao).totalDeCadastroAlterados() * 100) / totalDeRegistro) + "% dos cadastros foram atualizados";
 
             } catch (RepositorioException e) {
                 e.printStackTrace();
             }
-            conexao.close();
+            desconectarBanco();
         }
 
         if (i == 4) {
             DecimalFormat format = new DecimalFormat("0.#");
-            SQLiteDatabase conexao = new ConexaoDataBase().concectarComBanco(this);
-            imoveis = new RepositorioImovel(conexao);
+            conectarAoBanco();
             try {
-                dados = format.format((imoveis.totalDeImoveisVisitados() * 100) / totalDeRegistro) + "% dos tributos foram entregues";
+                dados = format.format((new RepositorioImovel(conexao).totalDeImoveisVisitados() * 100) / totalDeRegistro) + "% dos tributos foram entregues";
             } catch (RepositorioException e) {
                 e.printStackTrace();
             }
-            conexao.close();
+            desconectarBanco();
         }
 
         if (i == 5) {
             DecimalFormat format = new DecimalFormat("0.#");
-            SQLiteDatabase conexao = new ConexaoDataBase().concectarComBanco(this);
-            imoveis = new RepositorioImovel(conexao);
+            conectarAoBanco();
             try {
-                dados = format.format((imoveis.totalImoveisAVisitar() * 100) / totalDeRegistro) + "% faltam ser visitados";
+                dados = format.format((new RepositorioImovel(conexao).totalImoveisAVisitar() * 100) / totalDeRegistro) + "% faltam ser visitados";
 
             } catch (RepositorioException e) {
                 e.printStackTrace();
             }
-            conexao.close();
-
+           desconectarBanco();
         }
 
         if (i == 6) {
             DecimalFormat format = new DecimalFormat("0.#");
-            SQLiteDatabase conexao = new ConexaoDataBase().concectarComBanco(this);
-            imoveis = new RepositorioImovel(conexao);
+            conectarAoBanco();
             try {
                 totalNaoEntregues = imoveis.totalDeTributosNaoEntregues();
                 dados = format.format((totalNaoEntregues * 100) / totalDeRegistro) + "% dos tributos não foram entregues";
             } catch (RepositorioException e) {
                 e.printStackTrace();
             }
-            conexao.close();
+            desconectarBanco();
         }
         return dados;
+    }
+
+    private void desconectarBanco() {
+        this.conexao.close();
     }
 
     public void resumo(View view) {

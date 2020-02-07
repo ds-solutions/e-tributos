@@ -50,6 +50,7 @@ public class RepositorioLatLng implements IRepositorioLatLng {
             latLng.setId(resultado.getLong(resultado.getColumnIndexOrThrow(_LatLng.ID)));
             latLng.setLatitude(resultado.getDouble(resultado.getColumnIndexOrThrow(_LatLng.LATITUDE)));
             latLng.setLongitude(resultado.getDouble(resultado.getColumnIndexOrThrow(_LatLng.LONGITUDE)));
+            resultado.close();
             return latLng;
         }
         return null;

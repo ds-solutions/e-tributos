@@ -35,7 +35,6 @@ import java.util.List;
 public class ConsultarImoveis extends AppCompatActivity {
 
     private SQLiteDatabase conexao;
-    private ConexaoDataBase connectDataBase;
 
     private String[] parametros;
     private String[] consultarPor = new String[]{"Consultar por", "Enviados por e-mail",
@@ -72,8 +71,7 @@ public class ConsultarImoveis extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_consultar_imoveis);
-        connectDataBase = new ConexaoDataBase();
-        this.conexao = connectDataBase.concectarComBanco(this);
+        conectarAoBanco();
 
         this.inscricao = findViewById(R.id.id_edt_inscricao);
         this.btConsultar = findViewById(R.id.id_consultar);
@@ -221,6 +219,14 @@ public class ConsultarImoveis extends AppCompatActivity {
 
     }
 
+    private void conectarAoBanco() {
+        this.conexao = new ConexaoDataBase().concectarComBanco(this);
+    }
+
+    private void desconectarBanco() {
+        this.conexao.close();
+    }
+
     private void limparParametros() {
         this.parametros = new String[2];
     }
@@ -291,99 +297,119 @@ public class ConsultarImoveis extends AppCompatActivity {
 
     private void consultar() {
         this.listImoveis = new ArrayList<>();
-        this.imoveis = new RepositorioImovel(this.conexao);
         switch (iConsultaPor) {
             case 1:
+                conectarAoBanco();
                 try {
-                    listImoveis = imoveis.buscarTodosEnviadosPorEmail();
+                    listImoveis = new RepositorioImovel(this.conexao).buscarTodosEnviadosPorEmail();
                 } catch (RepositorioException e) {
                     e.printStackTrace();
                 }
+                desconectarBanco();
                 break;
 
             case 2:
                 try {
-                    listImoveis = imoveis.buscarTodosEnviadosPorWhatsApp();
+                    conectarAoBanco();
+                    listImoveis = new RepositorioImovel(this.conexao).buscarTodosEnviadosPorWhatsApp();
                 } catch (RepositorioException e) {
                     e.printStackTrace();
                }
+                desconectarBanco();
                 break;
 
             case 3:
+                conectarAoBanco();
                 try {
-                    listImoveis = imoveis.buscarTodosImoveisImpressos();
+                    listImoveis = new RepositorioImovel(this.conexao).buscarTodosImoveisImpressos();
                 } catch (RepositorioException e) {
                     e.printStackTrace();
                 }
+                desconectarBanco();
                 break;
 
             case 4:
+                conectarAoBanco();
                 try {
-                    listImoveis = imoveis.buscarTodosImoveisNaoImpressos();
+                    listImoveis = new RepositorioImovel(this.conexao).buscarTodosImoveisNaoImpressos();
                 } catch (RepositorioException e) {
                     e.printStackTrace();
                 }
+                desconectarBanco();
                 break;
 
             case 5:
+                conectarAoBanco();
                 try {
                     this.parametros = new String[]{this.inscricao.getText().toString()};
-                    listImoveis = imoveis.buscarTodosImoveisPorInscricao(this.parametros);
+                    listImoveis = new RepositorioImovel(this.conexao).buscarTodosImoveisPorInscricao(this.parametros);
                     this.parametros = new String[]{};
                 } catch (RepositorioException e) {
                     e.printStackTrace();
                 }
+                desconectarBanco();
                 break;
 
             case 6:
+                conectarAoBanco();
                try {
                     if (StringUtils.isBlank(this.parametros[0])){
                         listImoveis = null;
+                        desconectarBanco();
                         return;
                     }
-                    listImoveis = imoveis.buscarTodosPorLogradouro(this.parametros);
+                    listImoveis = new RepositorioImovel(this.conexao).buscarTodosPorLogradouro(this.parametros);
                     this.parametros = new String[]{};
+                    desconectarBanco();
                 } catch (RepositorioException e) {
                     e.printStackTrace();
                 }
                 break;
 
             case 7:
-
+                    conectarAoBanco();
                try {
                     this.parametros = new String[]{this.matricula.getText().toString()};
                    if (StringUtils.isBlank(parametros[0])){
                        this.listImoveis = null;
+                       desconectarBanco();
                        return;
                    }
-                    listImoveis = imoveis.buscarDaMatricula(this.parametros);
+                    listImoveis = new RepositorioImovel(this.conexao).buscarDaMatricula(this.parametros);
                     this.parametros = new String[]{};
+                    desconectarBanco();
                 } catch (RepositorioException e) {
                     e.printStackTrace();
                 }
                 break;
 
             case 8:
+                conectarAoBanco();
                 try {
-                    listImoveis = imoveis.buscarImoveisNaoEntregues();
+                    listImoveis = new RepositorioImovel(this.conexao).buscarImoveisNaoEntregues();
                 } catch (RepositorioException e) {
                     e.printStackTrace();
                 }
+                desconectarBanco();
                 break;
             case 9:
+                conectarAoBanco();
                 try {
-                    listImoveis = imoveis.buscarPorSetorQuadra(this.stringSetor, this.stringQuadra);
+                    listImoveis = new RepositorioImovel(this.conexao).buscarPorSetorQuadra(this.stringSetor, this.stringQuadra);
                 } catch (RepositorioException e) {
                     e.printStackTrace();
                 }
+                desconectarBanco();
                 break;
 
             default:
+                conectarAoBanco();
                 try {
                     listImoveis = imoveis.getImoveis();
                 } catch (RepositorioException e) {
                     e.printStackTrace();
                 }
+                desconectarBanco();
                 break;
         }
         parametros = null;
@@ -435,13 +461,13 @@ public class ConsultarImoveis extends AppCompatActivity {
     }
 
     public void buscarTodos() {
-        this.imoveis = new RepositorioImovel(this.conexao);
+        conectarAoBanco();
         try {
-            this.listImoveis = this.imoveis.getImoveis();
+            this.listImoveis = new RepositorioImovel(this.conexao).getImoveis();
         }catch (RepositorioException ex) {
             ex.printStackTrace();
         }
-
+        desconectarBanco();
     }
 
     public void pupularListView() {

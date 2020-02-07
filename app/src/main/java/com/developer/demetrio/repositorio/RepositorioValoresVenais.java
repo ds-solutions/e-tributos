@@ -57,6 +57,7 @@ public class RepositorioValoresVenais implements IRepositorioValoresVenais {
             valores.setEdificada(resultado.getString(resultado.getColumnIndexOrThrow(_ValoresVenais.EDIFICADA)));
             valores.setExcedente(resultado.getString(resultado.getColumnIndexOrThrow(_ValoresVenais.EXCEDENTE)));
             valores.setTotal(resultado.getString(resultado.getColumnIndexOrThrow(_ValoresVenais.TOTAL)));
+            resultado.close();
             return valores;
         }
 

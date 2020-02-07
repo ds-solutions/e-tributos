@@ -44,6 +44,7 @@ public class RepositorioEndereco implements IRepositorioEndereco {
         if (resultado.getCount() > 0) {
             resultado.moveToFirst();
             Endereco endereco = getEndereco(resultado);
+            resultado.close();
             return endereco;
         }
         return null;
@@ -59,6 +60,7 @@ public class RepositorioEndereco implements IRepositorioEndereco {
         endereco.setComplemento(resultado.getString(resultado.getColumnIndexOrThrow(_Endereco.COMPLEMENTO)));
         endereco.setNumero(resultado.getString(resultado.getColumnIndexOrThrow(_Endereco.NUMERO)));
         endereco.setCep(resultado.getString(resultado.getColumnIndexOrThrow(_Endereco.CEP)));
+        resultado.close();
         return endereco;
     }
 
@@ -98,7 +100,7 @@ public class RepositorioEndereco implements IRepositorioEndereco {
                     logradouros.add(resultado.getString(resultado.getColumnIndexOrThrow(_Endereco.LOGRADOURO)));
                 }
             }while (resultado.moveToNext());
-
+            resultado.close();
             return logradouros;
         }
         return null;

@@ -8,10 +8,7 @@ import com.developer.demetrio.databases.constantes._Comprovante;
 import com.developer.demetrio.execoes.RepositorioException;
 import com.developer.demetrio.model.Comprovante;
 
-import org.apache.commons.lang3.StringUtils;
-
 public class RepositorioComprovante implements IRepositorioComprovante {
-
     private SQLiteDatabase conexao;
 
     public RepositorioComprovante(SQLiteDatabase conexao) {
@@ -31,7 +28,9 @@ public class RepositorioComprovante implements IRepositorioComprovante {
         Cursor resultado = conexao.rawQuery(sql.toString(), parametros);
         if (resultado.getCount() > 0) {
             resultado.moveToFirst();
-            return getComprovante(resultado);
+            Comprovante comprovante = getComprovante(resultado);
+            resultado.close();
+            return comprovante;
         }
         return null;
     }
@@ -43,6 +42,7 @@ public class RepositorioComprovante implements IRepositorioComprovante {
         comprovante.setFotoRgVerso(resultado.getString(resultado.getColumnIndexOrThrow(_Comprovante.RG_VERSO)));
         comprovante.setFotoCPF(resultado.getString(resultado.getColumnIndexOrThrow(_Comprovante.CPF)));
         comprovante.setFotoEscritura(resultado.getString(resultado.getColumnIndexOrThrow(_Comprovante.ESCRITURA)));
+        resultado.close();
         return comprovante;
     }
 
@@ -74,8 +74,7 @@ public class RepositorioComprovante implements IRepositorioComprovante {
                 System.out.println(resultado.getString(resultado.getColumnIndexOrThrow(_Comprovante.CPF)));
                 System.out.println(resultado.getString(resultado.getColumnIndexOrThrow(_Comprovante.ESCRITURA)));
             } while (resultado.moveToNext());
-        } else {
-            System.out.println("retornou nullo");
+            resultado.close();
         }
     }
 

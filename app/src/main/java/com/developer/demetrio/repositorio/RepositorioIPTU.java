@@ -47,6 +47,7 @@ public class RepositorioIPTU implements IRepositorioIPTU {
         if (resultado.getCount() > 0) {
             resultado.moveToFirst();
             IPTU iptu = getIptu(resultado);
+            resultado.close();
             return iptu;
         }
         return null;
@@ -69,37 +70,13 @@ public class RepositorioIPTU implements IRepositorioIPTU {
         iptu.setCampo2CodigoDeBarras(resultado.getString(resultado.getColumnIndexOrThrow(_IPTU.CAMPO_2)));
         iptu.setCampo3CodigoDeBarras(resultado.getString(resultado.getColumnIndexOrThrow(_IPTU.CAMPO_3)));
         iptu.setCampo4CodigoDeBarras(resultado.getString(resultado.getColumnIndexOrThrow(_IPTU.CAMPO_4)));
+        resultado.close();
         return iptu;
     }
 
     private StringBuilder query() {
         StringBuilder sql = new StringBuilder();
         sql.append(" SELECT * ");
-        /*sql.append(_IPTU.ID);
-        sql.append(", ");
-        sql.append(_IPTU.CODIGO_DA_DIVIDA);
-        sql.append(", ");
-        sql.append(_IPTU.CODIGO_DE_BAIXA);
-        sql.append(", ");
-        sql.append(_IPTU.MENSAGEM);
-        sql.append(", ");
-        sql.append(_IPTU.VALOR_TOTAL);
-        sql.append(", ");
-        sql.append(_IPTU.SOMA_DO_VALOR);
-        sql.append(", ");
-        sql.append(_IPTU.SOMA_DO_DESCONTO);
-        sql.append(", ");
-        sql.append(_IPTU.SOMA_DA_ISENCAO);
-        sql.append(", ");
-        sql.append(_IPTU.CODIGO_DE_BARRAS);
-        sql.append(", ");
-        sql.append(_IPTU.CAMPO_1);
-        sql.append(", ");
-        sql.append(_IPTU.CAMPO_2);
-        sql.append(", ");
-        sql.append(_IPTU.CAMPO_3);
-        sql.append(", ");
-        sql.append(_IPTU.CAMPO_4); */
         sql.append(" FROM ");
         sql.append(_IPTU.NOME_DA_TABELA);
         sql.append(" WHERE ");

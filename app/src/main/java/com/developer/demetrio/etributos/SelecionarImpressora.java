@@ -183,7 +183,6 @@ public class SelecionarImpressora extends AppCompatActivity {
                 if(resultCode == RESULT_OK) {
                     this.imgBlue.setImageResource(R.drawable.bluetooth_on);
                     this.status.setText("Habilitado!");
-                    System.out.println("Entrou");
 
                 } else {
                     this.imgBlue.setImageResource(R.drawable.bluetooth_off);

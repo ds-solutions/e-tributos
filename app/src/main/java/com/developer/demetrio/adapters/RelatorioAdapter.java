@@ -102,7 +102,6 @@ public class RelatorioAdapter extends ArrayAdapter<ItemRelatorio> {
                 informacao = "";
                 if (!motivos.isEmpty()) {
                     for (String motivo : motivos) {
-                        System.out.println(motivo);
                             informacao += motivo+"\n";
                         }
                     } else {

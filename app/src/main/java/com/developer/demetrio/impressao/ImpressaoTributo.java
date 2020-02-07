@@ -48,10 +48,8 @@ public class ImpressaoTributo extends Impressao{
 
     public boolean print(Context context, Imovel imovel) throws ImpressaoException {
         this.context = context;
-        System.out.println("Entrou no método print com os dados "+ context.toString() + " imovel "+ imovel.getClass().toString());
-       // Zebra
-       return ZebraUtils.getInstance(this.context).imprimir(coletarIptuFormatado(imovel));
-       // return true;
+        return ZebraUtils.getInstance(this.context).imprimir(coletarIptuFormatado(imovel));
+
     }
 
     protected String comandoImprimir() {

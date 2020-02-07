@@ -80,8 +80,6 @@ public class Carregar extends AppCompatActivity {
         status = (TextView) findViewById(R.id.id_status);
         final long l = 2;
         handler = new Handler();
-        conectarAoBanco();
-
         init();
     }
 

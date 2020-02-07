@@ -29,7 +29,6 @@ public class Menu extends AppCompatActivity {
     private String conveterId;
     private long id;
     SQLiteDatabase conexao;
-    ConexaoDataBase conexaoDataBase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,16 +46,17 @@ public class Menu extends AppCompatActivity {
                 switch (itens.get(i).getDescricao()) {
                     case "Lista de Imóveis":
                         try {
-                            conexao = new ConexaoDataBase().concectarComBanco(getApplicationContext());
-                            RepositorioImovel imoveis = new RepositorioImovel(conexao);
-                           id = imoveis.primeiraPosicaoNaoEmitida();
+                            conectarAoBanco();
+                            id = new RepositorioImovel(conexao).primeiraPosicaoNaoEmitida();
+                            desconectarBanco();
                            if (id == 0) {
-                               id = imoveis.primeiraPosicao();
+                               conectarAoBanco();
+                               id = new RepositorioImovel(conexao).primeiraPosicao();
+                               desconectarBanco();
                            }
                         } catch (RepositorioException e) {
                             e.printStackTrace();
                         }
-                        conexao.close();
                         activity = new Intent(getApplicationContext(), ListaImoveis.class);
                         if (id > 0) {
                             Bundle bundle = new Bundle();
@@ -77,15 +77,14 @@ public class Menu extends AppCompatActivity {
                         break;
 
                     case "Relatório":
-                        SQLiteDatabase conexao = new ConexaoDataBase().concectarComBanco(getApplicationContext());
-                        RepositorioImovel imoveis = new RepositorioImovel(conexao);
+                        conectarAoBanco();
                         long totalDeRegistro = 0L;
                        try {
-                            totalDeRegistro = imoveis.getQtdImoveis();
+                            totalDeRegistro = new RepositorioImovel(conexao).getQtdImoveis();
                         } catch (RepositorioException e) {
                             e.printStackTrace();
                         }
-                       conexao.close();
+                      desconectarBanco();
                        Bundle bundle = new Bundle();
                        bundle.putLong("total_de_registros", totalDeRegistro);
                         activity = new Intent(getApplicationContext(), Relatorio.class);
@@ -115,6 +114,13 @@ public class Menu extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void conectarAoBanco() {
+        this.conexao = new ConexaoDataBase().concectarComBanco(this);
+    }
+    private void desconectarBanco() {
+        this.conexao.close();
     }
 
     private void exportarDb() {

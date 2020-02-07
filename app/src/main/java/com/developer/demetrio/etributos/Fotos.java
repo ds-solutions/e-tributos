@@ -86,8 +86,8 @@ public class Fotos extends AppCompatActivity {
     private String frenteRg, versoRG, cpfFoto, escrituraFoto;
 
     private int largura, altura;
-    private static final int LARGURA = 306;
-    private static final int ALTURA = 191;
+    private static final int LARGURA = 200;
+    private static final int ALTURA = 131;
 
     private Handler handler;
     private Bitmap bitmap;
@@ -151,7 +151,12 @@ public class Fotos extends AppCompatActivity {
         }
         handler = new Handler();
 
-         verificarExistenciaDeFoto();
+        if (comprovante != null) {
+            verificarExistenciaDeFoto();
+        } else {
+            preencherImageViewDefault();
+        }
+
 
         this.rgFrente.setOnClickListener(new FotoRgFrente());
         this.rgVerso.setOnClickListener(new FotoRgVerso());
@@ -159,91 +164,22 @@ public class Fotos extends AppCompatActivity {
         this.escritura.setOnClickListener(new FotoEscritura());
     }
 
+    private void preencherImageViewDefault() {
+        this.rgFrente.setImageResource(R.drawable.rg_frente);
+        this.rgVerso.setImageResource(R.drawable.rg_verso);
+        this.cpf.setImageResource(R.drawable.cpf);
+        this.escritura.setImageResource(R.drawable.escritura);
+    }
 
 
     private Comprovante novaInstancia() {
-        System.out.println("Criou nova instancia!!!");
         return new Comprovante();
     }
-/*
-    private void verificarExistenciaDeFoto() {
-        isCamera = false;
-        isFile = true;
-        if (StringUtils.isNotBlank(comprovante.getFotoRgFrente())) {
-            this.foto = new File(ConstantesSistemas.CAMINHO_FOTOS, comprovante.getFotoRgFrente());
-            System.out.println("fotoFrente: "+ comprovante.getFotoRgFrente()+" caminho: " + foto.getAbsolutePath().toString());
-            if (foto != null && foto.exists()) {
-                if (carregarImagem == null || carregarImagem.getStatus() != AsyncTask.Status.RUNNING) {
-                    chave = 0;
-                    carregarImagem = new CarregarImagem(activity);
-                    carregarImagem.execute();
-                    carregarImagem = null;
-
-                }
-
-            }
-        }
-        else {
-            this.rgFrente.setImageResource(R.drawable.rg_frente);
-        }
-      if (StringUtils.isNotBlank(comprovante.getFotoRgVerso())) {
-            this.foto = new File(ConstantesSistemas.CAMINHO_FOTOS, comprovante.getFotoRgVerso());
-          System.out.println("fotoVerso: "+ comprovante.getFotoRgVerso()+" caminho: " + foto.getAbsolutePath().toString());
-          if (foto != null && foto.exists()) {
-              if (carregarImagem == null || carregarImagem.getStatus() != AsyncTask.Status.RUNNING) {
-                  chave = 1;
-                  carregarImagem = new CarregarImagem(activity);
-                  carregarImagem.execute();
-                  carregarImagem = null;
-
-              }
-          }
-        }
-        else {
-            this.rgVerso.setImageResource(R.drawable.rg_verso);
-        }
-
-        if (StringUtils.isNotBlank(comprovante.getFotoCPF())) {
-            this.foto = new File(ConstantesSistemas.CAMINHO_FOTOS, comprovante.getFotoCPF());
-            System.out.println("CPF: "+ comprovante.getFotoCPF()+" caminho: " + foto.getAbsolutePath().toString());
-            if (foto != null && foto.exists()) {
-                if (carregarImagem == null || carregarImagem.getStatus() != AsyncTask.Status.RUNNING) {
-                    chave = 2;
-                    carregarImagem = new CarregarImagem(activity);
-                    carregarImagem.execute();
-                    carregarImagem = null;
-
-                }
-            }
-        }
-        else {
-            this.cpf.setImageResource(R.drawable.cpf);
-        }
-        if (StringUtils.isNotBlank(comprovante.getFotoEscritura())) {
-            this.foto = new File(ConstantesSistemas.CAMINHO_FOTOS, comprovante.getFotoEscritura());
-            System.out.println("escritura: "+ comprovante.getFotoEscritura()+" caminho: " + foto.getAbsolutePath().toString());
-            if (foto != null && foto.exists()) {
-                if (carregarImagem == null || carregarImagem.getStatus() != AsyncTask.Status.RUNNING) {
-                    chave = 3;
-                    carregarImagem = new CarregarImagem(activity);
-                    carregarImagem.execute();
-                    carregarImagem = null;
-
-                }
-            }
-        }
-        else {
-            this.escritura.setImageResource(R.drawable.escritura);
-        }
-    }
-*/
 
     private void verificarExistenciaDeFoto() {
 
-
-        final Timer timer = new Timer();
-
-        final TimerTask task = new TimerTask() {
+     final Timer timer = new Timer();
+     final TimerTask task = new TimerTask() {
             @Override
             public void run() {
                 if (cont < 4) {
@@ -269,7 +205,7 @@ public class Fotos extends AppCompatActivity {
                 cont++;
             }
         };
-        timer.schedule(task, 50, 250);
+        timer.schedule(task, 300, 300);
 
     }
 
@@ -278,7 +214,7 @@ public class Fotos extends AppCompatActivity {
             case 0:
                 if (StringUtils.isNotBlank(comprovante.getFotoRgFrente())) {
                     chave = i;
-                   return new File(ConstantesSistemas.CAMINHO_FOTOS, comprovante.getFotoRgFrente());
+                    return new File(ConstantesSistemas.CAMINHO_FOTOS, comprovante.getFotoRgFrente());
                 }
                 else {
                     this.rgFrente.setImageResource(R.drawable.rg_frente);
@@ -288,7 +224,7 @@ public class Fotos extends AppCompatActivity {
                 if (StringUtils.isNotBlank(comprovante.getFotoRgVerso())) {
                     chave = i;
                     return new File(ConstantesSistemas.CAMINHO_FOTOS, comprovante.getFotoRgVerso());
-  }
+                }
                 else {
                     this.rgVerso.setImageResource(R.drawable.rg_verso);
                 }
@@ -442,7 +378,6 @@ public class Fotos extends AppCompatActivity {
         bmOptions.inJustDecodeBounds = false;
         bmOptions.inSampleSize = scala;
         Bitmap bitmap = BitmapFactory.decodeFile(foto.getAbsolutePath(), bmOptions);
-        System.out.println("CHAVE: "+chave);
         switch (chave) {
             case 0:
                 this.rgFrente.setImageBitmap(bitmap);
@@ -462,8 +397,7 @@ public class Fotos extends AppCompatActivity {
     }
 
     private void carregarImovel(long id) {
-        System.out.println("Id: "+ id);
-        conectarBanco();
+       conectarBanco();
         try {
             this.imovel = new RepositorioImovel(this.conexao).buscarImovelPorId(id);
         } catch (RepositorioException e) {
@@ -493,11 +427,10 @@ public class Fotos extends AppCompatActivity {
     }
 
     public void salvar(View view) {
-
-
         if (this.comprovante != null) {
             if (StringUtils.isNotBlank(String.valueOf(this.comprovante.getId()))
                     && this.comprovante.getId() != 0){
+                seterDados();
                 conectarBanco();
                 try {
                     new RepositorioComprovante(this.conexao)
@@ -512,10 +445,7 @@ public class Fotos extends AppCompatActivity {
         }
         if (this.comprovante == null){
             this.comprovante = novaInstancia();
-            this.comprovante.setFotoRgFrente(frenteRg);
-            this.comprovante.setFotoRgVerso(versoRG);
-            this.comprovante.setFotoCPF(cpfFoto);
-            this.comprovante.setFotoEscritura(escrituraFoto);
+           seterDados();
             conectarBanco();
             try {
                 this.comprovante.setId(new RepositorioComprovante(this.conexao)
@@ -531,6 +461,13 @@ public class Fotos extends AppCompatActivity {
 
     }
 
+    private void seterDados() {
+        this.comprovante.setFotoRgFrente(frenteRg);
+        this.comprovante.setFotoRgVerso(versoRG);
+        this.comprovante.setFotoCPF(cpfFoto);
+        this.comprovante.setFotoEscritura(escrituraFoto);
+    }
+
     private void abrirTelaDeImpressao() {
         Bundle parametros = new Bundle();
         parametros.putLong("id", this.imovel.getId());
@@ -540,7 +477,6 @@ public class Fotos extends AppCompatActivity {
     }
 
     private void atualizarImovelComOsComprovantes() {
-
         if (this.comprovante != null &&
                 StringUtils.isNotBlank(String.valueOf(this.comprovante.getId()))) {
             conectarBanco();
@@ -554,6 +490,7 @@ public class Fotos extends AppCompatActivity {
             }
             desconectarBanco();
         }
+        abrirTelaDeImpressao();
    }
 
     public void cancelar(View view) {
@@ -576,12 +513,10 @@ public class Fotos extends AppCompatActivity {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-
     }
 
     private File criarArquivoDeImagem(int chave) throws IOException{
-        String nomeDaMidia = this.imovel.getId()+ "_" /*+this.imovel.getCadastro().getNumCadastro()
-                +"_" */+ CHAVE_REFERENCIA[chave]+ "_"
+        String nomeDaMidia = this.imovel.getId()+ "_" + CHAVE_REFERENCIA[chave]+ "_"
                 + new SimpleDateFormat("dd_MM_yyyy_hh_mm_ss").format(new Date())+".jpg";
 
         File dirMida = new File(ConstantesSistemas.CAMINHO_FOTOS);
@@ -589,7 +524,6 @@ public class Fotos extends AppCompatActivity {
             dirMida.mkdirs();
         }
         File image = new File(dirMida.getPath(), nomeDaMidia);
-        System.out.println(nomeDaMidia);
         if (chave == 0) {
             frenteRg = nomeDaMidia;
         }
@@ -608,9 +542,7 @@ public class Fotos extends AppCompatActivity {
     class CarregarImagem extends AsyncTask<Void, Void, Bitmap> {
         public Bitmap bit;
         public Activity activity;
-
         public CarregarImagem() {
-
         }
         public CarregarImagem(Activity activity) {
             this.activity = activity;
@@ -628,9 +560,6 @@ public class Fotos extends AppCompatActivity {
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-
-                    System.out.println("chave: "+ chave+ " Caminho"+ foto.getAbsolutePath().toString());
-
                     if (bit != null) {
                         switch (chave) {
                             case 0:
@@ -652,11 +581,9 @@ public class Fotos extends AppCompatActivity {
                             default:
                                 break;
                         }
-
                     }
                 }
             });
-
         }
     }
 

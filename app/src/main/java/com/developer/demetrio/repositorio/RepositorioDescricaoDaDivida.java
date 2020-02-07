@@ -70,6 +70,7 @@ public class RepositorioDescricaoDaDivida implements IRepositorioDescricaoDaDivi
                 descricao.setPontualidade(resultado.getString(resultado.getColumnIndexOrThrow(_DescricaoDaDivida.PONTUALIDADE)));
                 descricao.setIsencao(resultado.getString(resultado.getColumnIndexOrThrow(_DescricaoDaDivida.ISENCAO)));
                 descricao.setId_IPTU(resultado.getLong(resultado.getColumnIndexOrThrow(_DescricaoDaDivida.ID_IPTU)));
+                resultado.close();
                 return descricao;
         }
         return null;
@@ -125,6 +126,7 @@ public class RepositorioDescricaoDaDivida implements IRepositorioDescricaoDaDivi
                 descricao.setId_IPTU(resultado.getLong(resultado.getColumnIndexOrThrow(_DescricaoDaDivida.ID_IPTU)));
                 descricoes.add(descricao);
             }while (resultado.moveToNext());
+            resultado.close();
             return descricoes;
         }
     return null;

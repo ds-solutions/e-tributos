@@ -52,9 +52,9 @@ public class RepositorioContribuinte implements IRepositorioContribuinte {
             contribuinte.setId(resultado.getLong(resultado.getColumnIndexOrThrow(_Contribuinte.ID)));
             contribuinte.getAtualizacaoDoContribuinte().setId(resultado.getLong(resultado.getColumnIndexOrThrow(_Contribuinte.ID_AUTALIZACAO_DO_CONTRIBUINTE)));
             contribuinte.getDadosCadastradosDoContribuinte().setId(resultado.getLong(resultado.getColumnIndexOrThrow(_Contribuinte.ID_AUTALIZACAO_DO_CONTRIBUINTE)));
+            resultado.close();
             return contribuinte;
         }
-
         return null;
     }
 
@@ -73,7 +73,6 @@ public class RepositorioContribuinte implements IRepositorioContribuinte {
         parametros[0] = String.valueOf(contribuinte.getId());
         ContentValues values = new ContentValues();
        if (contribuinte.getAtualizacaoDoContribuinte() != null) {
-           System.out.println("o id que veio "+ contribuinte.getAtualizacaoDoContribuinte().getId());
            values.put(_Contribuinte.ID_AUTALIZACAO_DO_CONTRIBUINTE,
                    contribuinte.getAtualizacaoDoContribuinte().getId());
            this.conexao.update(_Contribuinte.NOME_DA_TABELA, values, _Contribuinte.ID+"="+ contribuinte.getId(), null);

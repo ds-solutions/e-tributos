@@ -31,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
         senha = (EditText) findViewById(R.id.idSenha);
         btEntrar = (Button) findViewById(R.id.id_button_logar);
       //  new ConexaoDataBase(this);
-        this.conexao = new ConexaoDataBase().concectarComBanco(this);
         btEntrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -45,19 +44,21 @@ public class MainActivity extends AppCompatActivity {
       /*  if (this.login.getText().toString().equals(ConstantesSistemas.LOGIN)
                 && this.senha.getText().toString().equals(ConstantesSistemas.SENHA)) {
           */
-            RepositorioImovel imoveis = new RepositorioImovel(this.conexao);
 
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            conectarAoBanco();
             try {
-                if (imoveis.getQtdImoveis() > 0) {
+                if (new RepositorioImovel(this.conexao).getQtdImoveis() > 0) {
                     Intent activity = new Intent(getApplicationContext(), Menu.class);
+                    desconectarBanco();
                     startActivity(activity);
                 } else {
                     Intent carregar = new Intent(getApplicationContext(), Carregar.class);
+                    desconectarBanco();
                     startActivity(carregar);
                 }
             } catch (RepositorioException e) {
@@ -72,4 +73,13 @@ public class MainActivity extends AppCompatActivity {
 
   this.conexao.close();
     }
+
+    private void desconectarBanco() {
+        this.conexao.close();
+    }
+
+    private void conectarAoBanco(){
+        this.conexao = new ConexaoDataBase().concectarComBanco(this);
+    }
+
 }

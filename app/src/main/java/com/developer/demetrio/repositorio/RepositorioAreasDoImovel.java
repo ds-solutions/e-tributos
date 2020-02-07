@@ -39,21 +39,6 @@ public class RepositorioAreasDoImovel implements IRepositorioAreasDoImovel {
         StringBuilder sql = new StringBuilder();
         sql.append(" SELECT ");
         sql.append("*");
-       /* sql.append(_AreasDoImovel.ID);
-        sql.append(", ");
-        sql.append(_AreasDoImovel.TESTADA);
-        sql.append(", ");
-        sql.append(_AreasDoImovel.AREA_DO_TERRENO);
-        sql.append(", ");
-        sql.append(_AreasDoImovel.AREA_TOTAL_DO_TERRENO);
-        sql.append(", ");
-        sql.append(_AreasDoImovel.EDIFICADO);
-        sql.append(", ");
-        sql.append(_AreasDoImovel.AREA_TOTAL_EDIFICADO);
-        sql.append(", ");
-        sql.append(_AreasDoImovel.EXCEDENTE);
-        sql.append(", ");
-        sql.append(_AreasDoImovel.FRACAO);*/
         sql.append(" FROM ");
         sql.append(_AreasDoImovel.NOME_DA_TABELA);
         sql.append(" WHERE ");
@@ -70,6 +55,7 @@ public class RepositorioAreasDoImovel implements IRepositorioAreasDoImovel {
             areas.setAreaTotalEdificado(resultado.getString(resultado.getColumnIndexOrThrow(_AreasDoImovel.AREA_TOTAL_EDIFICADO)));
             areas.setExcedente(resultado.getString(resultado.getColumnIndexOrThrow(_AreasDoImovel.EXCEDENTE)));
             areas.setFracao(resultado.getString(resultado.getColumnIndexOrThrow(_AreasDoImovel.FRACAO)));
+            resultado.close();
             return areas;
         }
         return null;

@@ -47,6 +47,7 @@ public class RepositorioTributo implements IRepositorioTributo {
             tributo.setIptu(new IPTU());
             tributo.setId(resultado.getLong(resultado.getColumnIndexOrThrow(_Tributo.ID)));
             tributo.getIptu().setId(resultado.getLong(resultado.getColumnIndexOrThrow(_Tributo.ID_IPTU)));
+            resultado.close();
             return tributo;
         }
 

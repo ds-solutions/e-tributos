@@ -75,6 +75,7 @@ public class RepositorioCadastro implements IRepositorioCadastro {
             cadastro.setQuadra(resultado.getString(resultado.getColumnIndexOrThrow(_Cadastro.QUADRA)));
             cadastro.setLote(resultado.getString(resultado.getColumnIndexOrThrow(_Cadastro.LOTE)));
             cadastro.setUnidade(resultado.getString(resultado.getColumnIndexOrThrow(_Cadastro.UNIDADE)));
+            resultado.close();
             return cadastro;
 
         }
@@ -110,9 +111,8 @@ public class RepositorioCadastro implements IRepositorioCadastro {
                 cadastro.setSetor(resultado.getString(resultado.getColumnIndexOrThrow(_Cadastro.SETOR)));
                 cadastro.setQuadra(resultado.getString(resultado.getColumnIndexOrThrow(_Cadastro.QUADRA)));
                 cadastros.add(cadastro);
-                System.out.println("Entro do repositorio setor: "+cadastro.getSetor()+" quadra "+cadastro.getQuadra());
+                resultado.close();
             } while (resultado.moveToNext());
-
             return cadastros;
         }
         return null;

@@ -14,7 +14,6 @@ import com.developer.demetrio.util.ConstantesSistemas;
 import java.util.ArrayList;
 
 class RepositorioBasico implements IRepositorioBasico{
-    //com.developer.demetrio.databases
     public static final String CAMINHO_BANCO = "data/data/com.developer.demetrio/databases";
     public static final String NOME_BANCO = "tributos_banco";
     protected static Context context;

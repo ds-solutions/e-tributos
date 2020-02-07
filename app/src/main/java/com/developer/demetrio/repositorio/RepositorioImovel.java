@@ -68,7 +68,9 @@ public class RepositorioImovel implements IRepositorioImovel {
         Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
         if (resultado.getCount() > 0){
             resultado.moveToFirst();
-            return getResultado(resultado);
+            List<Imovel> imovels = getResultado(resultado);
+            resultado.close();
+            return imovels;
         }
         return null;
     }
@@ -87,7 +89,9 @@ public class RepositorioImovel implements IRepositorioImovel {
         Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
         if (resultado.getCount() > 0){
             resultado.moveToFirst();
-            return getResultado(resultado);
+            List<Imovel> imovels = getResultado(resultado);
+            resultado.close();
+            return imovels;
         }
         return null;
     }
@@ -106,7 +110,9 @@ public class RepositorioImovel implements IRepositorioImovel {
         Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
         if (resultado.getCount() > 0){
             resultado.moveToFirst();
-            return getResultado(resultado);
+            List<Imovel> imovels = getResultado(resultado);
+            resultado.close();
+            return imovels;
         }
         return null;
     }
@@ -125,7 +131,9 @@ public class RepositorioImovel implements IRepositorioImovel {
         Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
         if (resultado.getCount() > 0){
             resultado.moveToFirst();
-            return getResultado(resultado);
+            List<Imovel> imovels = getResultado(resultado);
+            resultado.close();
+            return imovels;
         }
         return null;
     }
@@ -152,7 +160,9 @@ public class RepositorioImovel implements IRepositorioImovel {
         Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
         if (resultado.getCount() > 0){
             resultado.moveToFirst();
-            return getResultado(resultado);
+            List<Imovel> imovels = getResultado(resultado);
+            resultado.close();
+            return imovels;
         }
         return null;
     }
@@ -179,7 +189,9 @@ public class RepositorioImovel implements IRepositorioImovel {
         Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
         if (resultado.getCount() > 0){
             resultado.moveToFirst();
-            return getResultado(resultado);
+            List<Imovel> imovels = getResultado(resultado);
+            resultado.close();
+            return imovels;
         }
         return null;
     }
@@ -204,7 +216,9 @@ public class RepositorioImovel implements IRepositorioImovel {
         Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
         if (resultado.getCount() > 0){
             resultado.moveToFirst();
-            return getResultado(resultado);
+            List<Imovel> imovels = getResultado(resultado);
+            resultado.close();
+            return imovels;
         }
         return null;
     }
@@ -260,7 +274,9 @@ public class RepositorioImovel implements IRepositorioImovel {
         Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
         if (resultado.getCount() > 0){
             resultado.moveToFirst();
-            return getResultado(resultado);
+            List<Imovel> imovels = getResultado(resultado);
+            resultado.close();
+            return imovels;
         }
         return null;
     }
@@ -323,6 +339,7 @@ public class RepositorioImovel implements IRepositorioImovel {
              imovel.setTributo(new Tributo());
              imovel.getTributo().setId(resultado.getLong(resultado.getColumnIndexOrThrow(_Imovel.ID_TRIBUTO)));
              imovel.getComprovante().setId(resultado.getInt(resultado.getColumnIndexOrThrow(_Imovel.ID_COMPROVANTE)));
+             resultado.close();
              return imovel;
         }
         return null;
@@ -339,7 +356,9 @@ public class RepositorioImovel implements IRepositorioImovel {
        Cursor resultado =  this.conexao.rawQuery(sql.toString(), null);
         if (resultado.getCount() > 0) {
             resultado.moveToFirst();
-            return resultado.getCount();
+            Integer qtd = resultado.getCount();
+            resultado.close();
+            return qtd;
         }
         return 0;
     }
@@ -348,7 +367,6 @@ public class RepositorioImovel implements IRepositorioImovel {
 
     @Override
     public List<Imovel> getImoveis()throws RepositorioException {
-
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT * FROM ");
         sql.append(_Imovel.NOME_DA_TABELA);
@@ -356,7 +374,9 @@ public class RepositorioImovel implements IRepositorioImovel {
         Cursor resultado = this.conexao.rawQuery(sql.toString(), null);
         if (resultado.getCount() > 0) {
             resultado.moveToFirst();
-            return getResultado(resultado);
+            List<Imovel> imovels = getResultado(resultado);
+            resultado.close();
+            return imovels;
         }
         return null;
     }
@@ -386,7 +406,9 @@ public class RepositorioImovel implements IRepositorioImovel {
 
         if (resultado.getCount() > 0) {
             resultado.moveToFirst();
-            return resultado.getLong(resultado.getColumnIndexOrThrow(_Imovel.ID));
+            long id = resultado.getLong(resultado.getColumnIndexOrThrow(_Imovel.ID));
+            resultado.close();
+            return id;
         }
         return 0;
     }
@@ -416,6 +438,7 @@ public class RepositorioImovel implements IRepositorioImovel {
         Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
         if (resultado.getCount() > 0
                 && resultado.getCount() == totalRegistro) {
+            resultado.close();
             return true;
         }
         return false;
@@ -443,7 +466,9 @@ public class RepositorioImovel implements IRepositorioImovel {
         Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
         if (resultado.getCount() > 0){
             resultado.moveToFirst();
-            return getResultado(resultado);
+            List<Imovel> imovels = getResultado(resultado);
+            resultado.close();
+            return imovels;
         }
         return null;
     }
@@ -457,7 +482,9 @@ public class RepositorioImovel implements IRepositorioImovel {
         Cursor resultado = this.conexao.rawQuery(sql.toString(), null);
         if (resultado.getCount() > 0){
             resultado.moveToFirst();
-            return resultado.getLong(resultado.getColumnIndexOrThrow(_Imovel.ID));
+            long id = resultado.getLong(resultado.getColumnIndexOrThrow(_Imovel.ID));
+            resultado.close();
+            return id;
         }
         return 0;
     }
@@ -477,7 +504,9 @@ public class RepositorioImovel implements IRepositorioImovel {
         sql.append(" =? ");
         Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
         if (resultado.getCount() > 0) {
-            return resultado.getCount();
+            long total = resultado.getCount();
+            resultado.close();
+            return total;
         }
         return 0;
     }
@@ -496,7 +525,8 @@ public class RepositorioImovel implements IRepositorioImovel {
 
         Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
         if (resultado.getCount() > 0) {
-            return resultado.getCount();
+            long total = resultado.getCount();
+            return total;
         }
         return 0;
     }
@@ -515,7 +545,9 @@ public class RepositorioImovel implements IRepositorioImovel {
 
         Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
         if (resultado.getCount() > 0) {
-            return resultado.getCount();
+            long total = resultado.getCount();
+            resultado.close();
+            return total;
         }
         return 0;
     }
@@ -534,7 +566,9 @@ public class RepositorioImovel implements IRepositorioImovel {
 
         Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
         if (resultado.getCount() > 0) {
-            return resultado.getCount();
+            long total = resultado.getCount();
+            resultado.close();
+            return total;
         }
         return 0;
     }
@@ -556,7 +590,9 @@ public class RepositorioImovel implements IRepositorioImovel {
         sql.append(" =? ");
         Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
         if (resultado.getCount() > 0) {
-            return resultado.getCount();
+            long total = resultado.getCount();
+            resultado.close();
+            return total;
         }
         return 0;
     }
@@ -583,7 +619,9 @@ public class RepositorioImovel implements IRepositorioImovel {
         sql.append(_Contribuinte.ID_AUTALIZACAO_DO_CONTRIBUINTE);
         Cursor resultado = this.conexao.rawQuery(sql.toString() + " != "+null, null);
         if (resultado.getCount() > 0) {
-            return resultado.getCount();
+            long total = resultado.getCount();
+            resultado.close();
+            return total;
         }
         return 0;
     }
@@ -602,7 +640,9 @@ public class RepositorioImovel implements IRepositorioImovel {
 
         Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
         if (resultado.getCount() > 0) {
-            return resultado.getCount();
+            long total = resultado.getCount();
+            resultado.close();
+            return total;
         }
         return 0;
     }
@@ -621,7 +661,9 @@ public class RepositorioImovel implements IRepositorioImovel {
 
         Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
         if (resultado.getCount() > 0) {
-            return resultado.getCount();
+            long total = resultado.getCount();
+            resultado.close();
+            return total;
         }
         return 0;
     }
@@ -640,7 +682,9 @@ public class RepositorioImovel implements IRepositorioImovel {
 
         Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
         if (resultado.getCount() > 0) {
-            return resultado.getCount();
+            long total = resultado.getCount();
+            resultado.close();
+            return total;
         }
         return 0;
     }
@@ -659,7 +703,9 @@ public class RepositorioImovel implements IRepositorioImovel {
 
         Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
         if (resultado.getCount() > 0) {
-            return resultado.getCount();
+            long total = resultado.getCount();
+            resultado.close();
+            return total;
         }
         return 0;
     }
@@ -684,7 +730,9 @@ public class RepositorioImovel implements IRepositorioImovel {
 
         Cursor resultado = this.conexao.rawQuery(sql.toString(), parametros);
         if (resultado.getCount() > 0) {
-            return resultado.getCount();
+            long total = resultado.getCount();
+            resultado.close();
+            return total;
         }
         return 0;
     }
@@ -736,7 +784,9 @@ public class RepositorioImovel implements IRepositorioImovel {
         Cursor resultado = conexao.rawQuery(sql.toString(), parametros);
         if (resultado.getCount() > 0) {
             resultado.moveToFirst();
-            return resultadoDaConsulta(resultado);
+            List<QuadrasNaoVisitadas> naoVisitados = resultadoDaConsulta(resultado);
+            resultado.close();
+            return naoVisitados;
         }
 
         return null;
@@ -758,6 +808,7 @@ public class RepositorioImovel implements IRepositorioImovel {
             naoEntregue.setQuadra(resultado.getString(resultado.getColumnIndexOrThrow(_Cadastro.QUADRA)));
             respostas.add(naoEntregue);
         }while (resultado.moveToNext());
+        resultado.close();
        return respostas;
     }
 
@@ -784,7 +835,7 @@ public class RepositorioImovel implements IRepositorioImovel {
                 imovel.getTributo().setId(resultado.getLong(resultado.getColumnIndexOrThrow(_Imovel.ID_TRIBUTO)));
                 imoveis.add(imovel);
             }while (resultado.moveToNext());
-
+                resultado.close();
             return imoveis;
         }
         return null;
@@ -811,6 +862,7 @@ public class RepositorioImovel implements IRepositorioImovel {
             endereco.setComplemento(resultado.getString(resultado.getColumnIndexOrThrow(_Endereco.COMPLEMENTO)));
             endereco.setNumero(resultado.getString(resultado.getColumnIndexOrThrow(_Endereco.NUMERO)));
             endereco.setCep(resultado.getString(resultado.getColumnIndexOrThrow(_Endereco.CEP)));
+            resultado.close();
             return endereco;
         }
         return null;
@@ -839,7 +891,7 @@ public class RepositorioImovel implements IRepositorioImovel {
             contribuinte.setAtualizacaoDoContribuinte(getContribuinteAtualizado(resultado.getLong(resultado.getColumnIndexOrThrow(_Contribuinte.ID_AUTALIZACAO_DO_CONTRIBUINTE))));
 
             contribuinte.setDadosCadastradosDoContribuinte(getDadosDoContribuinte(resultado.getLong(resultado.getColumnIndexOrThrow(_Contribuinte.ID_DADOS_DO_CONTRIBUINTE))));
-
+            resultado.close();
             return contribuinte;
         }
 
@@ -878,6 +930,7 @@ public class RepositorioImovel implements IRepositorioImovel {
             dados.setTelefone(resultado.getString(resultado.getColumnIndexOrThrow(_AtualizacaoDoContribuinte.TELEFONE)));
             dados.setCelular(resultado.getString(resultado.getColumnIndexOrThrow(_AtualizacaoDoContribuinte.CELULAR)));
             dados.setEmail(resultado.getString(resultado.getColumnIndexOrThrow(_AtualizacaoDoContribuinte.EMAIL)));
+            resultado.close();
             return dados;
         }
         return  null;
@@ -912,6 +965,7 @@ public class RepositorioImovel implements IRepositorioImovel {
             dados.setSexo(resultado.getString(resultado.getColumnIndexOrThrow(_DadosCadastradosDoContribuinte.SEXO)));
             dados.setEmail(resultado.getString(resultado.getColumnIndexOrThrow(_DadosCadastradosDoContribuinte.EMAIL)));
             dados.setNumeroCelular(resultado.getString(resultado.getColumnIndexOrThrow(_DadosCadastradosDoContribuinte.CELULAR)));
+            resultado.close();
             return dados;
         }
         return null;
@@ -945,6 +999,7 @@ public class RepositorioImovel implements IRepositorioImovel {
             cadastro.setQuadra(resultado.getString(resultado.getColumnIndexOrThrow(_Cadastro.QUADRA)));
             cadastro.setLote(resultado.getString(resultado.getColumnIndexOrThrow(_Cadastro.LOTE)));
             cadastro.setUnidade(resultado.getString(resultado.getColumnIndexOrThrow(_Cadastro.UNIDADE)));
+            resultado.close();
             return cadastro;
          }
 

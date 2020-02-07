@@ -50,10 +50,9 @@ public class RepositorioCodigoDeCobranca implements IRepositorioCodigoDeCobranca
             codigo.setId(resultado.getLong(resultado.getColumnIndexOrThrow(_CodigoDeCobranca.ID)));
             codigo.setTaxaTestada(resultado.getString(resultado.getColumnIndexOrThrow(_CodigoDeCobranca.TAXA_TESTADA)));
             codigo.setTipo(resultado.getString(resultado.getColumnIndexOrThrow(_CodigoDeCobranca.TIPO)));
-
+            resultado.close();
             return codigo;
         }
-
         return null;
     }
 

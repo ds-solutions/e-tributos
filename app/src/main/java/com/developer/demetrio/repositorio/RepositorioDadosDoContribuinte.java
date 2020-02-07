@@ -70,6 +70,7 @@ public class RepositorioDadosDoContribuinte implements IRepositorioDadosDoContri
             dados.setSexo(resultado.getString(resultado.getColumnIndexOrThrow(_DadosCadastradosDoContribuinte.SEXO)));
             dados.setEmail(resultado.getString(resultado.getColumnIndexOrThrow(_DadosCadastradosDoContribuinte.EMAIL)));
             dados.setNumeroCelular(resultado.getString(resultado.getColumnIndexOrThrow(_DadosCadastradosDoContribuinte.CELULAR)));
+            resultado.close();
              return dados;
         }
         return null;
