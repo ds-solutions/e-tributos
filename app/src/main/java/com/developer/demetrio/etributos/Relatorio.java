@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.developer.demetrio.adapters.RelatorioAdapter;
 import com.developer.demetrio.adapters.utils.ItemRelatorio;
 import com.developer.demetrio.databases.ConexaoDataBase;
+import com.developer.demetrio.execoes.LogErro;
 import com.developer.demetrio.execoes.RepositorioException;
 import com.developer.demetrio.model.utils.QuadrasNaoVisitadas;
 import com.developer.demetrio.repositorio.RepositorioDadosAtualizadosDoContribuinte;
@@ -110,6 +111,7 @@ public class Relatorio extends AppCompatActivity {
              try {
                 dados = format.format((new RepositorioImovel(conexao).totalEnviadosPorEmail() * 100) / totalDeRegistro) + "% dos tributos foram enviados por e-mail";
             } catch (RepositorioException e) {
+                 new LogErro().criarArquivoDeLog(e, "Erro na class Relatório ao tentar buscar total de imóveis enviados por email");
                 e.printStackTrace();
             }
             desconectarBanco();
@@ -121,6 +123,7 @@ public class Relatorio extends AppCompatActivity {
             try {
                 dados = format.format((new RepositorioImovel(conexao).totalEnviadosPorWhatsApp() * 100) / totalDeRegistro) + "% dos tributos foram enviados por whatsApp";
             } catch (RepositorioException e) {
+                new LogErro().criarArquivoDeLog(e, "Erro na class Relatório ao tentar buscar total de imóveis enviados por whatsApp");
                 e.printStackTrace();
             }
             desconectarBanco();
@@ -132,6 +135,7 @@ public class Relatorio extends AppCompatActivity {
             try {
                 dados = format.format((new RepositorioImovel(conexao).totalImpresso() * 100) / totalDeRegistro) + "% dos tributos foram impressos";
             } catch (RepositorioException e) {
+                new LogErro().criarArquivoDeLog(e, "Erro na class Relatório ao tentar buscar total de imóveis impressos");
                 e.printStackTrace();
             }
             desconectarBanco();
@@ -144,6 +148,7 @@ public class Relatorio extends AppCompatActivity {
                 dados = format.format((new RepositorioDadosAtualizadosDoContribuinte(conexao).totalDeCadastroAlterados() * 100) / totalDeRegistro) + "% dos cadastros foram atualizados";
 
             } catch (RepositorioException e) {
+                new LogErro().criarArquivoDeLog(e, "Erro na class Relatório ao tentar buscar total de dados atualizados");
                 e.printStackTrace();
             }
             desconectarBanco();
@@ -155,6 +160,7 @@ public class Relatorio extends AppCompatActivity {
             try {
                 dados = format.format((new RepositorioImovel(conexao).totalDeImoveisVisitados() * 100) / totalDeRegistro) + "% dos tributos foram entregues";
             } catch (RepositorioException e) {
+                new LogErro().criarArquivoDeLog(e, "Erro na class Relatório ao tentar buscar total de imóveis visitados");
                 e.printStackTrace();
             }
             desconectarBanco();
@@ -167,6 +173,7 @@ public class Relatorio extends AppCompatActivity {
                 dados = format.format((new RepositorioImovel(conexao).totalImoveisAVisitar() * 100) / totalDeRegistro) + "% faltam ser visitados";
 
             } catch (RepositorioException e) {
+                new LogErro().criarArquivoDeLog(e, "Erro na class Relatório ao tentar buscar total de imóveis a visiatar");
                 e.printStackTrace();
             }
            desconectarBanco();
@@ -176,9 +183,10 @@ public class Relatorio extends AppCompatActivity {
             DecimalFormat format = new DecimalFormat("0.#");
             conectarAoBanco();
             try {
-                totalNaoEntregues = imoveis.totalDeTributosNaoEntregues();
+                totalNaoEntregues = new RepositorioImovel(this.conexao).totalDeTributosNaoEntregues();
                 dados = format.format((totalNaoEntregues * 100) / totalDeRegistro) + "% dos tributos não foram entregues";
             } catch (RepositorioException e) {
+                new LogErro().criarArquivoDeLog(e, "Erro na class Relatório ao tentar buscar total de tributos não entregues");
                 e.printStackTrace();
             }
             desconectarBanco();

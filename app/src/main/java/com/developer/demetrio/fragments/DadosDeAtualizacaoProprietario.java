@@ -48,7 +48,7 @@ public class DadosDeAtualizacaoProprietario extends Fragment {
     private String genero, raca, pessoaTipo, condicaoCivil;
     private SQLiteDatabase conexao;
 
-    private AtualizacaoDoContribuinte dados;
+    private AtualizacaoDoContribuinte dados, atualizado;
 
     private Button salvar, cancelar;
 
@@ -200,14 +200,14 @@ public class DadosDeAtualizacaoProprietario extends Fragment {
 
         public TirarFotos(){}
 
-
         @Override
         public void onClick(View view) {
 
             inserir(novoCadastro());
 
             Bundle parametros = new Bundle();
-            parametros.putLong("id", imovel.getId());
+            parametros.putLong("imovel", imovel.getId());
+            parametros.putLong("atualizado", atualizado.getId());
             Intent intent = new Intent(context, Fotos.class);
             intent.putExtras(parametros);
             startActivity(intent, parametros);
@@ -286,8 +286,6 @@ public class DadosDeAtualizacaoProprietario extends Fragment {
             }
             i++;
         }
-
-
     }
 
     private void conectarBanco() {
@@ -361,6 +359,7 @@ public class DadosDeAtualizacaoProprietario extends Fragment {
         }catch (RepositorioException ex) {
             ex.printStackTrace();
         }
+         atualizado = contribuinte;
          desconectarBanco();
         atualizarContribuinte(contribuinte);
     }

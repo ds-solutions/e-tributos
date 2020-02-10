@@ -20,9 +20,11 @@ import android.widget.Spinner;
 
 import com.developer.demetrio.adapters.ListImoveisAdapter;
 import com.developer.demetrio.databases.ConexaoDataBase;
+import com.developer.demetrio.execoes.LogErro;
 import com.developer.demetrio.execoes.RepositorioException;
 import com.developer.demetrio.model.Cadastro;
 import com.developer.demetrio.model.Imovel;
+import com.developer.demetrio.model.utils.MaskEditUtil;
 import com.developer.demetrio.repositorio.RepositorioCadastro;
 import com.developer.demetrio.repositorio.RepositorioEndereco;
 import com.developer.demetrio.repositorio.RepositorioImovel;
@@ -66,12 +68,11 @@ public class ConsultarImoveis extends AppCompatActivity {
     private OnItemClickListener deviceClickListiner = new ClickListiner();
 
     private Context context;
-    @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_consultar_imoveis);
-        conectarAoBanco();
+
 
         this.inscricao = findViewById(R.id.id_edt_inscricao);
         this.btConsultar = findViewById(R.id.id_consultar);
@@ -217,6 +218,7 @@ public class ConsultarImoveis extends AppCompatActivity {
             }
         });
 
+        this.inscricao.addTextChangedListener(MaskEditUtil.mask(this.inscricao, MaskEditUtil.FORMAT_INSCRICAO));
     }
 
     private void conectarAoBanco() {
@@ -240,13 +242,15 @@ public class ConsultarImoveis extends AppCompatActivity {
     }
 
     private void popularSpinnerSetorQuadra() {
-        RepositorioCadastro cadastros = new RepositorioCadastro(this.conexao);
+       conectarAoBanco();
         List<Cadastro> list = new ArrayList<>();
         try {
-            list = cadastros.registrados();
+            list =  new RepositorioCadastro(this.conexao).registrados();
         } catch (RepositorioException e) {
+            new LogErro().criarArquivoDeLog(e, "Erro na class Acticty Carregar ao tentar listar cadastros");
             e.printStackTrace();
         }
+        desconectarBanco();
         this.setores = new ArrayList<String>();
         this.quadras = new ArrayList<String>();
         this.setores.add("Setor");
@@ -278,13 +282,15 @@ public class ConsultarImoveis extends AppCompatActivity {
     }
 
     private void popularSpinnerLogradouro() {
-        RepositorioEndereco enderecos = new RepositorioEndereco(this.conexao);
+        conectarAoBanco();
         this.logradouros = new ArrayList<>();
         try {
-            this.logradouros = enderecos.nomesLogradouros();
+            this.logradouros = new RepositorioEndereco(this.conexao).nomesLogradouros();
         } catch (RepositorioException e) {
+            new LogErro().criarArquivoDeLog(e, "Erro na class Acticty Carregar ao tentar listar logradouros");
             e.printStackTrace();
         }
+        desconectarBanco();
         if (!this.logradouros.isEmpty()) {
             ArrayAdapter<String> logradourosAdapter = new ArrayAdapter<String>(this.context, android.R.layout.simple_spinner_dropdown_item, this.logradouros);
             logradourosAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -303,16 +309,18 @@ public class ConsultarImoveis extends AppCompatActivity {
                 try {
                     listImoveis = new RepositorioImovel(this.conexao).buscarTodosEnviadosPorEmail();
                 } catch (RepositorioException e) {
+                    new LogErro().criarArquivoDeLog(e, "Erro na class Acticty Carregar ao tentar listar imoveis enviados por email");
                     e.printStackTrace();
                 }
                 desconectarBanco();
                 break;
 
             case 2:
+                conectarAoBanco();
                 try {
-                    conectarAoBanco();
                     listImoveis = new RepositorioImovel(this.conexao).buscarTodosEnviadosPorWhatsApp();
                 } catch (RepositorioException e) {
+                    new LogErro().criarArquivoDeLog(e, "Erro na class Acticty Carregar ao tentar listar imoveis enviados por whatsApp");
                     e.printStackTrace();
                }
                 desconectarBanco();
@@ -323,6 +331,7 @@ public class ConsultarImoveis extends AppCompatActivity {
                 try {
                     listImoveis = new RepositorioImovel(this.conexao).buscarTodosImoveisImpressos();
                 } catch (RepositorioException e) {
+                    new LogErro().criarArquivoDeLog(e, "Erro na class Acticty Carregar ao tentar listar imoveis impressos");
                     e.printStackTrace();
                 }
                 desconectarBanco();
@@ -333,6 +342,7 @@ public class ConsultarImoveis extends AppCompatActivity {
                 try {
                     listImoveis = new RepositorioImovel(this.conexao).buscarTodosImoveisNaoImpressos();
                 } catch (RepositorioException e) {
+                    new LogErro().criarArquivoDeLog(e, "Erro na class Acticty Carregar ao tentar listar imoveis não impressos");
                     e.printStackTrace();
                 }
                 desconectarBanco();
@@ -345,6 +355,7 @@ public class ConsultarImoveis extends AppCompatActivity {
                     listImoveis = new RepositorioImovel(this.conexao).buscarTodosImoveisPorInscricao(this.parametros);
                     this.parametros = new String[]{};
                 } catch (RepositorioException e) {
+                    new LogErro().criarArquivoDeLog(e, "Erro na class Acticty Carregar ao tentar listar imoveis por inscrição");
                     e.printStackTrace();
                 }
                 desconectarBanco();
@@ -360,14 +371,14 @@ public class ConsultarImoveis extends AppCompatActivity {
                     }
                     listImoveis = new RepositorioImovel(this.conexao).buscarTodosPorLogradouro(this.parametros);
                     this.parametros = new String[]{};
-                    desconectarBanco();
                 } catch (RepositorioException e) {
+                   new LogErro().criarArquivoDeLog(e, "Erro na class Acticty Carregar ao tentar listar imoveis por logradouros");
                     e.printStackTrace();
                 }
+                desconectarBanco();
                 break;
-
             case 7:
-                    conectarAoBanco();
+                 conectarAoBanco();
                try {
                     this.parametros = new String[]{this.matricula.getText().toString()};
                    if (StringUtils.isBlank(parametros[0])){
@@ -377,10 +388,11 @@ public class ConsultarImoveis extends AppCompatActivity {
                    }
                     listImoveis = new RepositorioImovel(this.conexao).buscarDaMatricula(this.parametros);
                     this.parametros = new String[]{};
-                    desconectarBanco();
                 } catch (RepositorioException e) {
+                   new LogErro().criarArquivoDeLog(e, "Erro na class Acticty Carregar ao tentar listar imoveis por matricula");
                     e.printStackTrace();
                 }
+                desconectarBanco();
                 break;
 
             case 8:
@@ -388,6 +400,7 @@ public class ConsultarImoveis extends AppCompatActivity {
                 try {
                     listImoveis = new RepositorioImovel(this.conexao).buscarImoveisNaoEntregues();
                 } catch (RepositorioException e) {
+                    new LogErro().criarArquivoDeLog(e, "Erro na class Acticty Carregar ao tentar listar imoveis não entregues");
                     e.printStackTrace();
                 }
                 desconectarBanco();
@@ -397,6 +410,7 @@ public class ConsultarImoveis extends AppCompatActivity {
                 try {
                     listImoveis = new RepositorioImovel(this.conexao).buscarPorSetorQuadra(this.stringSetor, this.stringQuadra);
                 } catch (RepositorioException e) {
+                    new LogErro().criarArquivoDeLog(e, "Erro na class Acticty Carregar ao tentar listar imoveis por setor e quadra");
                     e.printStackTrace();
                 }
                 desconectarBanco();
@@ -405,8 +419,9 @@ public class ConsultarImoveis extends AppCompatActivity {
             default:
                 conectarAoBanco();
                 try {
-                    listImoveis = imoveis.getImoveis();
+                    listImoveis = new RepositorioImovel(this.conexao).getImoveis();
                 } catch (RepositorioException e) {
+                    new LogErro().criarArquivoDeLog(e, "Erro na class Acticty Carregar ao tentar listar todos imoveis");
                     e.printStackTrace();
                 }
                 desconectarBanco();
@@ -465,6 +480,7 @@ public class ConsultarImoveis extends AppCompatActivity {
         try {
             this.listImoveis = new RepositorioImovel(this.conexao).getImoveis();
         }catch (RepositorioException ex) {
+            new LogErro().criarArquivoDeLog(ex, "Erro na class Acticty Carregar ao tentar listar todos os imóveis");
             ex.printStackTrace();
         }
         desconectarBanco();

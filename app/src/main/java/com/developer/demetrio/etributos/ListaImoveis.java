@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import com.developer.demetrio.adapters.PageViewAdapter;
 import com.developer.demetrio.databases.ConexaoDataBase;
+import com.developer.demetrio.execoes.LogErro;
 import com.developer.demetrio.execoes.RepositorioException;
 import com.developer.demetrio.fachada.Fachada;
 import com.developer.demetrio.fragments.DadosDeAtualizacaoProprietario;
@@ -126,6 +127,7 @@ public class ListaImoveis extends AppCompatActivity {
         try {
             this.imovel = new RepositorioImovel(this.conexao).buscarImovelPorId(idImovel);
         } catch (RepositorioException e) {
+            new LogErro().criarArquivoDeLog(e, "Erro na class Acticty ListarImoveis ao tentar buscar imóvel por id");
             e.printStackTrace();
         }
         desconectarBanco();
@@ -145,6 +147,7 @@ public class ListaImoveis extends AppCompatActivity {
         try {
             tributo = new RepositorioTributo(this.conexao).buscar(id);
         } catch (RepositorioException e) {
+            new LogErro().criarArquivoDeLog(e, "Erro na class Acticty ListarImoveis ao tentar buscar tributo por id");
             e.printStackTrace();
         }
         desconectarBanco();
@@ -159,6 +162,7 @@ public class ListaImoveis extends AppCompatActivity {
          try {
             iptu = new RepositorioIPTU(this.conexao).buscar(id);
         } catch (RepositorioException e) {
+             new LogErro().criarArquivoDeLog(e, "Erro na class Acticty ListarImoveis ao tentar buscar iptu por id");
             e.printStackTrace();
         }
          desconectarBanco();
@@ -172,6 +176,7 @@ public class ListaImoveis extends AppCompatActivity {
          try {
             descricaoDaDividas = new RepositorioDescricaoDaDivida(this.conexao).descricoesDaDividaDe(id);
         } catch (RepositorioException e) {
+             new LogErro().criarArquivoDeLog(e, "Erro na class Acticty ListarImoveis ao tentar buscar descrição da divida por id");
             e.printStackTrace();
         }
          desconectarBanco();
@@ -184,6 +189,7 @@ public class ListaImoveis extends AppCompatActivity {
          try {
             contribuinte = new RepositorioContribuinte(this.conexao).buscar(id);
         } catch (RepositorioException e) {
+             new LogErro().criarArquivoDeLog(e, "Erro na class Acticty ListarImoveis ao tentar buscar contribuinte por id");
             e.printStackTrace();
         }
         desconectarBanco();
@@ -207,6 +213,7 @@ public class ListaImoveis extends AppCompatActivity {
          try {
             contribuinte = new RepositorioDadosAtualizadosDoContribuinte(this.conexao).buscar(id);
         } catch (RepositorioException e) {
+             new LogErro().criarArquivoDeLog(e, "Erro na class Acticty ListarImoveis ao tentar buscar atualizacão do contribuinte por id");
             e.printStackTrace();
         }
          desconectarBanco();
@@ -220,6 +227,7 @@ public class ListaImoveis extends AppCompatActivity {
         try {
             contribuinte = new RepositorioDadosDoContribuinte(this.conexao).buscar(id);
         } catch (RepositorioException e) {
+            new LogErro().criarArquivoDeLog(e, "Erro na class Acticty ListarImoveis ao tentar buscar dados do contribuinte por id");
             e.printStackTrace();
         }
         desconectarBanco();
@@ -232,6 +240,7 @@ public class ListaImoveis extends AppCompatActivity {
         try {
             endereco = new RepositorioEndereco(this.conexao).buscar(id);
         } catch (RepositorioException e) {
+            new LogErro().criarArquivoDeLog(e, "Erro na class Acticty ListarImoveis ao tentar buscar endereço por id");
             e.printStackTrace();
         }
         desconectarBanco();
@@ -244,6 +253,7 @@ public class ListaImoveis extends AppCompatActivity {
         try {
             cadastro = new RepositorioCadastro(this.conexao).buscar(id);
         } catch (RepositorioException e) {
+            new LogErro().criarArquivoDeLog(e, "Erro na class Acticty ListarImoveis ao tentar buscar cadastro por id");
             e.printStackTrace();
         }
         desconectarBanco();
@@ -261,6 +271,7 @@ public class ListaImoveis extends AppCompatActivity {
 
             aliquota = new RepositorioAliquota(this.conexao).buscar(id);
         } catch (RepositorioException e) {
+            new LogErro().criarArquivoDeLog(e, "Erro na class Acticty ListarImoveis ao tentar buscar aliquotas por id");
             e.printStackTrace();
         }
         desconectarBanco();
@@ -274,6 +285,7 @@ public class ListaImoveis extends AppCompatActivity {
          try {
             codigo = new RepositorioCodigoDeCobranca(this.conexao).buscar(id);
         } catch (RepositorioException e) {
+             new LogErro().criarArquivoDeLog(e, "Erro na class Acticty ListarImoveis ao tentar buscar codigo de cobrança por id");
             e.printStackTrace();
         }
         desconectarBanco();
@@ -286,6 +298,7 @@ public class ListaImoveis extends AppCompatActivity {
         try {
             areasDoImovel = new RepositorioAreasDoImovel(this.conexao).buscar(id);
         } catch (RepositorioException e) {
+            new LogErro().criarArquivoDeLog(e, "Erro na class Acticty ListarImoveis ao tentar buscar areas do imóvel por id");
             e.printStackTrace();
         }
         desconectarBanco();
@@ -298,6 +311,7 @@ public class ListaImoveis extends AppCompatActivity {
         try {
             valoresVenais = new RepositorioValoresVenais(this.conexao).buscar(id);
         } catch (RepositorioException e) {
+            new LogErro().criarArquivoDeLog(e, "Erro na class Acticty ListarImoveis ao tentar buscar valores venais por id");
             e.printStackTrace();
         }
         desconectarBanco();

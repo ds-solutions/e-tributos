@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.developer.demetrio.databases.ConexaoDataBase;
 import com.developer.demetrio.databases.DataBasesUtil;
 import com.developer.demetrio.databases.constantes._DataBase;
+import com.developer.demetrio.execoes.LogErro;
 import com.developer.demetrio.execoes.RepositorioException;
 import com.developer.demetrio.adapters.utils.ItemMenu;
 import com.developer.demetrio.adapters.MenuAdapter;
@@ -55,6 +56,7 @@ public class Menu extends AppCompatActivity {
                                desconectarBanco();
                            }
                         } catch (RepositorioException e) {
+                            new LogErro().criarArquivoDeLog(e, "Erro na class Menu ao tentar as primeiras posição");
                             e.printStackTrace();
                         }
                         activity = new Intent(getApplicationContext(), ListaImoveis.class);
@@ -82,6 +84,7 @@ public class Menu extends AppCompatActivity {
                        try {
                             totalDeRegistro = new RepositorioImovel(conexao).getQtdImoveis();
                         } catch (RepositorioException e) {
+                           new LogErro().criarArquivoDeLog(e, "Erro na class Menu ao buscar a qtd de imóveis cadastrados");
                             e.printStackTrace();
                         }
                       desconectarBanco();

@@ -111,8 +111,9 @@ public class RepositorioCadastro implements IRepositorioCadastro {
                 cadastro.setSetor(resultado.getString(resultado.getColumnIndexOrThrow(_Cadastro.SETOR)));
                 cadastro.setQuadra(resultado.getString(resultado.getColumnIndexOrThrow(_Cadastro.QUADRA)));
                 cadastros.add(cadastro);
-                resultado.close();
+
             } while (resultado.moveToNext());
+            resultado.close();
             return cadastros;
         }
         return null;

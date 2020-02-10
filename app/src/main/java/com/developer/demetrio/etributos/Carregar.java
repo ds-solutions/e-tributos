@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.developer.demetrio.databases.ConexaoDataBase;
+import com.developer.demetrio.execoes.LogErro;
 import com.developer.demetrio.execoes.RepositorioException;
 import com.developer.demetrio.iptu.DescricaoDaDivida;
 import com.developer.demetrio.iptu.IPTU;
@@ -138,10 +139,10 @@ public class Carregar extends AppCompatActivity {
         this.imovel.setTributo(popularTributo());
         this.imovel.setCadastro(popularCadastro());
         conectarAoBanco();
-        this.imoveis = new RepositorioImovel(this.conexao);
         try {
-            this.imovel.setId(this.imoveis.inserir(this.imovel));
+            this.imovel.setId(new RepositorioImovel(this.conexao).inserir(this.imovel));
         } catch (RepositorioException e) {
+            new LogErro().criarArquivoDeLog(e, "Erro na class Acticty Carregar ao tentar salvar imóvel");
             e.printStackTrace();
         }
         desconectarBanco();
@@ -156,6 +157,7 @@ public class Carregar extends AppCompatActivity {
         try {
             tributo.setId(tributos.inserir(tributo));
         } catch (RepositorioException e) {
+            new LogErro().criarArquivoDeLog(e, "Erro na class Acticty Carregar ao tentar salvar tributo");
             e.printStackTrace();
         }
         desconectarBanco();
@@ -180,10 +182,10 @@ public class Carregar extends AppCompatActivity {
         iptu.setValorTotal("80,46");
         iptu.setMensagem("Cota Única com desconto, após o vencimento procure o setor tributário do município ou acesse o nosso portal: http://portal.itaenga.pe.gov.br:8070/servicosweb");
         conectarAoBanco();
-        RepositorioIPTU iptus = new RepositorioIPTU(this.conexao);
         try {
-            iptu.setId(iptus.inserir(iptu));
+            iptu.setId(new RepositorioIPTU(this.conexao).inserir(iptu));
         } catch (RepositorioException e) {
+            new LogErro().criarArquivoDeLog(e, "Erro na class Acticty Carregar ao tentar salvar iptu");
             e.printStackTrace();
         }
         desconectarBanco();
@@ -223,10 +225,10 @@ public class Carregar extends AppCompatActivity {
             c++;
             i++;
             conectarAoBanco();
-            RepositorioDescricaoDaDivida dividas = new RepositorioDescricaoDaDivida(this.conexao);
-            try {
-                divida.setId_IPTU(dividas.inserir(divida));
+           try {
+                divida.setId_IPTU(new RepositorioDescricaoDaDivida(this.conexao).inserir(divida));
             } catch (RepositorioException e) {
+                new LogErro().criarArquivoDeLog(e, "Erro na class Acticty Carregar ao tentar salvar descrição da divida");
                 e.printStackTrace();
             }
             descricoes.add(divida);
@@ -261,10 +263,10 @@ public class Carregar extends AppCompatActivity {
         endereco.setCidade("LAGOA DE ITAENGA");
         endereco.setUf("PE");
         conectarAoBanco();
-        RepositorioEndereco enderecos = new RepositorioEndereco(this.conexao);
         try {
-            endereco.setId(enderecos.inserir(endereco));
+            endereco.setId(new RepositorioEndereco(this.conexao).inserir(endereco));
         } catch (RepositorioException e) {
+            new LogErro().criarArquivoDeLog(e, "Erro na class Acticty Carregar ao tentar salvar descrição da divida");
             e.printStackTrace();
         }
         desconectarBanco();
@@ -277,10 +279,10 @@ public class Carregar extends AppCompatActivity {
         contribuinte.setDadosCadastradosDoContribuinte(new DadosCadastradosDoContribuinte());
         contribuinte.setDadosCadastradosDoContribuinte(popularDadosDoContribuinte());
         conectarAoBanco();
-        RepositorioContribuinte contribuintes = new RepositorioContribuinte(this.conexao);
         try {
-            contribuinte.setId(contribuintes.inserir(contribuinte));
+            contribuinte.setId(new RepositorioContribuinte(this.conexao).inserir(contribuinte));
         } catch (RepositorioException e) {
+            new LogErro().criarArquivoDeLog(e, "Erro na class Acticty Carregar ao tentar salvar contribuinte");
             e.printStackTrace();
         }
         desconectarBanco();
@@ -302,11 +304,11 @@ public class Carregar extends AppCompatActivity {
         contribuinte.setCpf(getCpf());
         contribuinte.setNome(getNome());
         conectarAoBanco();
-        RepositorioDadosDoContribuinte dados = new RepositorioDadosDoContribuinte(this.conexao);
         try {
-            contribuinte.setId(dados.inserir(contribuinte));
+            contribuinte.setId(new RepositorioDadosDoContribuinte(this.conexao).inserir(contribuinte));
         } catch (RepositorioException e) {
             e.printStackTrace();
+            new LogErro().criarArquivoDeLog(e, "Erro na class Acticty Carregar ao tentar salvar dados do contribuinte");
         }
         desconectarBanco();
         return contribuinte;
@@ -401,10 +403,10 @@ public class Carregar extends AppCompatActivity {
         cadastro.setAreasDoImovel(pupularAreasDoImovel());
         cadastro.setValoresVenais(popularValoresVenais());
         conectarAoBanco();
-        RepositorioCadastro cadastros = new RepositorioCadastro(this.conexao);
         try {
-            cadastro.setId(cadastros.inserir(cadastro));
+            cadastro.setId(new RepositorioCadastro(this.conexao).inserir(cadastro));
         } catch (RepositorioException e) {
+            new LogErro().criarArquivoDeLog(e, "Erro na class Acticty Carregar ao tentar salvar cadastro");
             e.printStackTrace();
         }
         desconectarBanco();
@@ -426,10 +428,10 @@ public class Carregar extends AppCompatActivity {
         valoresVenais.setEdificada("3.257,00");
         valoresVenais.setTerreno("2.800,00");
         conectarAoBanco();
-        RepositorioValoresVenais valores = new RepositorioValoresVenais(this.conexao);
         try {
-            valoresVenais.setId(valores.inserir(valoresVenais));
+            valoresVenais.setId(new RepositorioValoresVenais(this.conexao).inserir(valoresVenais));
         } catch (RepositorioException e) {
+            new LogErro().criarArquivoDeLog(e, "Erro na class Acticty Carregar ao tentar salvar valores venais");
             e.printStackTrace();
         }
         desconectarBanco();
@@ -445,10 +447,10 @@ public class Carregar extends AppCompatActivity {
         area.setEdificado("125,00");
         area.setAreaDoTerreno("100,00");
         conectarAoBanco();
-        RepositorioAreasDoImovel areas = new RepositorioAreasDoImovel(this.conexao);
         try {
-            area.setId(areas.inserir(area));
+            area.setId(new RepositorioAreasDoImovel(this.conexao).inserir(area));
         } catch (RepositorioException e) {
+            new LogErro().criarArquivoDeLog(e, "Erro na class Acticty Carregar ao tentar salvar areas do imóvel");
             e.printStackTrace();
         }
         desconectarBanco();
@@ -463,10 +465,10 @@ public class Carregar extends AppCompatActivity {
         aliquota.setTerreno("1,00");
         aliquota.setCodigoDeCobranca(popularCodigo());
         conectarAoBanco();
-        RepositorioAliquota aliquotas = new RepositorioAliquota(this.conexao);
         try {
-            aliquota.setId(aliquotas.inserir(aliquota));
+            aliquota.setId(new RepositorioAliquota(this.conexao).inserir(aliquota));
         } catch (RepositorioException e) {
+            new LogErro().criarArquivoDeLog(e, "Erro na class Acticty Carregar ao tentar salvar alicota");
             e.printStackTrace();
         }
         desconectarBanco();
@@ -478,10 +480,10 @@ public class Carregar extends AppCompatActivity {
         codigo.setTipo("1-NORMAL");
         codigo.setTaxaTestada("5,00");
         conectarAoBanco();
-        RepositorioCodigoDeCobranca codigos = new RepositorioCodigoDeCobranca(this.conexao);
         try {
-            codigo.setId(codigos.inserir(codigo));
+            codigo.setId(new RepositorioCodigoDeCobranca(this.conexao).inserir(codigo));
         } catch (RepositorioException e) {
+            new LogErro().criarArquivoDeLog(e, "Erro na class Acticty Carregar ao tentar salvar código de cobrança");
             e.printStackTrace();
         }
         desconectarBanco();

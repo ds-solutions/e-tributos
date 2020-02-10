@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.developer.demetrio.databases.ConexaoDataBase;
+import com.developer.demetrio.execoes.LogErro;
 import com.developer.demetrio.execoes.RepositorioException;
 import com.developer.demetrio.model.Imovel;
 import com.developer.demetrio.repositorio.RepositorioImovel;
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
+                new LogErro().criarArquivoDeLog(e, "Erro na Thread na class MainActivity");
                 e.printStackTrace();
             }
             conectarAoBanco();
@@ -62,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(carregar);
                 }
             } catch (RepositorioException e) {
+                new LogErro().criarArquivoDeLog(e, "Erro na class MainActivity ao tentar verificar qtd de imóveis cadastrados");
                 e.printStackTrace();
             }
   /*      } else {

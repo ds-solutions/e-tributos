@@ -131,7 +131,7 @@
     <string name="falha_conecao">Não foi possivel se conectar à impressora.</string>
     <string name="str_erro_impressora">%1$s Deseja tentar novamente ?</string>
     <string name="db_erro">Erro ao acessar o banco de dados</string>
-    <string name="exemplo_01_01_001_0001_000">exemplo</string>
+    <string name="exemplo_01_01_001_0001_000">00.00.000.0000.00</string>
     <string name="todo">TODO</string>
     <string name="resumo">Resumo</string>
     <string name="enviando">Enviando...</string>

@@ -26,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.developer.demetrio.databases.ConexaoDataBase;
+import com.developer.demetrio.execoes.LogErro;
 import com.developer.demetrio.execoes.RepositorioException;
 import com.developer.demetrio.model.AtualizacaoDoContribuinte;
 import com.developer.demetrio.model.Comprovante;
@@ -108,8 +109,12 @@ public class Fotos extends AppCompatActivity {
         if (intent != null) {
             Bundle parametros = intent.getExtras();
             if (parametros != null) {
-                long id = parametros.getLong("id");
-                carregarImovel(id);
+                long idImovel = parametros.getLong("imovel");
+                if (parametros.get("atualizado") != null) {
+                    long idAtualizado = parametros.getLong("atualizado");
+                    carregarContribuinte(idAtualizado);
+                }
+                carregarImovel(idImovel);
             }
         }
       /*      conectarBanco();
@@ -195,7 +200,6 @@ public class Fotos extends AppCompatActivity {
                                 carregarImagem = new CarregarImagem(activity);
                                 carregarImagem.execute();
                             }
-
                         }
                     }
                 });
@@ -205,9 +209,8 @@ public class Fotos extends AppCompatActivity {
                 cont++;
             }
         };
-        timer.schedule(task, 300, 300);
-
-    }
+        timer.schedule(task, 500, 500);
+     }
 
     private File getPath(int i) {
         switch (i) {
@@ -249,7 +252,6 @@ public class Fotos extends AppCompatActivity {
                 break;
                 default:
                 break;
-
         }
          return null;
     }
@@ -266,6 +268,7 @@ public class Fotos extends AppCompatActivity {
                 try {
                     foto = criarArquivoDeImagem(chave);
                 }catch (IOException e) {
+                    new LogErro().criarArquivoDeLog(e, "Erro na class Acticty Fotos ao tentar criar arquivo da foto da frente da rg");
                     e.printStackTrace();
                 }
                 if (foto != null) {
@@ -291,6 +294,7 @@ public class Fotos extends AppCompatActivity {
                 try {
                     foto = criarArquivoDeImagem(chave);
                 }catch (IOException e) {
+                    new LogErro().criarArquivoDeLog(e, "Erro na class Acticty Fotos ao tentar criar arquivo da foto do verso da rg");
                     e.printStackTrace();
                 }
                 if (foto != null) {
@@ -317,6 +321,7 @@ public class Fotos extends AppCompatActivity {
                 try {
                     foto = criarArquivoDeImagem(chave);
                 }catch (IOException e) {
+                    new LogErro().criarArquivoDeLog(e, "Erro na class Acticty Fotos ao tentar criar arquivo da foto do cpf");
                     e.printStackTrace();
                 }
                 if (foto != null) {
@@ -342,7 +347,8 @@ public class Fotos extends AppCompatActivity {
                 try {
                     foto = criarArquivoDeImagem(chave);
                 }catch (IOException e) {
-                    e.printStackTrace();
+                    new LogErro().criarArquivoDeLog(e, "Erro na class Acticty Fotos ao tentar criar arquivo da foto da escritura");
+                   e.printStackTrace();
                 }
                 if (foto != null) {
                     Uri photoURI = FileProvider.getUriForFile(getBaseContext(),
@@ -401,6 +407,7 @@ public class Fotos extends AppCompatActivity {
         try {
             this.imovel = new RepositorioImovel(this.conexao).buscarImovelPorId(id);
         } catch (RepositorioException e) {
+            new LogErro().criarArquivoDeLog(e, "Erro na class Acticty Fotos ao tentar buscar objeto imóvel no banco");
             e.printStackTrace();
         }
         desconectarBanco();
@@ -411,11 +418,21 @@ public class Fotos extends AppCompatActivity {
                 comprovante = new RepositorioComprovante(this.conexao)
             .buscarPorId(this.imovel.getComprovante().getId());
             } catch (RepositorioException e) {
+                new LogErro().criarArquivoDeLog(e, "Erro na class Acticty Fotos ao tentar buscar objeto comprovante no banco");
                 e.printStackTrace();
             }
             desconectarBanco();
         }
+     }
 
+    private void carregarContribuinte(long id) {
+        conectarBanco();
+        try {
+            atualizado = new RepositorioDadosAtualizadosDoContribuinte(this.conexao).buscar(id);
+        } catch (RepositorioException e) {
+            e.printStackTrace();
+        }
+        desconectarBanco();
     }
 
     private void desconectarBanco() {
@@ -437,7 +454,7 @@ public class Fotos extends AppCompatActivity {
                             .atualizar(this.comprovante);
                     Toast.makeText(this, "Atualizado com sucesso!", Toast.LENGTH_LONG).show();
                 } catch (RepositorioException e) {
-                    criarArquivoDeLog(e, "ao tentar atualizar dados");
+                    new LogErro().criarArquivoDeLog(e, "Erro na class Acticty Fotos ao tentar atualizar dados");
                     e.printStackTrace();
                 }
             }
@@ -452,7 +469,7 @@ public class Fotos extends AppCompatActivity {
                         .salvar(this.comprovante));
                 Toast.makeText(this, "Salvo com sucesso!", Toast.LENGTH_LONG).show();
             } catch (RepositorioException e) {
-                criarArquivoDeLog(e, "ao tentar salvar dados");
+                new LogErro().criarArquivoDeLog(e, "Erro na class Acticty Fotos ao tentar salvar dados");
                 e.printStackTrace();
             }
             desconectarBanco();
@@ -485,7 +502,7 @@ public class Fotos extends AppCompatActivity {
             try {
                 new RepositorioImovel(this.conexao).atualizarComprovante(this.imovel);
             } catch (RepositorioException e) {
-                criarArquivoDeLog(e, "ao tentar imovel dados");
+                new LogErro().criarArquivoDeLog(e, "Erro na class Acticty Fotos ao tentar atualizar imóvel");
                 e.printStackTrace();
             }
             desconectarBanco();
@@ -497,27 +514,12 @@ public class Fotos extends AppCompatActivity {
         abrirTelaDeImpressao();
     }
 
-    private void criarArquivoDeLog(RepositorioException e, String local){
-        String nomeDoArquivo = local+"_"
-                + new SimpleDateFormat("dd_MM_yyyy_hh_mm_ss").format(new Date());
 
-        File dirMida = new File(ConstantesSistemas.CAMINHO_LOG);
-        if (!dirMida.exists()) {
-            dirMida.mkdirs();
-        }
-        try {
-            FileWriter log = new FileWriter(new File(dirMida, nomeDoArquivo));
-                log.write(e.getMessage());
-                log.flush();
-                log.close();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
 
     private File criarArquivoDeImagem(int chave) throws IOException{
+
         String nomeDaMidia = this.imovel.getId()+ "_" + CHAVE_REFERENCIA[chave]+ "_"
-                + new SimpleDateFormat("dd_MM_yyyy_hh_mm_ss").format(new Date())+".jpg";
+                + new SimpleDateFormat("dd_MM_yyyy_hh").format(new Date())+".jpg";
 
         File dirMida = new File(ConstantesSistemas.CAMINHO_FOTOS);
         if (!dirMida.exists()) {
@@ -525,16 +527,24 @@ public class Fotos extends AppCompatActivity {
         }
         File image = new File(dirMida.getPath(), nomeDaMidia);
         if (chave == 0) {
-            frenteRg = nomeDaMidia;
+            if (frenteRg == null || frenteRg == ""){
+                frenteRg = nomeDaMidia;
+            }
         }
         if (chave == 1) {
-            versoRG = nomeDaMidia;
+            if (versoRG == null || versoRG == "") {
+                versoRG = nomeDaMidia;
+            }
         }
         if (chave == 2) {
-            cpfFoto = nomeDaMidia;
+            if (cpfFoto == null || cpfFoto == "") {
+                cpfFoto = nomeDaMidia;
+            }
         }
         if (chave == 3) {
-            escrituraFoto = nomeDaMidia;
+            if (escrituraFoto == null || escrituraFoto == "") {
+                escrituraFoto = nomeDaMidia;
+            }
         }
       return image;
     }

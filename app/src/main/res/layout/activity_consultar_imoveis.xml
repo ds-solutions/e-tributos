@@ -44,11 +44,11 @@
             android:id="@+id/id_edt_inscricao"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ems="10"
             android:layout_weight="1"
-            android:inputType="text"
+            android:autofillHints=""
+            android:ems="10"
             android:hint="@string/exemplo_01_01_001_0001_000"
-            android:autofillHints="" />
+            android:inputType="number" />
 
         <EditText
             android:id="@+id/id_edt_matricula"
@@ -58,7 +58,7 @@
             android:autofillHints=""
             android:ems="10"
             android:hint="@string/exemplo_01_01_001_0001_000"
-            android:inputType="text" />
+            android:inputType="number" />
 
         <Spinner
             android:id="@+id/id_spinner_logradouro"

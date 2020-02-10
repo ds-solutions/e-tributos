@@ -12,6 +12,7 @@ public abstract class MaskEditUtil {
     public static final String FORMAT_PHOONE = "## ####-####";
     public static final String FORMAT_CEP = "#####-###";
     public static final String FORMAT_DATE = "##/##/####";
+    public static final String FORMAT_INSCRICAO = "##.##.###.####.###";
 
     public static TextWatcher mask(final EditText editText, final String mask) {
         return new TextWatcher() {

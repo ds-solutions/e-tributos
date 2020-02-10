@@ -712,19 +712,19 @@ public class RepositorioImovel implements IRepositorioImovel {
 
     @Override
     public long totalDeTributosNaoEntregues() throws RepositorioException {
-        String[] parametros = new String[]{"1","1","1","Motivo da não entrega"};
+        String[] parametros = new String[]{"Motivo da não entrega"};
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT ");
         sql.append(_Imovel.ID);
         sql.append(" FROM ");
         sql.append(_Imovel.NOME_DA_TABELA);
         sql.append(" WHERE ");
-        sql.append(_Imovel.INDIC_ENVIO_EMAIL);
+      /*  sql.append(_Imovel.INDIC_ENVIO_EMAIL);
         sql.append(" =? OR ");
         sql.append(_Imovel.INDIC_ENVIO_WHATSAAP);
         sql.append(" =? OR ");
         sql.append(_Imovel.INDIC_EMISSAO_CONTA);
-        sql.append(" =? AND ");
+        sql.append(" =? AND ");  */
         sql.append(_Imovel.MOTIVO_NAO_ENTREGA);
         sql.append(" != ?");
 
